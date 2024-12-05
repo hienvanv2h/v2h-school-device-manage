@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: school-device-management
+  datasource:
+    # Using Window Authentication
+    url: jdbc:sqlserver://DESKTOP-4LKULVK\\SQLEXPRESS:1433;databaseName=QuanLyThietBi;integratedSecurity=true;encrypt=true;trustServerCertificate=true
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true # Show SQL logs
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+        format_sql: true
+#  sql:
+#    init:
+#      mode: always
+
+gg:
+  jte:
+    developmentMode: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: ERROR

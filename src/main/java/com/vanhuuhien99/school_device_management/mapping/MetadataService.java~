@@ -1,0 +1,36 @@
+package com.vanhuuhien99.school_device_management.mapping;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.EntityType;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+public class MetadataService {
+
+    private final EntityManager entityManager;
+
+    public MetadataService(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    // Lấy danh sách cột với ánh xạ Tiếng Việt (nếu có)
+    public List<String> getTranslatedColumnNames(Class<?> entityClass) {
+        // Lấy danh sách thuộc tính từ JPA Metadata
+        EntityType<?> entityType = entityManager.getMetamodel().entity(entityClass);
+        List<String> attributeNames = entityType.getAttributes().stream()
+                .map(Attribute::getName)
+                .toList();
+
+        // Lấy ánh xạ từ ColumnMapping
+        Map<String, String> translations = ColumnMapping.getColumnTranslations(entityClass);
+
+        return attributeNames.stream()
+                .map(name -> translations.getOrDefault(name, name)) // Nếu không có ánh xạ, giữ nguyên
+                .collect(Collectors.toList());
+    }
+}
