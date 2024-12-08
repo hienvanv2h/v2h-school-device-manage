@@ -15,6 +15,6 @@ public class SchoolClass extends BaseEntity {
     @Column(name = "ClassID")
     private Long classId;
 
-    @Column(name = "ClassName", nullable = false, length = 100)
+    @Column(name = "ClassName", length = 20, nullable = false)
     private String className;
 }

@@ -1,21 +1,21 @@
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
-@import com.vanhuuhien99.school_device_management.entity.Subject
+@import com.vanhuuhien99.school_device_management.entity.Teacher
 @import org.springframework.data.domain.Page
 
 @param Map<String, String> columnMapping
-@param Page<Subject> subjectPage
+@param Page<Teacher> teacherPage
 
-@param int currentPage
+@param Integer currentPage
 @param String sortField
 @param String sortDirection
-@param String apiPath = "/dashboard/subjects"
+@param String apiPath = "/dashboard/teachers"
 
 @template.layout.dashboard(content = @`
     <div class="overflow-x-auto">
         <div class="sticky top-0 left-0 right-0 mb-4 h-[50px]">
             <div class="flex justify-between items-center gap-2">
-                <form id="filterForm" action="${apiPath}" method="GET">
+                <form id="filterForm" action="${apiPath}" method="GET" class="sticky top-0 h-[50px]">
                     <div class="flex gap-2 items-center h-full">
                         <input type="text" name="keyword" placeholder="Nhập từ khóa" class="p-2 border border-gray-300 rounded-md h-10">
                         <!-- Dropdown chọn bộ lọc -->
@@ -27,7 +27,9 @@
                                     <option value=""></option>
                                 @else
                                     @for(Map.Entry<String, String> entry : columnMapping.entrySet())
-                                        @if(entry.getKey().equalsIgnoreCase("subjectName"))
+                                        @if(entry.getKey().equalsIgnoreCase("fullName")
+                                        || entry.getKey().equalsIgnoreCase("email")
+                                        || entry.getKey().equalsIgnoreCase("phoneNumber"))
                                             <option value="${entry.getKey()}">
                                                 ${entry.getValue()}
                                             </option>
@@ -45,8 +47,8 @@
         </div>
 
         <div class="mt-[60px]">
-            @if(subjectPage == null || subjectPage.isEmpty())
-                <p class="text-gray-600">Không tìm thấy thông tin môn học</p>
+            @if(teacherPage == null || teacherPage.isEmpty())
+                <p class="text-gray-600">Không tìm thấy thông tin giáo viên</p>
             @else
                 <%--    Table    --%>
                 <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -54,7 +56,7 @@
                     <tr>
                         @for(Map.Entry<String, String> entry: columnMapping.entrySet())
                             <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 bg-gray-100 border-b min-w-[160px]">
-                                <a href="${apiPath}?page=${currentPage}&size=${subjectPage.getSize()}&sort=${entry.getKey()},${sortDirection.equalsIgnoreCase("asc") ? "desc" : "asc"}"
+                                <a href="${apiPath}?page=${currentPage}&size=${teacherPage.getSize()}&sort=${entry.getKey()},${sortField.equals(entry.getKey()) && sortDirection.equalsIgnoreCase("asc") ? "desc" : "asc"}"
                                    class="hover:underline">
                                     <%--    Tên cột hiển thị    --%>
                                     ${entry.getValue()}
@@ -68,22 +70,28 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @for(var subject: subjectPage.getContent())
+                    @for(var teacher: teacherPage.getContent())
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${subject.getSubjectId()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${subject.getSubjectName()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${teacher.getTeacherId()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${teacher.getFullName()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${teacher.getEmail()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${teacher.getPhoneNumber()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
+                                ${DateTimeFormatter.ofPattern("dd/MM/yyyy").format(teacher.getDateOfBirth())}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${teacher.getGender().getValue()}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(subject.getCreatedAt())}
+                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(teacher.getCreatedAt())}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(subject.getUpdatedAt())}
+                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(teacher.getUpdatedAt())}
                             </td>
                             <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
-                                <a href="${apiPath}/update/${subject.getSubjectId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
+                                <a href="${apiPath}/update/${teacher.getTeacherId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
                                     Cập nhật
                                 </a>
                                 <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
-                                        onclick="confirmDelete(${subject.getSubjectId()}, '${apiPath}')">
+                                        onclick="confirmDelete(${teacher.getTeacherId()}, '${apiPath}')">
                                     Xóa
                                 </button>
                             </td>
@@ -96,7 +104,7 @@
 
         <%--    Pagination    --%>
         @template.component.pagination(
-            page = subjectPage,
+            page = teacherPage,
             currentPage = currentPage,
             sortField = sortField,
             sortDirection = sortDirection,

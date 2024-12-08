@@ -20,7 +20,7 @@ public class Teacher extends BaseEntity {
     @Column(name = "FullName", nullable = false, length = 100)
     private String fullName;
 
-    @Column(name = "Email", length = 100)
+    @Column(name = "Email", length = 254)
     private String email;
 
     @Column(name = "PhoneNumber", length = 20, nullable = false, unique = true)
@@ -29,7 +29,7 @@ public class Teacher extends BaseEntity {
     @Column(name = "DateOfBirth")
     private LocalDate dateOfBirth;
 
-    @Enumerated(EnumType.STRING)
+    // @Convert(converter = GenderConverter.class)
     @Column(name = "Gender", length = 10)
     private Gender gender;
 }

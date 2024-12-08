@@ -57,7 +57,7 @@
             </a>
             <ul class="space-y-2">
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="#">Phân công chuyên môn</a>
+                    <a href="/dashboard/teacher-assignments">Phân công chuyên môn</a>
                 </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
                     <a href="#">Thời khóa biểu</a>

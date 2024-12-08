@@ -9,11 +9,6 @@
 @param Content customScripts = null
 <%-- CsrfToken --%>
 
-<%--    Searching    --%>
-@param String keyword = ""
-@param Map<String, String> filters = new java.util.HashMap<String, String>()
-@param String requestPath = null
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -37,7 +32,7 @@
     <div class="flex h-full">
         <!-- Sidebar -->
         <aside
-                class="bg-gray-800 text-white w-64 flex flex-col justify-between p-2 h-screen">
+                class="bg-gray-800 text-white w-64 flex flex-col justify-between p-2 h-screen fixed z-10">
             <div>
                 <!-- Sidebar Top -->
                 <div class="p-2 flex items-center mb-8">
@@ -70,15 +65,20 @@
             </div>
         </aside>
 
-        <div class="flex-1 flex flex-col">
+        <div class="relative flex-1 flex flex-col ml-64 overflow-x-auto">
             <%--    Header    --%>
-            @template.dashboard.header(keyword = keyword, filters = filters, requestPath = requestPath)
+            @template.dashboard.header()
 
             <!-- Main Content -->
-            <main class="flex-1 bg-white p-8 overflow-y-auto">
+            <main class="flex-1 bg-white p-8 overflow-y-auto mt-24">
                 ${content}
             </main>
         </div>
     </div>
+
+    <%--  Custom styles  --%>
+    @if(customScripts != null)
+        ${customScripts}
+    @endif
 </body>
 </html>

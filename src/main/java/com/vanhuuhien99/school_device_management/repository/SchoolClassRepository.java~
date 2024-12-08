@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SchoolClassRepository extends JpaRepository<SchoolClass, Long> {
 
+//    @Query(value = "SELECT * FROM SchoolClasses WHERE ClassName LIKE CONCAT('%', :keyword, '%')", nativeQuery = true)
     Page<SchoolClass> findByClassNameContaining(@Param("keyword") String keyword, Pageable pageable);
 }

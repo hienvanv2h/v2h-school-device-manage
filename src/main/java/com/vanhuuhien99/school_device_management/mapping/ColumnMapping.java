@@ -11,7 +11,6 @@ public class ColumnMapping {
             Subject.class, new LinkedHashMap<>() {{
                 put("subjectId", "#");
                 put("subjectName", "Tên môn học");
-                put("description", "Mô tả");
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }},
@@ -36,7 +35,7 @@ public class ColumnMapping {
                 put("categoryName", "Tên loại thiết bị");
                 put("description", "Mô tả");
                 put("unit", "Đơn vị tính");
-                put("unitPrice", "Đơn giá");
+                put("unitPrice", "Đơn giá nhập (VND)");
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }},

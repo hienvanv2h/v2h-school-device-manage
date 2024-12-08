@@ -1,15 +1,15 @@
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
-@import com.vanhuuhien99.school_device_management.entity.Subject
+@import com.vanhuuhien99.school_device_management.entity.DeviceCategory
 @import org.springframework.data.domain.Page
 
 @param Map<String, String> columnMapping
-@param Page<Subject> subjectPage
+@param Page<DeviceCategory> deviceCategoryPage
 
-@param int currentPage
+@param Integer currentPage
 @param String sortField
 @param String sortDirection
-@param String apiPath = "/dashboard/subjects"
+@param String apiPath = "/dashboard/device-categories"
 
 @template.layout.dashboard(content = @`
     <div class="overflow-x-auto">
@@ -27,7 +27,7 @@
                                     <option value=""></option>
                                 @else
                                     @for(Map.Entry<String, String> entry : columnMapping.entrySet())
-                                        @if(entry.getKey().equalsIgnoreCase("subjectName"))
+                                        @if(entry.getKey().equalsIgnoreCase("categoryName"))
                                             <option value="${entry.getKey()}">
                                                 ${entry.getValue()}
                                             </option>
@@ -45,8 +45,8 @@
         </div>
 
         <div class="mt-[60px]">
-            @if(subjectPage == null || subjectPage.isEmpty())
-                <p class="text-gray-600">Không tìm thấy thông tin môn học</p>
+            @if(deviceCategoryPage == null || deviceCategoryPage.isEmpty())
+                <p class="text-gray-600">Không tìm thấy loại thiết bị</p>
             @else
                 <%--    Table    --%>
                 <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -54,7 +54,7 @@
                     <tr>
                         @for(Map.Entry<String, String> entry: columnMapping.entrySet())
                             <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 bg-gray-100 border-b min-w-[160px]">
-                                <a href="${apiPath}?page=${currentPage}&size=${subjectPage.getSize()}&sort=${entry.getKey()},${sortDirection.equalsIgnoreCase("asc") ? "desc" : "asc"}"
+                                <a href="${apiPath}?page=${currentPage}&size=${deviceCategoryPage.getSize()}&sort=${entry.getKey()},${sortField.equals(entry.getKey()) && sortDirection.equalsIgnoreCase("asc") ? "desc" : "asc"}"
                                    class="hover:underline">
                                     <%--    Tên cột hiển thị    --%>
                                     ${entry.getValue()}
@@ -68,22 +68,25 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @for(var subject: subjectPage.getContent())
+                    @for(var deviceCategory: deviceCategoryPage.getContent())
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${subject.getSubjectId()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${subject.getSubjectName()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${deviceCategory.getCategoryId()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${deviceCategory.getCategoryName()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${deviceCategory.getDescription()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${deviceCategory.getUnit()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${deviceCategory.getUnitPrice()}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(subject.getCreatedAt())}
+                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(deviceCategory.getCreatedAt())}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(subject.getUpdatedAt())}
+                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(deviceCategory.getUpdatedAt())}
                             </td>
                             <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
-                                <a href="${apiPath}/update/${subject.getSubjectId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
+                                <a href="${apiPath}/update/${deviceCategory.getCategoryId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
                                     Cập nhật
                                 </a>
                                 <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
-                                        onclick="confirmDelete(${subject.getSubjectId()}, '${apiPath}')">
+                                        onclick="confirmDelete(${deviceCategory.getCategoryId()}, '${apiPath}')">
                                     Xóa
                                 </button>
                             </td>
@@ -96,7 +99,7 @@
 
         <%--    Pagination    --%>
         @template.component.pagination(
-            page = subjectPage,
+            page = deviceCategoryPage,
             currentPage = currentPage,
             sortField = sortField,
             sortDirection = sortDirection,

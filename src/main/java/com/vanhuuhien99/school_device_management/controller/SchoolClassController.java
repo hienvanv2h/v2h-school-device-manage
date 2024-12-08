@@ -1,19 +1,25 @@
 package com.vanhuuhien99.school_device_management.controller;
 
 import com.vanhuuhien99.school_device_management.entity.SchoolClass;
+import com.vanhuuhien99.school_device_management.formmodel.SchoolClassForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.service.SchoolClassService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dashboard/classes")
@@ -39,17 +45,15 @@ public class SchoolClassController {
         }
         PageRequest pageRequest = PageRequest.of(page - 1, size, sorting);
 
-        Page<SchoolClass> schoolClassPage = null;
-        if (keyword != null && !keyword.isEmpty() || filter != null && !filter.isEmpty()) {
-            // Tìm kiếm khi có keyword hoặc filter
+        Page<SchoolClass> schoolClassPage;
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            schoolClassPage = schoolClassService.getAllSchoolClasses(pageRequest);
+        } else {
             if(filter.equalsIgnoreCase("className")) {
-                schoolClassPage = schoolClassService.searchByClassName(keyword, pageRequest);
+                schoolClassPage = schoolClassService.searchByClassNameContaining(keyword, pageRequest);
             } else {
                 schoolClassPage = schoolClassService.getAllSchoolClasses(pageRequest);
             }
-        } else {
-            // Hiển thị danh sách đầy đủ
-            schoolClassPage = schoolClassService.getAllSchoolClasses(pageRequest);
         }
 
         model.addAttribute("schoolClassPage", schoolClassPage);
@@ -59,5 +63,68 @@ public class SchoolClassController {
         model.addAttribute("sortDirection", sort[1]);
 
         return "dashboard/table/school-class-table";
+    }
+
+    @GetMapping("/create")
+    public String createForm(Model model) {
+        model.addAttribute("type", "create");
+        return "dashboard/form/school-class-form";
+    }
+
+    @PostMapping("/save")
+    public String createNewSchoolClass(
+            @ModelAttribute("schoolClassForm") @Valid SchoolClassForm schoolClassForm,
+            BindingResult result,
+            Model model
+    ) {
+        log.info("Create form data for SchoolClass: {}", schoolClassForm);
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errors", errorMessages);
+            return "dashboard/form/school-class-form";
+        }
+        schoolClassService.createNewSchoolClass(schoolClassForm);
+        return "redirect:/dashboard/classes";
+    }
+
+    @GetMapping("/update/{classId}")
+    public String updateForm(@PathVariable("classId") Long classId, Model model) {
+        var schoolClass = schoolClassService.getSchoolClassById(classId);
+        var schoolClassForm = new SchoolClassForm();
+        schoolClassForm.setClassName(schoolClass.getClassName());
+
+        model.addAttribute("schoolClassForm", schoolClassForm);
+        model.addAttribute("type", "update");
+        model.addAttribute("id", classId);
+        return "dashboard/form/school-class-form";
+    }
+
+    @PutMapping("/save/{classId}")
+    public String updateSchoolClass(
+            @PathVariable("classId") Long classId,
+            @ModelAttribute("schoolClassForm") @Valid SchoolClassForm schoolClassForm,
+            BindingResult result,
+            Model model
+    ) {
+        log.info("Update form data for SchoolClass: {}", schoolClassForm);
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errors", errorMessages);
+            return "dashboard/form/school-class-form";
+        }
+        schoolClassService.updateSchoolClass(schoolClassForm, classId);
+        return "redirect:/dashboard/classes";
+    }
+
+    @DeleteMapping("/delete/{classId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteSchoolClass(@PathVariable("classId") Long classId) {
+        log.info("Delete SchoolClass with id: {}", classId);
+        schoolClassService.deleteSchoolClass(classId);
+        return ResponseEntity.ok("Xóa thành công!");
     }
 }
