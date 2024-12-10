@@ -5,7 +5,7 @@
 @param String apiPath
 @param boolean hasSort = false
 
-@if(page != null && currentPage != null && page.getTotalPages() > 1 && apiPath != null && !apiPath.isEmpty())
+@if(page != null && currentPage != null && page.getTotalPages() > 1 && currentPage > 0 && apiPath != null && !apiPath.isEmpty())
     <div class="mt-8 py-2 flex justify-center">
         <nav class="inline-flex rounded-md shadow-xl">
             @if(page.hasPrevious())

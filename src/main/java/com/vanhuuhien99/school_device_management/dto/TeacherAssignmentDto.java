@@ -1,11 +1,11 @@
 package com.vanhuuhien99.school_device_management.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
-@Builder
 @AllArgsConstructor
 public class TeacherAssignmentDto {
 
@@ -15,4 +15,6 @@ public class TeacherAssignmentDto {
     private String subjectName;
     private String semester;
     private String description;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

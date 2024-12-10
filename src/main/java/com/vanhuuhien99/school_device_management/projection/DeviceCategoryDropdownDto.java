@@ -1,4 +1,4 @@
-package com.vanhuuhien99.school_device_management.dto;
+package com.vanhuuhien99.school_device_management.projection;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

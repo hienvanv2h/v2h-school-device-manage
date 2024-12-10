@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     boolean existsByPhoneNumber(String phoneNumber);
@@ -14,4 +16,6 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Page<Teacher> findByEmailContaining(String keyword, Pageable pageable);
 
     Page<Teacher> findByPhoneNumberContaining(String keyword, Pageable pageable);
+
+    <T> List<T> findBy(Class<T> classType);
 }

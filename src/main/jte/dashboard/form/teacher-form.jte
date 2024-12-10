@@ -82,7 +82,7 @@
                     </select>
                 </div>
             </div>
-            <div class="flex justify-end">
+            <div class="flex justify-end mt-4">
                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                     ${type == null || type.equals("create") ? "Thêm" : "Cập nhật"}
                 </button>

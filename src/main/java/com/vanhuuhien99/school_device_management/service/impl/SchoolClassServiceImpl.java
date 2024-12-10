@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SchoolClassServiceImpl implements SchoolClassService {
@@ -20,6 +22,11 @@ public class SchoolClassServiceImpl implements SchoolClassService {
     @Override
     public Page<SchoolClass> getAllSchoolClasses(Pageable pageable) {
         return schoolClassRepository.findAll(pageable);
+    }
+
+    @Override
+    public <T> List<T> getAll(Class<T> classType) {
+        return schoolClassRepository.findBy(classType);
     }
 
     @Override

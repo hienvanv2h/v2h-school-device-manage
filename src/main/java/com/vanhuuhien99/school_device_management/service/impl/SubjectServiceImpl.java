@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SubjectServiceImpl implements SubjectService {
@@ -19,6 +21,11 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Page<Subject> getAllSubjects(Pageable pageable) {
         return subjectRepository.findAll(pageable);
+    }
+
+    @Override
+    public <T> List<T> getAll(Class<T> classType) {
+        return subjectRepository.findBy(classType);
     }
 
     @Override

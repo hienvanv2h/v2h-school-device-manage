@@ -4,13 +4,13 @@ import com.vanhuuhien99.school_device_management.entity.DeviceCategory;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceCategoryForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.service.DeviceCategoryService;
+import com.vanhuuhien99.school_device_management.utils.AppHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,12 +39,7 @@ public class DeviceCategoryController {
             @RequestParam(required = false) String filter,
             Model model
     ) {
-        Sort sorting = Sort.by(sort[0]).ascending();
-        if(sort[1].equalsIgnoreCase("desc")) {
-            sorting = sorting.descending();
-        }
-        PageRequest pageRequest = PageRequest.of(page - 1, size, sorting);
-
+        PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
         Page<DeviceCategory> deviceCategoryPage;
         if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
             deviceCategoryPage = deviceCategoryService.getAllDeviceCategories(pageRequest);

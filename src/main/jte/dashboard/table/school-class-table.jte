@@ -12,8 +12,8 @@
 @param String apiPath = "/dashboard/classes"
 
 @template.layout.dashboard(content = @`
-    <div class="overflow-x-auto">
-        <div class="sticky top-0 left-0 right-0 mb-4 h-[50px]">
+    <div class="relative">
+        <div class="sticky top-0 left-0 right-0 mb-4 bg-gray-800 rounded-lg p-8">
             <div class="flex justify-between items-center gap-2">
                 <form id="filterForm" action="${apiPath}" method="GET">
                     <div class="flex items-center">
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="mt-[60px]">
+        <div class="mt-[60px] overflow-x-auto">
             @if(schoolClassPage == null || schoolClassPage.isEmpty())
                 <p class="text-gray-600">Không tìm thấy thông tin lớp học</p>
             @else

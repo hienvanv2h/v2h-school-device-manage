@@ -1,0 +1,153 @@
+package com.vanhuuhien99.school_device_management.controller;
+
+import com.vanhuuhien99.school_device_management.formmodel.ScheduleForm;
+import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
+import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
+import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
+import com.vanhuuhien99.school_device_management.service.ScheduleService;
+import com.vanhuuhien99.school_device_management.service.TeacherAssignmentService;
+import com.vanhuuhien99.school_device_management.utils.AppHelper;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Controller
+@RequestMapping("/dashboard/schedules")
+@RequiredArgsConstructor
+public class ScheduleController {
+
+    private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
+
+    private final ScheduleService scheduleService;
+
+    private final TeacherAssignmentService teacherAssignmentService;
+
+    @GetMapping
+    public String getAllSchedules(
+            @RequestParam(defaultValue = "1" ) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "scheduleId,asc") String[] sort,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String filter,
+            Model model
+    ) {
+        PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
+        Page<ScheduleProjection> schedulePage;
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            schedulePage = scheduleService.getAllSchedules(pageRequest);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.contains("teacher.fullName")) {
+                schedulePage = scheduleService.searchSchedulesByTeacherNameContaining(keyword, pageRequest);
+            } else if(filter.contains("schoolClass.className")) {
+                schedulePage = scheduleService.searchSchedulesByClassNameContaining(keyword, pageRequest);
+            } else if(filter.contains("subject.subjectName")) {
+                schedulePage = scheduleService.searchSchedulesBySubjectNameContaining(keyword, pageRequest);
+            } else {
+                schedulePage = scheduleService.getAllSchedules(pageRequest);
+            }
+        }
+
+        model.addAttribute("schedulePage", schedulePage);
+        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(ScheduleProjection.class));
+        model.addAttribute("currentPage", page);
+        model.addAttribute("sortField", sort[0]);
+        model.addAttribute("sortDirection", sort[1]);
+        log.info("Loaded schedule table (page: {}, size: {}, sort: {}, keyword: {}, filter: {})", page, size, sort, keyword, filter);
+
+        return "dashboard/table/schedule-table";
+    }
+
+    @GetMapping("/create")
+    public String createScheduleForm(Model model) {
+        model.addAttribute("type", "create");
+        // Column mapping for TeacherAssignment table
+        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+        return "dashboard/form/schedule-form";
+    }
+
+    @PostMapping("/save")
+    public String createNewSchedule(
+            @ModelAttribute("scheduleForm") @Valid ScheduleForm scheduleForm,
+            BindingResult result,
+            Model model
+    ) {
+        log.info("Create form data for Schedule: {}", scheduleForm);
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errors", errorMessages);
+            // Column mapping for TeacherAssignment table
+            model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+            log.info("Validation errors in create schedule form");
+            return "dashboard/form/schedule-form";
+        }
+        scheduleService.createNewSchedule(scheduleForm);
+        return "redirect:/dashboard/schedules";
+    }
+
+    @GetMapping("/update/{scheduleId}")
+    public String updateScheduleForm(@PathVariable("scheduleId") Long scheduleId, Model model) {
+        var scheduleProjection = scheduleService.getScheduleById(scheduleId);
+        // Fill data to form
+        var scheduleForm = ScheduleForm.builder()
+                .teacherAssignmentId(scheduleProjection.getAssignmentId())
+                .dayOfWeek(scheduleProjection.getDayOfWeek())
+                .scheduleDate(scheduleProjection.getScheduleDate())
+                .startTime(scheduleProjection.getStartTime())
+                .endTime(scheduleProjection.getEndTime())
+                .location(scheduleProjection.getLocation())
+                .build();
+
+        model.addAttribute("type", "update");
+        model.addAttribute("id",scheduleId);
+        model.addAttribute("scheduleForm", scheduleForm);
+        // Column mapping for TeacherAssignment table
+        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+
+        return "dashboard/form/schedule-form";
+    }
+
+    @PutMapping("/save/{scheduleId}")
+    public String updateSchedule(
+            @PathVariable("scheduleId") Long scheduleId,
+            @ModelAttribute("scheduleForm") @Valid ScheduleForm scheduleForm,
+            BindingResult result,
+            Model model
+    ) {
+        log.info("Update form data for Schedule: {}", scheduleForm);
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errors", errorMessages);
+            // Column mapping for TeacherAssignment table
+            model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+            log.info("Validation errors in update schedule form");
+            return "dashboard/form/schedule-form";
+        }
+        scheduleService.updateSchedule(scheduleForm, scheduleId);
+        return "redirect:/dashboard/schedules";
+    }
+
+    @DeleteMapping("/delete/{scheduleId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteSchedule(@PathVariable("scheduleId") Long scheduleId) {
+        log.info("Delete Schedule with id: {}", scheduleId);
+        scheduleService.deleteSchedule(scheduleId);
+        return ResponseEntity.ok("Xóa thành công!");
+    }
+}
