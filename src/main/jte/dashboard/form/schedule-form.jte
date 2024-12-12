@@ -5,24 +5,19 @@
 @param Long id
 @param com.vanhuuhien99.school_device_management.formmodel.ScheduleForm scheduleForm
 
-@param Map<String, String> columnMapping
-@param Integer currentPage = 1
-@param Integer size = 10
-@param String sortField = "updatedAt"
-@param String sortDirection = "desc"
-@param String apiPath = "/dashboard/teacher-assignments"
+@param Map<String, String> TA_COLUMN_MAPPING
 
 @param String[] weekDays = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 
 @template.layout.dashboard(content = @`
     <div class="flex flex-col xl:flex-row justify-between items-start gap-2 max-w-7xl mx-auto h-screen mt-8">
-        <div class="flex flex-col justify-between max-w-3xl mx-auto max-h-[80%] h-full">
+        <div class="flex flex-col justify-between max-w-3xl max-h-[80%] h-full">
             <div class="overflow-auto p-2 flex-1 custom-scrollbar">
                 <%--    Teacher Assignment list    --%>
                 <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg shadow-md h-full">
                     <thead>
                         <tr>
-                            @for(Map.Entry<String, String> entry: columnMapping.entrySet())
+                            @for(Map.Entry<String, String> entry: TA_COLUMN_MAPPING.entrySet())
                                 <th id="${entry.getKey() + "Header"}" class="px-6 py-3 text-left text-sm font-medium text-gray-700 bg-gray-100 border-b min-w-[160px]">
                                     ${entry.getValue()}
                                 </th>
@@ -36,7 +31,7 @@
                 </table>
 
             </div>
-            <nav id="pagination" class="mt-8 py-2 flex justify-center">
+            <nav id="teacherAssignmentPagination" class="mt-8 py-2 flex justify-center">
                 <ul class="inline-flex rounded-md">
                     <%--    Phân trang được rendered bởi JavaScript    --%>
                 </ul>
@@ -47,7 +42,7 @@
             <form name="scheduleForm"
                   action="/dashboard/schedules/save${type == null || type.equals("create") ? "" : "/" + id}"
                   method="POST"
-                  class="bg-white p-6 rounded-lg shadow-md">
+                  class="bg-slate-100 p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4">Tạo thời khóa biểu</h2>
                 @if(errors != null)
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -146,10 +141,12 @@ customStyles = @`
     <link rel="stylesheet" type="text/css" href="/css/custom-scrollbar.css">
 `,
 customScripts = @`
-    <%--    Script lấy dữ liệu cho bảng    --%>
-    <script src="/js/fetch-table-data.js"></script>
-    <%--    Script gắn sự kiện chọn dòng từ bảng và gán giá trị cho input    --%>
+    <%--    Script định nghĩa hàm lấy dữ liệu bảng (dùng chung)    --%>
+    <script src="/js/table-manager-declaration.js"></script>
+    <%--    Script gắn sự kiện chọn dòng từ bảng và ánh xạ giá trị cho input    --%>
     <script src="/js/table-form-binding.js"></script>
     <%--    Script xử lý dropdown    --%>
     <script src="/js/dropdown.js"></script>
+    <%--    Script tạo tablemananager và ánh xạ giá trị table-form (TeacherAssignment)   --%>
+    <script src="/js/tables/teacherAssignmentTable.js"></script>
 `)

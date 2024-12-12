@@ -63,6 +63,18 @@ public class DeviceController {
         return "dashboard/table/device-table";
     }
 
+    @GetMapping("/api/data")
+    @ResponseBody
+    public ResponseEntity<Page<Device>> getDeviceTableData(
+            @RequestParam(defaultValue = "1" ) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "updatedAt,desc") String[] sort
+    ) {
+        PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
+        Page<Device> devicePage = deviceService.getAllDevices(pageRequest);
+        return ResponseEntity.ok(devicePage);
+    }
+
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("deviceCategoryDropdown", deviceCategoryService.getAllDeviceCategoriesForDropdown());

@@ -59,19 +59,16 @@ public class TeacherAssignmentController {
         return "dashboard/table/teacher-assignment-table";
     }
 
-    // Endpoint chỉ trả về dữ liệu bảng
+    // Endpoint trả về dữ liệu trang
     @GetMapping("/api/data")
     @ResponseBody
     public ResponseEntity<Page<TeacherAssignmentProjection>> getTeacherAssignmentTableData(
             @RequestParam(defaultValue = "1" ) int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "updatedAt,desc") String[] sort,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String filter,
-            Model model
+            @RequestParam(defaultValue = "updatedAt,desc") String[] sort
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        var teacherAssignmentList = teacherAssignmentService.getAllTeacherAssignments(pageRequest);
+        Page<TeacherAssignmentProjection> teacherAssignmentList = teacherAssignmentService.getAllTeacherAssignments(pageRequest);
         return ResponseEntity.ok(teacherAssignmentList);
     }
 

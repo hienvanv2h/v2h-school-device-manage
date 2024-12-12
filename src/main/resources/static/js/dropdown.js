@@ -7,6 +7,8 @@ dropdowns.forEach((dropdown) => {
   const input = dropdown.querySelector(".dropdown-input");
   const icon = dropdown.querySelector(".dropdown-icon");
 
+  if (button == null || menu == null) return;
+
   // Toggle dropdown visibility
   button.addEventListener("click", () => {
     menu.classList.toggle("hidden");
@@ -22,6 +24,9 @@ dropdowns.forEach((dropdown) => {
 
       // Update selected text and hidden input
       selected.textContent = text;
+
+      // Update input if it exists
+      if (input == null) return;
       input.value = value;
 
       // Close dropdown

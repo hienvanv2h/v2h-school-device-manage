@@ -74,7 +74,7 @@ public class ScheduleController {
     public String createScheduleForm(Model model) {
         model.addAttribute("type", "create");
         // Column mapping for TeacherAssignment table
-        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
         return "dashboard/form/schedule-form";
     }
 
@@ -91,7 +91,7 @@ public class ScheduleController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             // Column mapping for TeacherAssignment table
-            model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
             log.info("Validation errors in create schedule form");
             return "dashboard/form/schedule-form";
         }
@@ -116,7 +116,7 @@ public class ScheduleController {
         model.addAttribute("id",scheduleId);
         model.addAttribute("scheduleForm", scheduleForm);
         // Column mapping for TeacherAssignment table
-        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
 
         return "dashboard/form/schedule-form";
     }
@@ -135,7 +135,7 @@ public class ScheduleController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             // Column mapping for TeacherAssignment table
-            model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
             log.info("Validation errors in update schedule form");
             return "dashboard/form/schedule-form";
         }

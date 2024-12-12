@@ -15,7 +15,7 @@
     <div class="relative">
         <div class="sticky top-0 left-0 right-0 mb-4 bg-gray-800 rounded-lg p-8">
             <div class="flex justify-between items-center gap-2">
-                <form id="filterForm" action="${apiPath}" method="GET" class="sticky top-0 h-[50px]">
+                <form id="filterForm" action="${apiPath}" method="GET">
                     <div class="flex gap-2 items-center h-full">
                         <input type="text" name="keyword" placeholder="Nhập từ khóa" class="p-2 border border-gray-300 rounded-md h-10">
                         <!-- Dropdown chọn bộ lọc -->

@@ -1,6 +1,7 @@
 package com.vanhuuhien99.school_device_management.mapping;
 
 import com.vanhuuhien99.school_device_management.entity.*;
+import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationProjection;
 import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
 import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
 
@@ -67,10 +68,19 @@ public class ColumnMapping {
                 put("startTime", "Bắt đầu vào");
                 put("endTime", "Kết thúc vào");
                 put("location", "Địa điểm");
-//                put("teacherAssignment.assignmentId", "Môn học");
-                put("teacherAssignment.teacher.fullName", "Giáo viên");
-                put("teacherAssignment.schoolClass.className", "Lớp");
-                put("teacherAssignment.subject.subjectName", "Môn học");
+                put("teacherAssignment.teacher.fullName", "Giáo viên");     // Schedule.teacherAssignment.teacher.fullName
+                put("teacherAssignment.schoolClass.className", "Lớp");      // Schedule.teacherAssignment.schoolClass.className
+                put("teacherAssignment.subject.subjectName", "Môn học");     // Schedule.teacherAssignment.subject.subjectName
+                put("createdAt", "Ngày tạo");
+                put("updatedAt", "Ngày cập nhật");
+            }},
+            DeviceRegistrationProjection.class, new LinkedHashMap<>() {{
+                put("registrationId", "#");
+                put("device.deviceName", "Tên thiết bị");       // DeviceRegistration.device.deviceName
+                put("teacherAssignment.teacher.fullName", "Giáo viên");     // DeviceRegistration.teacherAssignment.teacher.fullName
+                put("description", "Ghi chú");
+                put("registrationStatus", "Trạng thái");
+                put("approvalStatus", "Trạng thái phê duyệt");
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }}

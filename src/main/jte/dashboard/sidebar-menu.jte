@@ -12,8 +12,7 @@
             </a>
         </li>
         <li>
-            <a href="#"
-               class="flex items-center p-2 hover:bg-gray-700 rounded transition duration-200">
+            <span class="flex items-center p-2 rounded transition duration-200">
                 <svg class="w-5 h-5 mr-3" fill="currentColor"
                      viewBox="0 0 20 20">
                     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
@@ -22,7 +21,7 @@
                           clip-rule="evenodd" />
                 </svg>
                 Danh mục
-            </a>
+            </span>
             <ul class="space-y-2">
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
                     <a href="/dashboard/subjects">DM môn học</a>
@@ -42,19 +41,17 @@
             </ul>
         </li>
         <li>
-            <a href="#"
-               class="flex items-center p-2 hover:bg-gray-700 rounded transition duration-200">
+            <span class="flex items-center p-2 rounded transition duration-200">
                 <svg class="w-5 h-5 mr-3" viewBox="0 0 20 20">
                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <g fill="currentColor" fill-rule="nonzero">
                             <path d="M10.7475415,2 L13.2530327,2 C14.4438967,2 15.4186777,2.92516159 15.4978419,4.09595119 L15.5030327,4.25 L15.503,4.5 L16.7453641,4.5 C18.5402896,4.5 19.9953641,5.95507456 19.9953641,7.75 L19.9953641,19.754591 C19.9953641,20.9972317 18.9880048,22.004591 17.7453641,22.004591 L6.25,22.004591 C5.00735931,22.004591 4,20.9972317 4,19.754591 L4,7.75 C4,5.95507456 5.45507456,4.5 7.25,4.5 L8.497,4.5 L8.49754146,4.25 C8.49754146,3.05913601 9.42270305,2.08435508 10.5934926,2.00519081 L10.7475415,2 Z M15.2505828,13.5 L8.75227993,13.5 C7.83410653,13.5 7.08108759,14.2071103 7.00808113,15.1064728 L7.00227993,15.25 L7.00227993,17.2470921 C7.00227993,18.1652655 7.7093902,18.9182844 8.60875272,18.9912909 L8.75227993,18.9970921 L15.2505828,18.9970921 C16.1687562,18.9970921 16.9217752,18.2899818 16.9947816,17.3906193 L17.0005828,17.2470921 L17.0005828,15.25 C17.0005828,14.3318266 16.2934726,13.5788077 15.39411,13.5058012 L15.2505828,13.5 Z M8.75227993,15 L15.2505828,15 C15.3689296,15 15.4680697,15.0822334 15.4939802,15.1926773 L15.5005828,15.25 L15.5005828,17.2470921 C15.5005828,17.3654388 15.4183494,17.4645789 15.3079055,17.4904894 L15.2505828,17.4970921 L8.75227993,17.4970921 C8.6339332,17.4970921 8.53479311,17.4148587 8.50888261,17.3044148 L8.50227993,17.2470921 L8.50227993,15.25 C8.50227993,15.1316533 8.58451334,15.0325132 8.69495722,15.0066027 L8.75227993,15 L15.2505828,15 L8.75227993,15 Z M13.25,9.5 L10.75,9.5 L10.6482294,9.50684662 C10.2821539,9.55650904 10,9.87030423 10,10.25 C10,10.6296958 10.2821539,10.943491 10.6482294,10.9931534 L10.75,11 L13.25,11 L13.3517706,10.9931534 C13.7178461,10.943491 14,10.6296958 14,10.25 C14,9.87030423 13.7178461,9.55650904 13.3517706,9.50684662 L13.25,9.5 Z M13.2530327,3.5 L10.7475415,3.5 C10.3678457,3.5 10.0540505,3.78215388 10.0043881,4.14822944 L9.99754146,4.25 L9.997,4.5 L14.0030327,4.5 L14.0030327,4.25 C14.0030327,3.87030423 13.7208789,3.55650904 13.3548033,3.50684662 L13.2530327,3.5 Z">
-
                             </path>
                         </g>
                     </g>
                 </svg>
                 Phân công giảng dạy
-            </a>
+            </span>
             <ul class="space-y-2">
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
                     <a href="/dashboard/teacher-assignments">Phân công chuyên môn</a>
@@ -65,8 +62,7 @@
             </ul>
         </li>
         <li>
-            <a href="#"
-               class="flex items-center p-2 hover:bg-gray-700 rounded transition duration-200">
+            <span class="flex items-center p-2 rounded transition duration-200">
                 <svg class="w-5 h-5 mr-3" fill="currentColor"
                      viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
@@ -74,7 +70,27 @@
                           clip-rule="evenodd" />
                 </svg>
                 Đăng ký mượn thiết bị
-            </a>
+            </span>
+            <ul class="space-y-2">
+                <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
+                    <a href="/dashboard/device-registrations/register">Tạo đơn đăng ký</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <span class="flex items-center p-2 rounded transition duration-200">
+                <svg class="w-5 h-5 mr-3" fill="currentColor"
+                     viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22ZM14.4743 8.419C14.7952 8.68094 14.8429 9.15341 14.581 9.47428L8.86671 16.4743C8.72427 16.6488 8.51096 16.75 8.28571 16.75C8.06047 16.75 7.84716 16.6488 7.70472 16.4743L5.419 13.6743C5.15707 13.3534 5.20484 12.8809 5.52572 12.619C5.84659 12.3571 6.31906 12.4048 6.581 12.7257L8.28571 14.814L13.419 8.52572C13.6809 8.20484 14.1534 8.15707 14.4743 8.419ZM18.4743 8.41901C18.7952 8.68095 18.8429 9.15342 18.581 9.47429L12.8665 16.4743C12.7152 16.6596 12.4846 16.7617 12.2457 16.7489C12.0068 16.7362 11.7883 16.6103 11.6575 16.4099L11.3719 15.9724C11.1455 15.6256 11.2432 15.1608 11.5901 14.9344C11.7939 14.8014 12.0384 14.7803 12.2514 14.8558L17.419 8.52571C17.681 8.20484 18.1534 8.15707 18.4743 8.41901Z"/>
+                </svg>
+                Phê duyệt đơn đăng ký
+            </span>
+            <ul class="space-y-2">
+                <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
+                    <a href="/dashboard/device-registrations">Danh sách đơn đăng ký</a>
+                </li>
+            </ul>
         </li>
         <li>
             <a href="#"
@@ -90,10 +106,10 @@
             </a>
             <ul class="space-y-2">
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="#">BC số lượng mượn TBDH</a>
+                    <a href="/dashboard/reports">BC số lượng mượn TBDH</a>
                 </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="#">BC tình trạng TBDH</a>
+                    <a href="/dashboard/reports">BC tình trạng TBDH</a>
                 </li>
             </ul>
         </li>
