@@ -1,13 +1,16 @@
 package com.vanhuuhien99.school_device_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "DeviceCategoriesSubjects")
+@Table(name = "DeviceCategorySubjects")
 public class DeviceCategorySubject extends BaseEntity {
 
     // Composite key
@@ -17,11 +20,13 @@ public class DeviceCategorySubject extends BaseEntity {
     @ManyToOne
     @MapsId("categoryId")
     @JoinColumn(name = "CategoryID")
+    @JsonManagedReference
     private DeviceCategory deviceCategory;
 
     @ManyToOne
     @MapsId("subjectId")
     @JoinColumn(name = "SubjectID")
+    @JsonManagedReference
     private Subject subject;
 
     public DeviceCategorySubject(DeviceCategory deviceCategory, Subject subject) {

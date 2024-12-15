@@ -19,6 +19,20 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
 
     @Override
+    public Page<Subject> getFilteredSubjects(String keyword, String filter, Pageable pageable) {
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            return getAllSubjects(pageable);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.equalsIgnoreCase("subjectName")) {
+                return searchBySubjectNameContaining(keyword, pageable);
+            } else {
+                return getAllSubjects(pageable);
+            }
+        }
+    }
+
+    @Override
     public Page<Subject> getAllSubjects(Pageable pageable) {
         return subjectRepository.findAll(pageable);
     }

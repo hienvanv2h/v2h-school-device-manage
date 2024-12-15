@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface TeacherService {
 
+    Page<Teacher> getFilteredTeachers(String keyword, String filter, Pageable pageable);
+
     Page<Teacher> getAllTeachers(Pageable pageable);
 
     <T> List<T> getAll(Class<T> classType);

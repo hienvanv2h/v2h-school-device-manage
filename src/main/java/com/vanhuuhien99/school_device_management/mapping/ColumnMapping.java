@@ -42,6 +42,13 @@ public class ColumnMapping {
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }},
+            DeviceCategorySubject.class, new LinkedHashMap<>() {{
+                put("id", "#");
+                put("deviceCategory.categoryName", "Loại thiết bị");      // DeviceCategorySubject.deviceCategory.categoryName
+                put("subject.subjectName", "Môn học");                   // DeviceCategorySubject.subject.subjectName
+                put("createdAt", "Ngày tạo");
+                put("updatedAt", "Ngày cập nhật");
+            }},
             Device.class, new LinkedHashMap<>() {{
                 put("deviceId", "#");
                 put("deviceName", "Tên thiết bị");

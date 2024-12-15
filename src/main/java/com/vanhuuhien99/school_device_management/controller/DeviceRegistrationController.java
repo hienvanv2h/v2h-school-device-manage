@@ -30,6 +30,9 @@ public class DeviceRegistrationController {
 
     private static final Logger log = LoggerFactory.getLogger(DeviceRegistrationController.class);
 
+    private static final String DEVICE_REGISTRATION_TABLE_TEMPLATE = "dashboard/table/device-registration-table";
+    private static final String DEVICE_REGISTRATION_FORM_TEMPLATE = "dashboard/form/device-registration-form";
+
     private final DeviceRegistrationService deviceRegistrationService;
 
     @GetMapping
@@ -53,7 +56,7 @@ public class DeviceRegistrationController {
         model.addAttribute("sortField", sort[0]);
         model.addAttribute("sortDirection", sort[1]);
 
-        return "dashboard/table/device-registration-table";
+        return DEVICE_REGISTRATION_TABLE_TEMPLATE;
     }
 
     // Create registration form
@@ -61,7 +64,7 @@ public class DeviceRegistrationController {
     public String deviceRegisterForm(Model model) {
         model.addAttribute("type", "create");
         populateFormModelAttributes(model);
-        return "dashboard/form/device-registration-form";
+        return DEVICE_REGISTRATION_FORM_TEMPLATE;
     }
 
     @PostMapping("/save")
@@ -78,7 +81,7 @@ public class DeviceRegistrationController {
             model.addAttribute("errors", errorMessages);
             populateFormModelAttributes(model);
             log.info("Validation errors in create device registration form");
-            return "dashboard/form/device-registration-form";
+            return DEVICE_REGISTRATION_FORM_TEMPLATE;
         }
         deviceRegistrationService.createNewDeviceRegistration(deviceRegistrationForm);
         return "redirect:/dashboard";
@@ -101,7 +104,7 @@ public class DeviceRegistrationController {
         model.addAttribute("deviceRegistrationForm", deviceRegistrationForm);
         populateFormModelAttributes(model);
 
-        return "dashboard/form/device-registration-form";
+        return DEVICE_REGISTRATION_FORM_TEMPLATE;
     }
 
     @PutMapping("/save/{registrationId}")
@@ -119,7 +122,7 @@ public class DeviceRegistrationController {
             model.addAttribute("errors", errorMessages);
             populateFormModelAttributes(model);
             log.info("Validation errors in update device registration form");
-            return "dashboard/form/device-registration-form";
+            return DEVICE_REGISTRATION_FORM_TEMPLATE;
         }
         deviceRegistrationService.updateDeviceRegistration(deviceRegistrationForm, registrationId);
         return "redirect:/dashboard/device-registrations";

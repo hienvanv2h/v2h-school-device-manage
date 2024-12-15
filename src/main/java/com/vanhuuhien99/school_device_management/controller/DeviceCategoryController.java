@@ -28,6 +28,9 @@ public class DeviceCategoryController {
 
     private static final Logger log = LoggerFactory.getLogger(DeviceCategoryController.class);
 
+    private static final String DEVICE_CATEGORY_TABLE_TEMPLATE = "dashboard/table/device-category-table";
+    private static final String DEVICE_CATEGORY_FORM_TEMPLATE = "dashboard/form/device-category-form";
+
     private final DeviceCategoryService deviceCategoryService;
 
     @GetMapping
@@ -40,16 +43,7 @@ public class DeviceCategoryController {
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<DeviceCategory> deviceCategoryPage;
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            deviceCategoryPage = deviceCategoryService.getAllDeviceCategories(pageRequest);
-        } else {
-            if(filter.equalsIgnoreCase("categoryName")) {
-                deviceCategoryPage = deviceCategoryService.searchByCategoryNameContaining(keyword, pageRequest);
-            } else {
-                deviceCategoryPage = deviceCategoryService.getAllDeviceCategories(pageRequest);
-            }
-        }
+        Page<DeviceCategory> deviceCategoryPage = deviceCategoryService.getFilteredDeviceCategories(keyword, filter, pageRequest);
 
         model.addAttribute("deviceCategoryPage", deviceCategoryPage);
         model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(DeviceCategory.class));
@@ -57,13 +51,13 @@ public class DeviceCategoryController {
         model.addAttribute("sortField", sort[0]);
         model.addAttribute("sortDirection", sort[1]);
 
-        return "dashboard/table/device-category-table";
+        return DEVICE_CATEGORY_TABLE_TEMPLATE;
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("type", "create");
-        return "dashboard/form/device-category-form";
+        return DEVICE_CATEGORY_FORM_TEMPLATE;
     }
 
     @PostMapping("/save")
@@ -79,7 +73,7 @@ public class DeviceCategoryController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in create device category form");
-            return "dashboard/form/device-category-form";
+            return DEVICE_CATEGORY_FORM_TEMPLATE;
         }
         deviceCategoryService.createNewDeviceCategory(deviceCategoryForm);
         return "redirect:/dashboard/device-categories";
@@ -99,7 +93,7 @@ public class DeviceCategoryController {
         model.addAttribute("deviceCategoryForm", deviceCategoryForm);
         model.addAttribute("type", "update");
         model.addAttribute("id", categoryId);
-        return "dashboard/form/device-category-form";
+        return DEVICE_CATEGORY_FORM_TEMPLATE;
     }
 
     @PutMapping("/save/{categoryId}")
@@ -116,7 +110,7 @@ public class DeviceCategoryController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in update device category form");
-            return "dashboard/form/device-category-form";
+            return DEVICE_CATEGORY_FORM_TEMPLATE;
         }
         deviceCategoryService.updateDeviceCategory(deviceCategoryForm, categoryId);
         return "redirect:/dashboard/device-categories";

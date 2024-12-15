@@ -1,15 +1,18 @@
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
-@import com.vanhuuhien99.school_device_management.entity.Device
+@import com.vanhuuhien99.school_device_management.entity.DeviceCategorySubject
 @import org.springframework.data.domain.Page
 
 @param Map<String, String> columnMapping
-@param Page<Device> devicePage
+@param Page<DeviceCategorySubject> deviceCategorySubjectPage
 
 @param Integer currentPage
 @param String sortField
 @param String sortDirection
-@param String apiPath = "/dashboard/devices"
+@param String apiPath = "/dashboard/device-category-subject"
+
+<%--    Lưu tên tham số truyền vào URL xóa bn ghi DeviceCategorySubject (xóa sử dụng cặp khóa)    --%>
+@param String[] mapsIdNames = new String[]{"categoryId", "subjectId"}
 
 @template.layout.dashboard(content = @`
     <div class="relative">
@@ -27,28 +30,26 @@
                                     <option value=""></option>
                                 @else
                                     @for(Map.Entry<String, String> entry : columnMapping.entrySet())
-                                        @if(entry.getKey().equalsIgnoreCase("deviceName"))
+                                        @if(entry.getKey().contains("categoryName") || entry.getKey().contains("subjectName"))
                                             <option value="${entry.getKey()}">
                                                 ${entry.getValue()}
                                             </option>
                                         @endif
                                     @endfor
                                 @endif
-                                <%-- Bổ sung lọc theo môn học --%>
-                                <option value="subjectName">Môn học</option>
                             </select>
                         </div>
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 h-10">Tìm kiếm</button>
                     </div>
                 </form>
 
-                <a href="${apiPath}/create" class="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Thêm mới</a>
+                <a href="${apiPath}/create" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Thêm mới</a>
             </div>
         </div>
 
         <div class="mt-[60px] overflow-x-auto">
-            @if(devicePage == null || devicePage.isEmpty())
-                <p class="text-gray-600">Không tìm thấy thiết bị</p>
+            @if(deviceCategorySubjectPage == null || deviceCategorySubjectPage.isEmpty())
+                <p class="text-gray-600">Không tìm thấy thông tin ánh xạ loại thiết bị - môn học</p>
             @else
                 <%--    Table    --%>
                 <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -56,7 +57,7 @@
                     <tr>
                         @for(Map.Entry<String, String> entry: columnMapping.entrySet())
                             <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 bg-gray-100 border-b min-w-[160px]">
-                                <a href="${apiPath}?page=${currentPage}&size=${devicePage.getSize()}&sort=${entry.getKey()},${sortField.equals(entry.getKey()) && sortDirection.equalsIgnoreCase("asc") ? "desc" : "asc"}"
+                                <a href="${apiPath}?page=${currentPage}&size=${deviceCategorySubjectPage.getSize()}&sort=${entry.getKey()},${sortField.equals(entry.getKey()) && sortDirection.equalsIgnoreCase("asc") ? "desc" : "asc"}"
                                    class="hover:underline">
                                     <%--    Tên cột hiển thị    --%>
                                     ${entry.getValue()}
@@ -70,27 +71,23 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @for(var device: devicePage.getContent())
+                    @for(var dcs: deviceCategorySubjectPage.getContent())
+                        <%--    Lưu ý: Thứ tự cột cần khớp tương ứng với LinkedHashMap trong ColumnMapping    --%>
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDeviceId()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDeviceName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
-                                ${device.getDeviceCategory() != null ? device.getDeviceCategory().getCategoryName() : ""}
+                                ${String.format("(%d,%d)", dcs.getId().getCategoryId(), dcs.getId().getSubjectId())}
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDescription()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getStatus()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${dcs.getDeviceCategory().getCategoryName()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${dcs.getSubject().getSubjectName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(device.getCreatedAt())}
+                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(dcs.getCreatedAt())}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(device.getUpdatedAt())}
+                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(dcs.getUpdatedAt())}
                             </td>
                             <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
-                                <a href="${apiPath}/update/${device.getDeviceId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
-                                    Cập nhật
-                                </a>
                                 <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
-                                        onclick="confirmDelete(${device.getDeviceId()}, '${apiPath}')">
+                                        onclick="confirmDelete([${dcs.getId().getCategoryId()}, ${dcs.getId().getSubjectId()}], '${apiPath}', {compositeKey: true, idNames: ['${mapsIdNames[0]}', '${mapsIdNames[1]}']})">
                                     Xóa
                                 </button>
                             </td>
@@ -103,7 +100,7 @@
 
         <%--    Pagination    --%>
         @template.component.pagination(
-        page = devicePage,
+        page = deviceCategorySubjectPage,
         currentPage = currentPage,
         sortField = sortField,
         sortDirection = sortDirection,

@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface SubjectService {
 
-    Page<Subject> getFilteredSubjects(String keyword, String filter, Pageable pageable);
-
     Page<Subject> getAllSubjects(Pageable pageable);
 
     <T> List<T> getAll(Class<T> classType);

@@ -30,6 +30,9 @@ public class ScheduleController {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
 
+    private static final String SCHEDULE_TABLE_TEMPLATE = "dashboard/table/schedule-table";
+    private static final String SCHEDULE_FORM_TEMPLATE = "dashboard/form/schedule-form";
+
     private final ScheduleService scheduleService;
 
     private final TeacherAssignmentService teacherAssignmentService;
@@ -67,7 +70,7 @@ public class ScheduleController {
         model.addAttribute("sortDirection", sort[1]);
         log.info("Loaded schedule table (page: {}, size: {}, sort: {}, keyword: {}, filter: {})", page, size, sort, keyword, filter);
 
-        return "dashboard/table/schedule-table";
+        return SCHEDULE_TABLE_TEMPLATE;
     }
 
     @GetMapping("/create")
@@ -75,7 +78,7 @@ public class ScheduleController {
         model.addAttribute("type", "create");
         // Column mapping for TeacherAssignment table
         model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
-        return "dashboard/form/schedule-form";
+        return SCHEDULE_FORM_TEMPLATE;
     }
 
     @PostMapping("/save")
@@ -93,7 +96,7 @@ public class ScheduleController {
             // Column mapping for TeacherAssignment table
             model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
             log.info("Validation errors in create schedule form");
-            return "dashboard/form/schedule-form";
+            return SCHEDULE_FORM_TEMPLATE;
         }
         scheduleService.createNewSchedule(scheduleForm);
         return "redirect:/dashboard/schedules";
@@ -118,7 +121,7 @@ public class ScheduleController {
         // Column mapping for TeacherAssignment table
         model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
 
-        return "dashboard/form/schedule-form";
+        return SCHEDULE_FORM_TEMPLATE;
     }
 
     @PutMapping("/save/{scheduleId}")
@@ -137,7 +140,7 @@ public class ScheduleController {
             // Column mapping for TeacherAssignment table
             model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
             log.info("Validation errors in update schedule form");
-            return "dashboard/form/schedule-form";
+            return SCHEDULE_FORM_TEMPLATE;
         }
         scheduleService.updateSchedule(scheduleForm, scheduleId);
         return "redirect:/dashboard/schedules";

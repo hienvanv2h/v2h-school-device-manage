@@ -1,0 +1,13 @@
+package com.vanhuuhien99.school_device_management.formmodel;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+public class DeviceCategorySubjectForm {
+
+    
+}

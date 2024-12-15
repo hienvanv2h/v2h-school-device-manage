@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DeviceCategoryDropdownDto {
+public class DeviceCategoryDto {
     private Long categoryId;
     private String categoryName;
 }

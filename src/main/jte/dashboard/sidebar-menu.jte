@@ -33,7 +33,10 @@
                     <a href="/dashboard/teachers">DM giáo viên</a>
                 </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/dashboard/device-categories">DM thiết bị</a>
+                    <a href="/dashboard/device-categories">DM loại thiết bị</a>
+                </li>
+                <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
+                    <a href="/dashboard/device-category-subject">Ánh xạ loại thiết bị - môn học</a>
                 </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
                     <a href="/dashboard/devices">DM thiết bị mượn trả</a>

@@ -28,6 +28,9 @@ public class SubjectController {
 
     private static final Logger log = LoggerFactory.getLogger(SubjectController.class);
 
+    private static final String SUBJECT_TABLE_TEMPLATE = "dashboard/table/subject-table";
+    private static final String SUBJECT_FORM_TEMPLATE = "dashboard/form/subject-form";
+
     private final SubjectService subjectService;
 
     @GetMapping
@@ -40,16 +43,7 @@ public class SubjectController {
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<Subject> subjectPage;
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            subjectPage = subjectService.getAllSubjects(pageRequest);
-        } else {
-            if(filter.equalsIgnoreCase("subjectName")) {
-                subjectPage = subjectService.searchBySubjectNameContaining(keyword, pageRequest);
-            } else {
-                subjectPage = subjectService.getAllSubjects(pageRequest);
-            }
-        }
+        Page<Subject> subjectPage = subjectService.getFilteredSubjects(keyword, filter, pageRequest);
 
         model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(Subject.class));
         model.addAttribute("subjectPage", subjectPage);
@@ -57,13 +51,13 @@ public class SubjectController {
         model.addAttribute("sortField", sort[0]);
         model.addAttribute("sortDirection", sort[1]);
 
-        return "dashboard/table/subject-table";
+        return SUBJECT_TABLE_TEMPLATE;
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("type", "create");
-        return "dashboard/form/subject-form";
+        return SUBJECT_FORM_TEMPLATE;
     }
 
     @PostMapping("/save")
@@ -78,7 +72,7 @@ public class SubjectController {
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
-            return "dashboard/form/subject-form";
+            return SUBJECT_FORM_TEMPLATE;
         }
         subjectService.createNewSubject(subjectForm);
         return "redirect:/dashboard/subjects";
@@ -93,7 +87,7 @@ public class SubjectController {
         model.addAttribute("subjectForm", subjectForm);
         model.addAttribute("type", "update");
         model.addAttribute("id", subjectId);
-        return "dashboard/form/subject-form";
+        return SUBJECT_FORM_TEMPLATE;
     }
 
     @PutMapping("/save/{subjectId}")
@@ -109,7 +103,7 @@ public class SubjectController {
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
-            return "dashboard/form/subject-form";
+            return SUBJECT_FORM_TEMPLATE;
         }
         subjectService.updateSubject(subjectForm, subjectId);
         return "redirect:/dashboard/subjects";

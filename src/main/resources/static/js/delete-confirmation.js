@@ -2,8 +2,16 @@ let deleteUrl = "";
 let redirectUrl = "";
 
 console.log("Loaded JS");
-function confirmDelete(id, apiPath) {
-  deleteUrl = `${apiPath}/delete/${id}`;
+function confirmDelete(id, apiPath, options = null) {
+  if (options && options.compositeKey && options.idNames) {
+    // Nếu có lựa chọn là hợp khóa bởi 2 khóa chính từ 2 bảng khác
+    // id và idNames là một mảng 2 phần tử (idNames chứa tên khóa, id chứa giá trị của khóa)
+    const { idNames } = options;
+    deleteUrl = `${apiPath}/delete?${idNames[0]}=${id[0]}&${idNames[1]}=${id[1]}`;
+  } else {
+    // Chỉ có khóa chính bình thường
+    deleteUrl = `${apiPath}/delete/${id}`;
+  }
   redirectUrl = apiPath;
   document.getElementById("confirmModal").classList.remove("hidden");
 }

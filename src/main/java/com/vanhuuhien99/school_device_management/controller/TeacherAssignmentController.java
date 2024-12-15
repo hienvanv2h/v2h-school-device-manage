@@ -34,6 +34,9 @@ public class TeacherAssignmentController {
 
     private static final Logger log = LoggerFactory.getLogger(TeacherAssignmentController.class);
 
+    private static final String TEACHER_ASSIGNMENT_TABLE_TEMPLATE = "dashboard/table/teacher-assignment-table";
+    private static final String TEACHER_ASSIGNMENT_FORM_TEMPLATE = "dashboard/form/teacher-assignment-form";
+
     private final TeacherAssignmentService teacherAssignmentService;
 
     private final SubjectService subjectService;
@@ -55,8 +58,7 @@ public class TeacherAssignmentController {
         Page<TeacherAssignmentProjection> teacherAssignmentPage = getTeacherAssignmentWithFilter(keyword, filter, pageRequest);
 
         populateTableModelAttributes(model, teacherAssignmentPage, page, sort[0], sort[1]);
-
-        return "dashboard/table/teacher-assignment-table";
+        return TEACHER_ASSIGNMENT_TABLE_TEMPLATE;
     }
 
     // Endpoint trả về dữ liệu trang
@@ -75,8 +77,8 @@ public class TeacherAssignmentController {
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("type", "create");
-        populateCommonModelAttributes(model);
-        return "dashboard/form/teacher-assignment-form";
+        populateFormModelAttributes(model);
+        return TEACHER_ASSIGNMENT_FORM_TEMPLATE;
     }
 
     @PostMapping("/save")
@@ -92,7 +94,7 @@ public class TeacherAssignmentController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in create teacher assignment form");
-            return "dashboard/form/teacher-assignment-form";
+            return TEACHER_ASSIGNMENT_FORM_TEMPLATE;
         }
         teacherAssignmentService.createNewTeacherAssignment(teacherAssignmentForm);
         return "redirect:/dashboard/teacher-assignments";
@@ -113,8 +115,8 @@ public class TeacherAssignmentController {
         model.addAttribute("type", "update");
         model.addAttribute("id",assignmentId);
         model.addAttribute("teacherAssignmentForm", teacherAssignmentForm);
-        populateCommonModelAttributes(model);
-        return "dashboard/form/teacher-assignment-form";
+        populateFormModelAttributes(model);
+        return TEACHER_ASSIGNMENT_FORM_TEMPLATE;
     }
 
     @PutMapping("/save/{assignmentId}")
@@ -131,7 +133,7 @@ public class TeacherAssignmentController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in update teacher assignment form");
-            return "dashboard/form/teacher-assignment-form";
+            return TEACHER_ASSIGNMENT_FORM_TEMPLATE;
         }
         teacherAssignmentService.updateTeacherAssignment(teacherAssignmentForm, assignmentId);
         return "redirect:/dashboard/teacher-assignments";
@@ -170,7 +172,7 @@ public class TeacherAssignmentController {
         model.addAttribute("sortDirection", sortDirection);
     }
 
-    private void populateCommonModelAttributes(Model model) {
+    private void populateFormModelAttributes(Model model) {
         var teacherList = teacherService.getAll(TeacherIdAndFullNameProjection.class);
         var schoolClassList = schoolClassService.getAll(SchoolClassIdAndNameProjection.class);
         var subjectList = subjectService.getAll(SubjectIdAndNameProjection.class);

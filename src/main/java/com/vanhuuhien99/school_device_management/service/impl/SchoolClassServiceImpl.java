@@ -20,6 +20,20 @@ public class SchoolClassServiceImpl implements SchoolClassService {
 
 
     @Override
+    public Page<SchoolClass> getFilteredSchoolClasses(String keyword, String filter, Pageable pageable) {
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            return getAllSchoolClasses(pageable);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.equalsIgnoreCase("className")) {
+                return searchByClassNameContaining(keyword, pageable);
+            } else {
+                return getAllSchoolClasses(pageable);
+            }
+        }
+    }
+
+    @Override
     public Page<SchoolClass> getAllSchoolClasses(Pageable pageable) {
         return schoolClassRepository.findAll(pageable);
     }

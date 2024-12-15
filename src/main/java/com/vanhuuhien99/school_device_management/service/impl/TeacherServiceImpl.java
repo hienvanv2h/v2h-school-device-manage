@@ -21,6 +21,24 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 
     @Override
+    public Page<Teacher> getFilteredTeachers(String keyword, String filter, Pageable pageable) {
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            return getAllTeachers(pageable);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.equalsIgnoreCase("fullName")) {
+                return searchByFullNameContaining(keyword, pageable);
+            } else if(filter.equalsIgnoreCase("email")) {
+                return searchByEmailContaining(keyword, pageable);
+            } else if(filter.equalsIgnoreCase("phoneNumber")) {
+                return searchByPhoneNumberContaining(keyword, pageable);
+            } else {
+                return getAllTeachers(pageable);
+            }
+        }
+    }
+
+    @Override
     public Page<Teacher> getAllTeachers(Pageable pageable) {
         return teacherRepository.findAll(pageable);
     }

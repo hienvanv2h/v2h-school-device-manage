@@ -1,10 +1,10 @@
-@import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDropdownDto
+@import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto
 
 @param java.util.List<String> errors
 @param String type
 @param Long id
 @param com.vanhuuhien99.school_device_management.formmodel.DeviceForm deviceForm
-@param java.util.List<DeviceCategoryDropdownDto> deviceCategoryDropdown
+@param java.util.List<DeviceCategoryDto> deviceCategoryDropdown
 @param String[] statusList = new String[]{"Còn nguyên", "Hỏng", "Mất"}
 
 @template.layout.dashboard(content = @`
@@ -45,7 +45,7 @@
                     <label class="block text-gray-700 font-medium mb-2">
                         Loại thiết bị <span class="text-red-500">*</span>
                     </label>
-                    <input type="hidden" name="teacherId"
+                    <input type="hidden" name="deviceCategoryId"
                            value="${type != null && type.equals("update") && deviceForm != null && deviceForm.getDeviceCategoryId() != null
                                     ? deviceForm.getDeviceCategoryId().toString() : ""}"
                            class="dropdown-input" />
@@ -55,7 +55,7 @@
                                     && deviceCategoryDropdown != null && !deviceCategoryDropdown.isEmpty() && deviceForm != null)
                                 ${deviceCategoryDropdown.stream()
                                         .filter(dc -> dc.getCategoryId().equals(deviceForm.getDeviceCategoryId()))
-                                        .map(DeviceCategoryDropdownDto::getCategoryName)
+                                        .map(DeviceCategoryDto::getCategoryName)
                                         .findFirst()
                                         .orElse("")}
                             @else

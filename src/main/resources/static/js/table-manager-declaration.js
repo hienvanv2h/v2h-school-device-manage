@@ -32,7 +32,7 @@ function createTableManager({
       renderTableRows(data.content);
       renderPagination(data.page.totalPages, data.page.number);
     } catch (error) {
-      console.error("Error when fetching teacher assignments:", error);
+      console.error("Error when fetching data:", error);
       tableBody.innerHTML = `
             <tr>
                 <td colspan="100%" class="text-start text-red-500 py-4">

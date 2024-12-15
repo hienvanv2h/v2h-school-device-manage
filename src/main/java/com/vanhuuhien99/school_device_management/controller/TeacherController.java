@@ -28,6 +28,9 @@ public class TeacherController {
 
     private static final Logger log = LoggerFactory.getLogger(TeacherController.class);
 
+    private static final String TEACHER_TABLE_TEMPLATE = "dashboard/table/teacher-table";
+    private static final String TEACHER_FORM_TEMPLATE = "dashboard/form/teacher-form";
+
     private final TeacherService teacherService;
 
     @GetMapping
@@ -40,20 +43,7 @@ public class TeacherController {
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<Teacher> teacherPage;
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            teacherPage = teacherService.getAllTeachers(pageRequest);
-        } else {
-            if(filter.equalsIgnoreCase("fullName")) {
-                teacherPage = teacherService.searchByFullNameContaining(keyword, pageRequest);
-            } else if(filter.equalsIgnoreCase("email")) {
-                teacherPage = teacherService.searchByEmailContaining(keyword, pageRequest);
-            } else if(filter.equalsIgnoreCase("phoneNumber")) {
-                teacherPage = teacherService.searchByPhoneNumberContaining(keyword, pageRequest);
-            } else {
-                teacherPage = teacherService.getAllTeachers(pageRequest);
-            }
-        }
+        Page<Teacher> teacherPage = teacherService.getFilteredTeachers(keyword, filter, pageRequest);
 
         model.addAttribute("teacherPage", teacherPage);
         model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(Teacher.class));
@@ -61,13 +51,13 @@ public class TeacherController {
         model.addAttribute("sortField", sort[0]);
         model.addAttribute("sortDirection", sort[1]);
 
-        return "dashboard/table/teacher-table";
+        return TEACHER_TABLE_TEMPLATE;
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("type", "create");
-        return "dashboard/form/teacher-form";
+        return TEACHER_FORM_TEMPLATE;
     }
 
     @PostMapping("/save")
@@ -83,7 +73,7 @@ public class TeacherController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in create teacher form");
-            return "dashboard/form/teacher-form";
+            return TEACHER_FORM_TEMPLATE;
         }
         teacherService.createNewTeacher(teacherForm);
         return "redirect:/dashboard/teachers";
@@ -104,7 +94,7 @@ public class TeacherController {
         model.addAttribute("teacherForm", teacherForm);
         model.addAttribute("type", "update");
         model.addAttribute("id", teacherId);
-        return "dashboard/form/teacher-form";
+        return TEACHER_FORM_TEMPLATE;
     }
 
     @PutMapping("/save/{teacherId}")
@@ -121,7 +111,7 @@ public class TeacherController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in update teacher form");
-            return "dashboard/form/teacher-form";
+            return TEACHER_FORM_TEMPLATE;
         }
         teacherService.updateTeacher(teacherForm, teacherId);
         return "redirect:/dashboard/teachers";

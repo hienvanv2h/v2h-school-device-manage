@@ -7,9 +7,13 @@ import org.springframework.data.domain.Pageable;
 
 public interface DeviceService {
 
+    Page<Device> getFilteredDevices(String keyword, String filter, Pageable pageable);
+
     Page<Device> getAllDevices(Pageable pageable);
 
     Page<Device> searchByDeviceNameContaining(String keyword, Pageable pageable);
+
+    Page<Device> searchBySubjectName(String subjectName, Pageable pageable);
 
     Device getDeviceById(Long deviceId);
 

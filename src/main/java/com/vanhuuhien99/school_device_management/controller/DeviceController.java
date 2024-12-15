@@ -29,6 +29,9 @@ public class DeviceController {
 
     private static final Logger log = LoggerFactory.getLogger(DeviceController.class);
 
+    private static final String DEVICE_TABLE_TEMPLATE = "dashboard/table/device-table";
+    private static final String DEVICE_FORM_TEMPLATE = "dashboard/form/device-form";
+
     private final DeviceService deviceService;
 
     private final DeviceCategoryService deviceCategoryService;
@@ -43,16 +46,7 @@ public class DeviceController {
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<Device> devicePage;
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            devicePage = deviceService.getAllDevices(pageRequest);
-        } else {
-            if(filter.equalsIgnoreCase("deviceName")) {
-                devicePage = deviceService.searchByDeviceNameContaining(keyword, pageRequest);
-            } else {
-                devicePage = deviceService.getAllDevices(pageRequest);
-            }
-        }
+        Page<Device> devicePage = deviceService.getFilteredDevices(keyword, filter, pageRequest);
 
         model.addAttribute("devicePage", devicePage);
         model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(Device.class));
@@ -60,7 +54,7 @@ public class DeviceController {
         model.addAttribute("sortField", sort[0]);
         model.addAttribute("sortDirection", sort[1]);
 
-        return "dashboard/table/device-table";
+        return DEVICE_TABLE_TEMPLATE;
     }
 
     @GetMapping("/api/data")
@@ -79,7 +73,7 @@ public class DeviceController {
     public String createForm(Model model) {
         model.addAttribute("deviceCategoryDropdown", deviceCategoryService.getAllDeviceCategoriesForDropdown());
         model.addAttribute("type", "create");
-        return "dashboard/form/device-form";
+        return DEVICE_FORM_TEMPLATE;
     }
 
     @PostMapping("/save")
@@ -95,7 +89,7 @@ public class DeviceController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in create device form");
-            return "dashboard/form/device-form";
+            return DEVICE_FORM_TEMPLATE;
         }
         deviceService.createNewDevice(deviceForm);
         return "redirect:/dashboard/devices";
@@ -116,7 +110,7 @@ public class DeviceController {
         model.addAttribute("deviceCategoryDropdown", deviceCategoryService.getAllDeviceCategoriesForDropdown());
         model.addAttribute("type", "update");
         model.addAttribute("id", deviceId);
-        return "dashboard/form/device-form";
+        return DEVICE_FORM_TEMPLATE;
     }
 
     @PutMapping("/save/{deviceId}")
@@ -133,7 +127,7 @@ public class DeviceController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             log.info("Validation errors in update device form");
-            return "dashboard/form/device-form";
+            return DEVICE_FORM_TEMPLATE;
         }
         deviceService.updateDevice(deviceForm, deviceId);
         return "redirect:/dashboard/devices";

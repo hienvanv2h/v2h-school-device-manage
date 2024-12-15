@@ -1,6 +1,6 @@
 package com.vanhuuhien99.school_device_management.service.impl;
 
-import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDropdownDto;
+import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto;
 import com.vanhuuhien99.school_device_management.entity.DeviceCategory;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceCategoryForm;
@@ -20,9 +20,22 @@ public class DeviceCategoryServiceImpl implements DeviceCategoryService {
 
     private final DeviceCategoryRepository deviceCategoryRepository;
 
+    @Override
+    public Page<DeviceCategory> getFilteredDeviceCategories(String keyword, String filter, Pageable pageable) {
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            return getAllDeviceCategories(pageable);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.equalsIgnoreCase("categoryName")) {
+                return searchByCategoryNameContaining(keyword, pageable);
+            } else {
+                return getAllDeviceCategories(pageable);
+            }
+        }
+    }
 
     @Override
-    public List<DeviceCategoryDropdownDto> getAllDeviceCategoriesForDropdown() {
+    public List<DeviceCategoryDto> getAllDeviceCategoriesForDropdown() {
         return deviceCategoryRepository.getAllDeviceCategoriesForDropdown();
     }
 

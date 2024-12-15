@@ -1,7 +1,10 @@
 package com.vanhuuhien99.school_device_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
@@ -25,4 +28,8 @@ public class DeviceCategory extends BaseEntity {
 
     @Column(name = "UnitPrice", nullable = false)
     private Double unitPrice;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "deviceCategory")
+    @JsonBackReference
+    private List<DeviceCategorySubject> deviceCategorySubjects;
 }

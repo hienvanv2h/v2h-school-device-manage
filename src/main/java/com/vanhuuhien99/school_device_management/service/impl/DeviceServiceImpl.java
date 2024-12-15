@@ -21,6 +21,22 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceCategoryRepository deviceCategoryRepository;
 
     @Override
+    public Page<Device> getFilteredDevices(String keyword, String filter, Pageable pageable) {
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            return getAllDevices(pageable);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.equalsIgnoreCase("deviceName")) {
+                return searchByDeviceNameContaining(keyword, pageable);
+            } else if(filter.equalsIgnoreCase("subjectName")) {
+                return searchBySubjectName(keyword, pageable);
+            } else {
+                return getAllDevices(pageable);
+            }
+        }
+    }
+
+    @Override
     public Page<Device> getAllDevices(Pageable pageable) {
         return deviceRepository.findAll(pageable);
     }
@@ -29,6 +45,13 @@ public class DeviceServiceImpl implements DeviceService {
     public Page<Device> searchByDeviceNameContaining(String keyword, Pageable pageable) {
         return deviceRepository.findByDeviceNameContaining(keyword, pageable);
     }
+
+    @Override
+    public Page<Device> searchBySubjectName(String subjectName, Pageable pageable) {
+//        return deviceRepository.findDevicesBySubjectName(subjectName, pageable);
+        return getAllDevices(pageable);
+    }
+
 
     @Override
     public Device getDeviceById(Long deviceId) {

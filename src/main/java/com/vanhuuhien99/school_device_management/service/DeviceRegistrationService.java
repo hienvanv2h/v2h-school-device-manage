@@ -28,5 +28,5 @@ public interface DeviceRegistrationService {
 
     void deleteDeviceRegistration(Long registrationId);
 
-    public Page<DeviceRegistrationProjection> getFilteredDeviceRegistrations(String keyword, String filter, String approvalStatus, Pageable pageRequest);
+    Page<DeviceRegistrationProjection> getFilteredDeviceRegistrations(String keyword, String filter, String approvalStatus, Pageable pageRequest);
 }
