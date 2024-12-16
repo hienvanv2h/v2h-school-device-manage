@@ -49,13 +49,13 @@ public class TeacherAssignmentController {
     public String getTeacherAssignments(
             @RequestParam(defaultValue = "1" ) int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "assignmentId,asc") String[] sort,
+            @RequestParam(defaultValue = "updatedAt,desc") String[] sort,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String filter,
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<TeacherAssignmentProjection> teacherAssignmentPage = getTeacherAssignmentWithFilter(keyword, filter, pageRequest);
+        Page<TeacherAssignmentProjection> teacherAssignmentPage = teacherAssignmentService.getFilteredTeacherAssignments(keyword, filter, pageRequest);
 
         populateTableModelAttributes(model, teacherAssignmentPage, page, sort[0], sort[1]);
         return TEACHER_ASSIGNMENT_TABLE_TEMPLATE;
@@ -145,23 +145,6 @@ public class TeacherAssignmentController {
         log.info("Delete Teacher assignment with id: {}", assignmentId);
         teacherAssignmentService.deleteTeacherAssignment(assignmentId);
         return ResponseEntity.ok("Xóa thành công!");
-    }
-
-    private Page<TeacherAssignmentProjection> getTeacherAssignmentWithFilter(String keyword, String filter, PageRequest pageRequest) {
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            return teacherAssignmentService.getAllTeacherAssignments(pageRequest);
-        } else {
-            // Các giá trị khớp xem trong lớp ColumnMapping
-            if(filter.equalsIgnoreCase("teacher.fullName")) {
-                return teacherAssignmentService.searchAssignmentByTeacherNameContaining(keyword, pageRequest);
-            } else if(filter.equalsIgnoreCase("schoolClass.className")) {
-                return teacherAssignmentService.searchAssignmentByClassNameContaining(keyword, pageRequest);
-            } else if(filter.equalsIgnoreCase("semester")) {
-                return teacherAssignmentService.searchAssignmentBySemesterContaining(keyword, pageRequest);
-            } else {
-                return teacherAssignmentService.getAllTeacherAssignments(pageRequest);
-            }
-        }
     }
 
     private void populateTableModelAttributes(Model model, Page<?> pageData, int currentPage, String sortField, String sortDirection) {

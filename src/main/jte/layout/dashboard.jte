@@ -1,13 +1,14 @@
 @import gg.jte.Content
 @import com.vanhuuhien99.school_device_management.viewmodel.Page
-@import java.util.Map
 
 @param Page page = null
+@param Content header = null
 @param Content content = null
 @param Content footer = null
 @param Content customStyles = null
 @param Content customScripts = null
-<%-- CsrfToken --%>
+
+@param boolean isAuthenticated = false
 
 <!doctype html>
 <html lang="en">
@@ -67,7 +68,8 @@
 
         <div class="relative flex-1 flex flex-col ml-64 overflow-x-auto">
             <%--    Header    --%>
-            @template.dashboard.header()
+<%--            @template.dashboard.header(isAuthenticated = isAuthenticated)--%>
+            ${header}
 
             <!-- Main Content -->
             <main class="flex-1 bg-white p-8 overflow-y-auto mt-24">

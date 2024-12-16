@@ -3,11 +3,19 @@
 @param Long id
 @param com.vanhuuhien99.school_device_management.formmodel.DeviceCategoryForm deviceCategoryForm
 
-@template.layout.dashboard(content = @`
+@param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState
+
+@param String apiPath = "/dashboard/device-categories"
+
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="max-w-2xl mx-auto mt-8">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Thêm loại thiết bị mới</h2>
         <form name="deviceCategoryForm"
-              action="/dashboard/device-categories/save${type == null || type.equals("create") ? "" : "/" + id}"
+              action="${apiPath}/save${type == null || type.equals("create") ? "" : "/" + id}"
               method="POST"
               class="bg-white p-6 rounded-lg shadow-md">
             @if(errors != null)
@@ -24,6 +32,9 @@
                 @if(type != null && type.equals("update"))
                     <input type="hidden" name="_method" value="PUT">
                 @endif
+
+                <%--    CSRF    --%>
+                ${globalState.getCsrfHiddenInput()}
 
                 <div>
                     <label for="categoryName" class="block text-gray-700 font-medium mb-2">

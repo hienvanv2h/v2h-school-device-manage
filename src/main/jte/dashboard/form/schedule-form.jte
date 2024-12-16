@@ -1,3 +1,4 @@
+@import com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState
 @import java.util.Map
 
 @param java.util.List<String> errors
@@ -6,10 +7,17 @@
 @param com.vanhuuhien99.school_device_management.formmodel.ScheduleForm scheduleForm
 
 @param Map<String, String> TA_COLUMN_MAPPING
-
 @param String[] weekDays = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 
-@template.layout.dashboard(content = @`
+@param GlobalTemplateState globalState
+
+@param String apiPath = "/dashboard/schedules"
+
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="flex flex-col xl:flex-row justify-between items-start gap-2 max-w-7xl mx-auto h-screen mt-8">
         <div class="flex flex-col justify-between max-w-3xl max-h-[80%] h-full">
             <div class="overflow-auto p-2 flex-1 custom-scrollbar">
@@ -40,7 +48,7 @@
 
         <div class="max-w-2xl mx-auto h-full">
             <form name="scheduleForm"
-                  action="/dashboard/schedules/save${type == null || type.equals("create") ? "" : "/" + id}"
+                  action="${apiPath}/save${type == null || type.equals("create") ? "" : "/" + id}"
                   method="POST"
                   class="bg-slate-100 p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4">Tạo thời khóa biểu</h2>
@@ -58,6 +66,9 @@
                     @if(type != null && type.equals("update"))
                         <input type="hidden" name="_method" value="PUT">
                     @endif
+
+                    <%--    CSRF    --%>
+                    ${globalState.getCsrfHiddenInput()}
 
                     <div>
                         <label for="teacherAssignmentId" class="block text-gray-700 font-medium mb-2">
@@ -86,7 +97,7 @@
                                value=""
                                class="dropdown-input" />
                         <button type="button" class="dropdown-button py-2 px-4 border border-gray-300 rounded-md w-full text-left flex justify-between items-center">
-                            <span class="dropdown-selected">Chọn ngày trong tuần</span>
+                            <span class="dropdown-selected">Chọn thứ</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform dropdown-icon" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>

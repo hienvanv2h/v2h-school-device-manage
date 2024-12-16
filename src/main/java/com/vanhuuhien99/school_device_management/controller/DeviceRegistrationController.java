@@ -1,9 +1,11 @@
 package com.vanhuuhien99.school_device_management.controller;
 
 import com.vanhuuhien99.school_device_management.entity.Device;
+import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
+import com.vanhuuhien99.school_device_management.entity.User;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
-import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationProjection;
+import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationDTO;
 import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
 import com.vanhuuhien99.school_device_management.service.DeviceRegistrationService;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,7 +39,7 @@ public class DeviceRegistrationController {
     private final DeviceRegistrationService deviceRegistrationService;
 
     @GetMapping
-    public String getDeviceRegistrationList(
+    public String getDeviceRegistrations(
             @RequestParam(defaultValue = "1" ) int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "registrationId,asc") String[] sort,
@@ -46,17 +49,48 @@ public class DeviceRegistrationController {
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<DeviceRegistrationProjection> deviceRegistrationPage = deviceRegistrationService.getFilteredDeviceRegistrations(keyword, filter, approvalStatus, pageRequest);
-        var approvalStatusList = deviceRegistrationService.getAllApprovalStatus();
+        Page<DeviceRegistration> deviceRegistrationPage = deviceRegistrationService.searchByCriteria(keyword, filter, approvalStatus, pageRequest);
+        // Ánh xạ sang DTO class
+        Page<DeviceRegistrationDTO> deviceRegistrationDTOPage = deviceRegistrationPage
+                .map(DeviceRegistrationDTO::fromDeviceRegistration);
 
-        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(DeviceRegistrationProjection.class));
-        model.addAttribute("deviceRegistrationPage", deviceRegistrationPage);
-        model.addAttribute("approvalStatusList", approvalStatusList);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("sortField", sort[0]);
-        model.addAttribute("sortDirection", sort[1]);
-
+        populateTableModelAttributes(model, deviceRegistrationDTOPage, page, sort[0], sort[1]);
         return DEVICE_REGISTRATION_TABLE_TEMPLATE;
+    }
+
+    // Danh sách các đơn đăng ký của người dùng hiện tại
+    @GetMapping("/list")
+    public String getDeviceRegistrationListBelongToCurrentUser(
+            @RequestParam(defaultValue = "1" ) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "registrationId,asc") String[] sort,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) String approvalStatus,
+            Model model,
+            Authentication authentication
+    ) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        var principal = authentication.getPrincipal();
+        if(principal instanceof User user) {
+            String userPhoneNumber = user.getPhoneNumber();
+
+            PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
+            Page<DeviceRegistration> deviceRegistrationPage = deviceRegistrationService
+                    .searchByCriteria(keyword, filter, approvalStatus, userPhoneNumber, pageRequest);
+            // Ánh xạ sang DTO class
+            Page<DeviceRegistrationDTO> deviceRegistrationDTOPage = deviceRegistrationPage
+                    .map(DeviceRegistrationDTO::fromDeviceRegistration);
+
+            populateTableModelAttributes(model, deviceRegistrationDTOPage, page, sort[0], sort[1]);
+            return DEVICE_REGISTRATION_TABLE_TEMPLATE;
+        }
+
+        // Nếu không hợp lệ redirect về trang đăng nhập
+        return "redirect:/login";
     }
 
     // Create registration form
@@ -89,14 +123,15 @@ public class DeviceRegistrationController {
 
     @GetMapping("/update/{registrationId}")
     public String updateDeviceRegistrationForm(@PathVariable("registrationId") Long registrationId, Model model) {
-        var deviceRegistrationProjection = deviceRegistrationService.getDeviceRegistrationById(registrationId);
+        var deviceRegistration = deviceRegistrationService.getDeviceRegistrationById(registrationId);
+        var deviceRegistrationDTO = DeviceRegistrationDTO.fromDeviceRegistration(deviceRegistration);
         // Fill data to form
         var deviceRegistrationForm = DeviceRegistrationForm.builder()
-                .teacherAssignmentId(deviceRegistrationProjection.getTeacherAssignmentId())
-                .deviceId(deviceRegistrationProjection.getDeviceId())
-                .registrationStatus(deviceRegistrationProjection.getRegistrationStatus())
-                .approvalStatus(deviceRegistrationProjection.getApprovalStatus())
-                .description(deviceRegistrationProjection.getDescription())
+                .teacherAssignmentId(deviceRegistrationDTO.getTeacherAssignmentId())
+                .deviceId(deviceRegistrationDTO.getDeviceId())
+                .registrationStatus(deviceRegistrationDTO.getRegistrationStatus())
+                .approvalStatus(deviceRegistrationDTO.getApprovalStatus())
+                .description(deviceRegistrationDTO.getDescription())
                 .build();
 
         model.addAttribute("type", "update");
@@ -134,6 +169,16 @@ public class DeviceRegistrationController {
         log.info("Delete DeviceRegistration with id: {}", registrationId);
         deviceRegistrationService.deleteDeviceRegistration(registrationId);
         return ResponseEntity.ok("Xóa thành công!");
+    }
+
+    private void populateTableModelAttributes(Model model, Page<DeviceRegistrationDTO> deviceRegistrationPage, int currentPage, String sortField, String sortDirection) {
+        var approvalStatusList = deviceRegistrationService.getAllApprovalStatus();
+        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(DeviceRegistrationDTO.class));
+        model.addAttribute("deviceRegistrationPage", deviceRegistrationPage);
+        model.addAttribute("approvalStatusList", approvalStatusList);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDirection", sortDirection);
     }
 
     private void populateFormModelAttributes(Model model) {

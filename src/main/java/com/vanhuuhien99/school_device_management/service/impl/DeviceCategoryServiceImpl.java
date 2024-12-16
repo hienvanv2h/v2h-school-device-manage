@@ -4,6 +4,7 @@ import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto;
 import com.vanhuuhien99.school_device_management.entity.DeviceCategory;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceCategoryForm;
+import com.vanhuuhien99.school_device_management.projection.DeviceCategorySummaryDTO;
 import com.vanhuuhien99.school_device_management.repository.DeviceCategoryRepository;
 import com.vanhuuhien99.school_device_management.service.DeviceCategoryService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -56,6 +59,29 @@ public class DeviceCategoryServiceImpl implements DeviceCategoryService {
     }
 
     @Override
+    public Page<DeviceCategorySummaryDTO> getDeviceCategorySummary(Pageable pageable) {
+        return deviceCategoryRepository.getDeviceCategorySummary(pageable);
+    }
+
+    @Override
+    public Page<DeviceCategorySummaryDTO> getDamagedOrLostDeviceCategorySummary(Pageable pageable) {
+        var statuses = List.of("Hỏng", "Mất");
+        return deviceCategoryRepository.getDamagedOrLostDeviceCategorySummary(statuses, pageable);
+    }
+
+    @Override
+    public Page<DeviceCategorySummaryDTO> getDeviceCategorySummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        return deviceCategoryRepository.getDeviceCategorySummaryByDateRange(startDate, endDate, pageable);
+    }
+
+    @Override
+    public Page<DeviceCategorySummaryDTO> getDamagedOrLostDeviceCategorySummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        var statuses = List.of("Hỏng", "Mất");
+        return deviceCategoryRepository.getDamagedOrLostDeviceCategorySummaryByDateRange(startDate, endDate, statuses, pageable);
+    }
+
+    @Override
+    @Transactional
     public void createNewDeviceCategory(DeviceCategoryForm form) {
         if(deviceCategoryRepository.existsByCategoryName(form.getCategoryName())) {
             throw new DataIntegrityViolationException("Device category name already exists");
@@ -71,6 +97,7 @@ public class DeviceCategoryServiceImpl implements DeviceCategoryService {
     }
 
     @Override
+    @Transactional
     public void updateDeviceCategory(DeviceCategoryForm form, Long categoryId) {
         var existingDeviceCategory = getDeviceCategoryById(categoryId);
         existingDeviceCategory.setCategoryName(form.getCategoryName());
@@ -81,6 +108,7 @@ public class DeviceCategoryServiceImpl implements DeviceCategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteDeviceCategory(Long categoryId) {
         var existingDeviceCategory = getDeviceCategoryById(categoryId);
         deviceCategoryRepository.delete(existingDeviceCategory);

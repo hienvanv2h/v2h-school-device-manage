@@ -4,11 +4,19 @@
 @param com.vanhuuhien99.school_device_management.formmodel.TeacherForm teacherForm
 @param String[] genders = new String[]{"Nam", "Nữ"}
 
-@template.layout.dashboard(content = @`
+@param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState
+
+@param String apiPath = "/dashboard/teachers"
+
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="max-w-2xl mx-auto mt-8">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Thêm giáo viên</h2>
         <form name="teacherForm"
-              action="/dashboard/teachers/save${type == null || type.equals("create") ? "" : "/" + id}"
+              action="${apiPath}/save${type == null || type.equals("create") ? "" : "/" + id}"
               method="POST"
               class="bg-white p-6 rounded-lg shadow-md">
             @if(errors != null)
@@ -25,6 +33,8 @@
                 @if(type != null && type.equals("update"))
                     <input type="hidden" name="_method" value="PUT">
                 @endif
+                <%--    CSRF    --%>
+                ${globalState.getCsrfHiddenInput()}
 
                 <div>
                     <label for="fullName" class="block text-gray-700 font-medium mb-2">

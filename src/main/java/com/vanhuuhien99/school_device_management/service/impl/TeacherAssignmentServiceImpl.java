@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,24 @@ public class TeacherAssignmentServiceImpl implements TeacherAssignmentService {
     private final SchoolClassRepository schoolClassRepository;
 
     private final SubjectRepository subjectRepository;
+
+    @Override
+    public Page<TeacherAssignmentProjection> getFilteredTeacherAssignments(String keyword, String filter, Pageable pageable) {
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            return getAllTeacherAssignments(pageable);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.equalsIgnoreCase("teacher.fullName")) {
+                return searchAssignmentByTeacherNameContaining(keyword, pageable);
+            } else if(filter.equalsIgnoreCase("schoolClass.className")) {
+                return searchAssignmentByClassNameContaining(keyword, pageable);
+            } else if(filter.equalsIgnoreCase("semester")) {
+                return searchAssignmentBySemesterContaining(keyword, pageable);
+            } else {
+                return getAllTeacherAssignments(pageable);
+            }
+        }
+    }
 
     @Override
     public Page<TeacherAssignmentProjection> getAllTeacherAssignments(Pageable pageable) {
@@ -56,6 +75,7 @@ public class TeacherAssignmentServiceImpl implements TeacherAssignmentService {
     }
 
     @Override
+    @Transactional
     public void createNewTeacherAssignment(TeacherAssignmentForm form) {
         var existingTeacher = getTeacherById(form.getTeacherId());
         var existingSchoolClass = getSchoolClassById(form.getClassId());
@@ -72,6 +92,7 @@ public class TeacherAssignmentServiceImpl implements TeacherAssignmentService {
     }
 
     @Override
+    @Transactional
     public void updateTeacherAssignment(TeacherAssignmentForm form, Long assignmentId) {
         var existingTeacher = getTeacherById(form.getTeacherId());
         var existingSchoolClass = getSchoolClassById(form.getClassId());
@@ -88,6 +109,7 @@ public class TeacherAssignmentServiceImpl implements TeacherAssignmentService {
     }
 
     @Override
+    @Transactional
     public void deleteTeacherAssignment(Long assignmentId) {
         var existingTeacherAssignment = teacherAssignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find teacher assignment with id: " + assignmentId));

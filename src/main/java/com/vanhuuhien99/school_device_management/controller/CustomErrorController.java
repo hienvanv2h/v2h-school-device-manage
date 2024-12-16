@@ -14,9 +14,9 @@ public class CustomErrorController implements ErrorController {
     public String error(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-        if (status != null && Integer.parseInt(status.toString()) == HttpStatus.NOT_FOUND.value()) {
-            return "404";
-        }
+        if (status == null) return "error";
+        if(Integer.parseInt(status.toString()) == HttpStatus.NOT_FOUND.value()) return "404";
+        if(Integer.parseInt(status.toString()) == HttpStatus.FORBIDDEN.value()) return "403";
         return "error";
     }
 }

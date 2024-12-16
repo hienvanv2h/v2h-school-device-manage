@@ -4,19 +4,27 @@
 @import java.util.List
 @import java.util.Map
 @import com.vanhuuhien99.school_device_management.entity.ApprovalStatusDefinition
-@import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationProjection
+@import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationDTO
+@import com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState
 @import org.springframework.data.domain.Page
 
-@param Page<DeviceRegistrationProjection> deviceRegistrationPage
+@param Page<DeviceRegistrationDTO> deviceRegistrationPage
 @param Map<String, String> columnMapping
 @param List<ApprovalStatusDefinition> approvalStatusList
 
 @param Integer currentPage
 @param String sortField
 @param String sortDirection
+
+@param GlobalTemplateState globalState
+
 @param String apiPath = "/dashboard/device-registrations"
 
-@template.layout.dashboard(content = @`
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="relative">
         <div class="sticky top-0 left-0 right-0 mb-4 bg-gray-800 rounded-lg p-8">
             <div class="flex flex-wrap justify-between items-start gap-2">
@@ -75,7 +83,7 @@
 
         <div class="mt-[60px] overflow-x-auto">
             @if(deviceRegistrationPage == null || deviceRegistrationPage.isEmpty())
-                <p class="text-gray-600">Không tìm thấy thông tin thời khóa biểu</p>
+                <p class="text-gray-600">Không tìm thấy thông tin đơn đăng ký</p>
             @else
             <%--    Table    --%>
                 <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -112,15 +120,20 @@
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
                                 ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(deviceRegistration.getUpdatedAt())}
                             </td>
-                            <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
-                                <a href="${apiPath}/update/${deviceRegistration.getRegistrationId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
-                                    Cập nhật
-                                </a>
-                                <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
-                                        onclick="confirmDelete(${deviceRegistration.getRegistrationId()}, '${apiPath}')">
-                                    Xóa
-                                </button>
-                            </td>
+
+                            @if(globalState.isAdmin())
+                                <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
+                                    <a href="${apiPath}/update/${deviceRegistration.getRegistrationId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
+                                        Cập nhật
+                                    </a>
+                                    <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
+                                            onclick="confirmDelete(${deviceRegistration.getRegistrationId()}, '${apiPath}')">
+                                        Xóa
+                                    </button>
+                                </td>
+                            @else
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b"></td>
+                            @endif
                         </tr>
                     @endfor
                     </tbody>
@@ -137,6 +150,9 @@
         apiPath = apiPath,
         hasSort = sortField != null && !sortField.isEmpty() && sortDirection != null && !sortDirection.isEmpty()
         )
+
+        <%--    CSRF    --%>
+        ${globalState.getCsrfHiddenInput()}
 
         <%-- Modal Dialog --%>
         @template.component.delete-confirm-modal()

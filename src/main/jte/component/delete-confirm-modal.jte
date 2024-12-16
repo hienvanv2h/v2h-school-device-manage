@@ -1,4 +1,4 @@
-<div id="confirmModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+<div id="confirmModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100 hidden">
     <div class="bg-white p-6 rounded-lg shadow-md">
         <p class="mb-4">Bạn có chắc chắn muốn xóa?</p>
         <div class="flex justify-end gap-2">

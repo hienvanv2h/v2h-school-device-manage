@@ -1,6 +1,7 @@
 @param Boolean error = false
 @param String errorMessage = null
 <%-- CsrfToken--%>
+@param com.vanhuuhien99.school_device_management.viewmodel.CsrfHiddenInput csrfHiddenInput
 
 @template.layout.base(
 content = @`
@@ -20,7 +21,8 @@ content = @`
 
             <!-- Login Form -->
             <form class="mt-8 space-y-6" action="/login" method="POST">
-<%--                ${csrfHiddenInput}--%>
+                <%--    CSRF    --%>
+                ${csrfHiddenInput}
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
                         <label for="username" class="block mb-4 font-semibold">Tên tài khoản</label>

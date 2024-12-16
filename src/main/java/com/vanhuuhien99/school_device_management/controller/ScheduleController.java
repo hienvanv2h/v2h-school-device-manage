@@ -41,27 +41,13 @@ public class ScheduleController {
     public String getAllSchedules(
             @RequestParam(defaultValue = "1" ) int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "scheduleId,asc") String[] sort,
+            @RequestParam(defaultValue = "updatedAt,desc") String[] sort,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String filter,
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<ScheduleProjection> schedulePage;
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            schedulePage = scheduleService.getAllSchedules(pageRequest);
-        } else {
-            // Các giá trị khớp xem trong lớp ColumnMapping
-            if(filter.contains("teacher.fullName")) {
-                schedulePage = scheduleService.searchSchedulesByTeacherNameContaining(keyword, pageRequest);
-            } else if(filter.contains("schoolClass.className")) {
-                schedulePage = scheduleService.searchSchedulesByClassNameContaining(keyword, pageRequest);
-            } else if(filter.contains("subject.subjectName")) {
-                schedulePage = scheduleService.searchSchedulesBySubjectNameContaining(keyword, pageRequest);
-            } else {
-                schedulePage = scheduleService.getAllSchedules(pageRequest);
-            }
-        }
+        Page<ScheduleProjection> schedulePage = scheduleService.getFilteredSchedules(keyword, filter, pageRequest);
 
         model.addAttribute("schedulePage", schedulePage);
         model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(ScheduleProjection.class));

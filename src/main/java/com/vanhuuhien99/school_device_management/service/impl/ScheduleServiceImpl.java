@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,23 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final TeacherAssignmentRepository teacherAssignmentRepository;
 
+    @Override
+    public Page<ScheduleProjection> getFilteredSchedules(String keyword, String filter, Pageable pageable) {
+        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
+            return getAllSchedules(pageable);
+        } else {
+            // Các giá trị khớp xem trong lớp ColumnMapping
+            if(filter.contains("teacher.fullName")) {
+                return searchSchedulesByTeacherNameContaining(keyword, pageable);
+            } else if(filter.contains("schoolClass.className")) {
+                return searchSchedulesByClassNameContaining(keyword, pageable);
+            } else if(filter.contains("subject.subjectName")) {
+                return searchSchedulesBySubjectNameContaining(keyword, pageable);
+            } else {
+                return getAllSchedules(pageable);
+            }
+        }
+    }
 
     @Override
     public Page<ScheduleProjection> getAllSchedules(Pageable pageable) {
@@ -48,6 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional
     public void createNewSchedule(ScheduleForm form) {
         var existingTeacherAssignment = teacherAssignmentRepository.findById(form.getTeacherAssignmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find teacher assignment with id: " + form.getTeacherAssignmentId()));
@@ -63,6 +82,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional
     public void updateSchedule(ScheduleForm form, Long scheduleId) {
         Schedule existingSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find schedule with id: " + scheduleId));
@@ -80,6 +100,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional
     public void deleteSchedule(Long scheduleId) {
         Schedule existingSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find schedule with id: " + scheduleId));

@@ -24,10 +24,14 @@ document
   .getElementById("confirmBtn")
   .addEventListener("click", async function () {
     try {
+      // Lấy CSRF token từ input hidden
+      const csrfToken = document.getElementById("_csrf").value;
+
       const response = await fetch(deleteUrl, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRF-TOKEN": csrfToken,
         },
       });
 

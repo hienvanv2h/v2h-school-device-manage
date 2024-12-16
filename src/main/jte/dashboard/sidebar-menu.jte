@@ -78,6 +78,9 @@
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
                     <a href="/dashboard/device-registrations/register">Tạo đơn đăng ký</a>
                 </li>
+                <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
+                    <a href="/dashboard/device-registrations/list">Xem đơn đã tạo</a>
+                </li>
             </ul>
         </li>
         <li>
@@ -109,10 +112,10 @@
             </a>
             <ul class="space-y-2">
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/dashboard/reports">BC số lượng mượn TBDH</a>
+                    <a href="#">BC số lượng mượn TBDH</a>
                 </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/dashboard/reports">BC tình trạng TBDH</a>
+                    <a href="/dashboard/summary-reports">BC tình trạng TBDH</a>
                 </li>
             </ul>
         </li>

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface TeacherAssignmentService {
 
+    Page<TeacherAssignmentProjection> getFilteredTeacherAssignments(String keyword, String filter, Pageable pageable);
+
     Page<TeacherAssignmentProjection> getAllTeacherAssignments(Pageable pageable);
 
     Page<TeacherAssignmentProjection> searchAssignmentByTeacherNameContaining(String keyword, Pageable pageable);

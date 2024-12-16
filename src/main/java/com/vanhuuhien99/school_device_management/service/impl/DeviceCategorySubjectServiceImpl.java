@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -58,6 +59,7 @@ public class DeviceCategorySubjectServiceImpl implements DeviceCategorySubjectSe
     }
 
     @Override
+    @Transactional
     public void createNewDeviceCategorySubject(DeviceCategorySubjectForm form) {
         // Kiểm tra nếu có bản ghi với cặp khóa tương ứng
         Optional<DeviceCategorySubject> deviceCategorySubject = deviceCategorySubjectRepository.findById(
@@ -77,6 +79,7 @@ public class DeviceCategorySubjectServiceImpl implements DeviceCategorySubjectSe
     }
 
     @Override
+    @Transactional
     public void deleteDeviceCategorySubject(DeviceCategorySubjectId deviceCategorySubjectId) {
         deviceCategorySubjectRepository.deleteById(deviceCategorySubjectId);
     }

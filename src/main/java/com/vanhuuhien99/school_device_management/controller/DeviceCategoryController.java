@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,5 +123,34 @@ public class DeviceCategoryController {
         log.info("Delete DeviceCategory with id: {}", categoryId);
         deviceCategoryService.deleteDeviceCategory(categoryId);
         return ResponseEntity.ok("Xóa thành công!");
+    }
+
+    @GetMapping("/summary")
+    @ResponseBody
+    public ResponseEntity<?> getDeviceCategorySummary(
+            @RequestParam(defaultValue = "1" ) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "categoryId,asc") String[] sort,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate
+    ) {
+        PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
+//        var deviceCategorySummary = deviceCategoryService.getDeviceCategorySummary(pageRequest);
+        var parsedStartDate = startDate != null ? LocalDate.parse(startDate) : LocalDate.now();
+        var parsedEndDate = endDate != null ? LocalDate.parse(endDate) : LocalDate.now().plusYears(1);
+        var deviceCategorySummary = deviceCategoryService.getDeviceCategorySummaryByDateRange(parsedStartDate.atStartOfDay(), parsedEndDate.atStartOfDay(), pageRequest);
+        return ResponseEntity.ok(deviceCategorySummary);
+    }
+
+    @GetMapping("/summary/damaged-or-lost")
+    @ResponseBody
+    public ResponseEntity<?> getDamagedOrLostDeviceCategorySummary(
+            @RequestParam(defaultValue = "1" ) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "categoryId,asc") String[] sort
+    ) {
+        PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
+        var deviceCategorySummary = deviceCategoryService.getDamagedOrLostDeviceCategorySummary(pageRequest);
+        return ResponseEntity.ok(deviceCategorySummary);
     }
 }

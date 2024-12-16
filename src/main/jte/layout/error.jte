@@ -1,0 +1,38 @@
+@import gg.jte.Content
+
+@param String title = "Error"
+@param Content content
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        body {
+          background-color: #f3f3f3;
+          color: #333;
+          font-family: Arial, sans-serif;
+          text-align: center;
+          padding: 50px;
+        }
+        h1 {
+          font-size: 50px;
+        }
+        p {
+          font-size: 20px;
+        }
+        a {
+          text-decoration: none;
+          color: #007bff;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    ${content}
+</body>
+</html>

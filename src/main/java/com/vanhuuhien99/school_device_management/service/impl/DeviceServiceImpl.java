@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +61,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public void createNewDevice(DeviceForm form) {
         DeviceCategory existingDeviceCategory = getDeviceCategoryById(form.getDeviceCategoryId());
 
@@ -73,6 +75,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public void updateDevice(DeviceForm form, Long deviceId) {
         DeviceCategory existingDeviceCategory = getDeviceCategoryById(form.getDeviceCategoryId());
 
@@ -85,6 +88,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public void deleteDevice(Long deviceId) {
         var existingDevice = getDeviceById(deviceId);
         deviceRepository.delete(existingDevice);

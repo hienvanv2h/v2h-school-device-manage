@@ -1,7 +1,7 @@
 package com.vanhuuhien99.school_device_management.mapping;
 
 import com.vanhuuhien99.school_device_management.entity.*;
-import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationProjection;
+import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationDTO;
 import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
 import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
 
@@ -25,7 +25,7 @@ public class ColumnMapping {
             }},
             Teacher.class, new LinkedHashMap<>() {{
                 put("teacherId", "#");
-                put("fullName", "Ho và tên");
+                put("fullName", "Họ và tên");
                 put("email", "Email");
                 put("phoneNumber", "Số điện thoại");
                 put("dateOfBirth", "Ngày sinh");
@@ -81,7 +81,7 @@ public class ColumnMapping {
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }},
-            DeviceRegistrationProjection.class, new LinkedHashMap<>() {{
+            DeviceRegistrationDTO.class, new LinkedHashMap<>() {{
                 put("registrationId", "#");
                 put("device.deviceName", "Tên thiết bị");       // DeviceRegistration.device.deviceName
                 put("teacherAssignment.teacher.fullName", "Giáo viên");     // DeviceRegistration.teacherAssignment.teacher.fullName

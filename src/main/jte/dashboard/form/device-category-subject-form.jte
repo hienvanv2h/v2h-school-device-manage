@@ -5,9 +5,15 @@
 @param java.util.List<DeviceCategoryDto> DEVICE_CATEGORY_DROPDOWN
 @param java.util.List<SubjectIdAndNameProjection> SUBJECT_LIST
 
+@param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState
+
 @param String createUrl = "/dashboard/device-category-subject/save"
 
-@template.layout.dashboard(content = @`
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="max-w-2xl mx-auto mt-8">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Thêm thiết bị</h2>
         <form name="deviceForm"
@@ -23,6 +29,10 @@
                     </ul>
                 </div>
             @endif
+
+            <%--    CSRF    --%>
+            ${globalState.getCsrfHiddenInput()}
+
             <div class="flex flex-col gap-4">
                 <%--    Device Category    --%>
                 <div class="dropdown relative">

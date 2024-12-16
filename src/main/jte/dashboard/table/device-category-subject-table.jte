@@ -1,6 +1,7 @@
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
 @import com.vanhuuhien99.school_device_management.entity.DeviceCategorySubject
+@import com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState
 @import org.springframework.data.domain.Page
 
 @param Map<String, String> columnMapping
@@ -9,17 +10,24 @@
 @param Integer currentPage
 @param String sortField
 @param String sortDirection
+
+@param GlobalTemplateState globalState
+
 @param String apiPath = "/dashboard/device-category-subject"
 
 <%--    Lưu tên tham số truyền vào URL xóa bn ghi DeviceCategorySubject (xóa sử dụng cặp khóa)    --%>
 @param String[] mapsIdNames = new String[]{"categoryId", "subjectId"}
 
-@template.layout.dashboard(content = @`
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="relative">
         <div class="sticky top-0 left-0 right-0 mb-4 bg-gray-800 rounded-lg p-8">
             <div class="flex justify-between items-center gap-2">
                 <form id="filterForm" action="${apiPath}" method="GET">
-                    <div class="flex gap-2 items-center h-full">
+                    <div class="flex flex-wrap gap-2 items-center h-full">
                         <input type="text" name="keyword" placeholder="Nhập từ khóa" class="p-2 border border-gray-300 rounded-md h-10">
                         <!-- Dropdown chọn bộ lọc -->
                         <div class="relative min-w-[150px]">
@@ -43,7 +51,9 @@
                     </div>
                 </form>
 
-                <a href="${apiPath}/create" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Thêm mới</a>
+                @if(globalState.isAdmin())
+                    <a href="${apiPath}/create" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Thêm mới</a>
+                @endif
             </div>
         </div>
 
@@ -85,12 +95,17 @@
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
                                 ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(dcs.getUpdatedAt())}
                             </td>
-                            <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
-                                <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
-                                        onclick="confirmDelete([${dcs.getId().getCategoryId()}, ${dcs.getId().getSubjectId()}], '${apiPath}', {compositeKey: true, idNames: ['${mapsIdNames[0]}', '${mapsIdNames[1]}']})">
-                                    Xóa
-                                </button>
-                            </td>
+
+                            @if(globalState.isAdmin())
+                                <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
+                                    <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
+                                            onclick="confirmDelete([${dcs.getId().getCategoryId()}, ${dcs.getId().getSubjectId()}], '${apiPath}', {compositeKey: true, idNames: ['${mapsIdNames[0]}', '${mapsIdNames[1]}']})">
+                                        Xóa
+                                    </button>
+                                </td>
+                            @else
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b"></td>
+                            @endif
                         </tr>
                     @endfor
                     </tbody>
@@ -107,6 +122,9 @@
         apiPath = apiPath,
         hasSort = sortField != null && !sortField.isEmpty() && sortDirection != null && !sortDirection.isEmpty()
         )
+
+        <%--    CSRF    --%>
+        ${globalState.getCsrfHiddenInput()}
 
         <%-- Modal Dialog --%>
         @template.component.delete-confirm-modal()

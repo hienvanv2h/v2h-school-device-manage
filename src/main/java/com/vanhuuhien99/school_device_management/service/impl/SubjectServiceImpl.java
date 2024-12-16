@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    @Transactional
     public void createNewSubject(SubjectForm form) {
         var newSubject = Subject.builder()
                 .subjectName(form.getSubjectName())
@@ -62,6 +64,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    @Transactional
     public void updateSubject(SubjectForm form, Long subjectId) {
         var existingSubject = getSubjectById(subjectId);
         existingSubject.setSubjectName(form.getSubjectName());
@@ -69,6 +72,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    @Transactional
     public void deleteSubject(Long subjectId) {
         var existingSubject = getSubjectById(subjectId);
         subjectRepository.delete(existingSubject);

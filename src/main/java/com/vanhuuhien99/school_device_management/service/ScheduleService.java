@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface ScheduleService {
 
+    Page<ScheduleProjection> getFilteredSchedules(String keyword, String filter, Pageable pageable);
+
     Page<ScheduleProjection> getAllSchedules(Pageable pageable);
 
     ScheduleProjection getScheduleById(Long scheduleId);

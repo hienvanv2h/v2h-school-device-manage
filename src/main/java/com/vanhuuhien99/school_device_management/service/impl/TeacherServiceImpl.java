@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -70,6 +71,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional
     public void createNewTeacher(TeacherForm form) {
         if(teacherRepository.existsByPhoneNumber(form.getPhoneNumber())) {
             throw new DataIntegrityViolationException("Phone number already exists");
@@ -86,6 +88,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional
     public void updateTeacher(TeacherForm form, Long teacherId) {
         var existingTeacher = getTeacherById(teacherId);
         existingTeacher.setFullName(form.getFullName());
@@ -98,6 +101,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional
     public void deleteTeacher(Long teacherId) {
         var existingTeacher = getTeacherById(teacherId);
         teacherRepository.delete(existingTeacher);

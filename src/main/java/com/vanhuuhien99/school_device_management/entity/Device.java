@@ -1,11 +1,15 @@
 package com.vanhuuhien99.school_device_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Builder
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @ToString(callSuper = true)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "deviceId")
 @Entity
 @Table(name = "Devices")
 public class Device extends BaseEntity {
@@ -19,6 +23,7 @@ public class Device extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CategoryID")
+    @JsonBackReference
     private DeviceCategory deviceCategory;
 
     @Column(name = "Description")

@@ -11,7 +11,15 @@
 @param Map<String, String> DEVICE_COLUMN_MAPPING
 @param List<ApprovalStatusDefinition> approvalStatusList
 
-@template.layout.dashboard(content = @`
+@param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState
+
+@param String apiPath = "/dashboard/device-registrations"
+
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="flex flex-col xl:flex-row justify-between items-center gap-2 max-w-7xl mx-auto h-screen mt-8">
         <div class="flex flex-col gap-4 h-[100vh]">
             <div class="flex flex-col justify-between flex-1 max-w-3xl mx-auto max-h-[50%] h-full">
@@ -71,7 +79,7 @@
 
         <div class="min-w-[30%] max-w-4xl mx-auto h-full">
             <form name="deviceRegistrationForm"
-                  action="/dashboard/device-registrations/save${type == null || type.equals("create") ? "" : "/" + id}"
+                  action="${apiPath}/save${type == null || type.equals("create") ? "" : "/" + id}"
                   method="POST"
                   class="bg-slate-100 p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4">Đăng ký mượn thiết bị</h2>
@@ -89,6 +97,9 @@
                     @if(type != null && type.equals("update"))
                         <input type="hidden" name="_method" value="PUT">
                     @endif
+
+                    <%--    CSRF    --%>
+                    ${globalState.getCsrfHiddenInput()}
 
                     <div>
                         <label for="teacherAssignmentId" class="block text-gray-700 font-medium mb-2">

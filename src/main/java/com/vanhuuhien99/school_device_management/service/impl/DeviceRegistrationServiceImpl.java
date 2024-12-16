@@ -6,16 +6,19 @@ import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
 import com.vanhuuhien99.school_device_management.entity.TeacherAssignment;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
-import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationProjection;
 import com.vanhuuhien99.school_device_management.repository.ApprovalStatusRepository;
 import com.vanhuuhien99.school_device_management.repository.DeviceRegistrationRepository;
 import com.vanhuuhien99.school_device_management.repository.DeviceRepository;
 import com.vanhuuhien99.school_device_management.repository.TeacherAssignmentRepository;
 import com.vanhuuhien99.school_device_management.service.DeviceRegistrationService;
+import com.vanhuuhien99.school_device_management.specification.DeviceRegistrationSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -32,8 +35,38 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     private final ApprovalStatusRepository approvalStatusRepository;
 
     @Override
-    public Page<DeviceRegistrationProjection> getAllDeviceRegistrations(Pageable pageable) {
-        return deviceRegistrationRepository.findAllDeviceRegistrations(pageable);
+    public Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, Pageable pageRequest) {
+        return searchByCriteria(keyword, filter, approvalStatus, null, pageRequest);
+    }
+
+    @Override
+    public Page<DeviceRegistration> searchByCriteria(
+            String keyword,
+            String filter,
+            String approvalStatus,
+            String phoneNumber,
+            Pageable pageable
+    ) {
+        Specification<DeviceRegistration> spec = Specification.where(null);
+
+        if(StringUtils.hasText(filter) && StringUtils.hasText(keyword)) {
+            if(filter.contains("teacher.fullName")) {
+                spec = spec.and(DeviceRegistrationSpec.containsTeacherFullName(keyword));
+            }
+            if(filter.contains("device.deviceName")) {
+                spec = spec.and(DeviceRegistrationSpec.containsDeviceName(keyword));
+            }
+        }
+
+        if(StringUtils.hasText(phoneNumber)) {
+            spec = spec.and(DeviceRegistrationSpec.hasTeacherPhoneNumber(phoneNumber));
+        }
+
+        if(StringUtils.hasText(approvalStatus)) {
+            spec = spec.and(DeviceRegistrationSpec.hasApprovalStatus(approvalStatus));
+        }
+
+        return deviceRegistrationRepository.findAll(spec, pageable);
     }
 
     @Override
@@ -42,27 +75,13 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     }
 
     @Override
-    public DeviceRegistrationProjection getDeviceRegistrationById(Long registrationId) {
-        return deviceRegistrationRepository.findDeviceRegistrationById(registrationId)
+    public DeviceRegistration getDeviceRegistrationById(Long registrationId) {
+        return deviceRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
     }
 
     @Override
-    public Page<DeviceRegistrationProjection> searchByTeacherNameContaining(String keyword, Pageable pageable) {
-        return deviceRegistrationRepository.findByTeacherFullNameContainingIgnoreCase(keyword, pageable);
-    }
-
-    @Override
-    public Page<DeviceRegistrationProjection> searchByApprovalStatus(String approvalStatus, Pageable pageable) {
-        return deviceRegistrationRepository.findByApprovalStatus(approvalStatus, pageable);
-    }
-
-    @Override
-    public Page<DeviceRegistrationProjection> searchByDeviceNameContaining(String keyword, Pageable pageable) {
-        return deviceRegistrationRepository.findByDeviceNameContainingIgnoreCase(keyword, pageable);
-    }
-
-    @Override
+    @Transactional
     public void createNewDeviceRegistration(DeviceRegistrationForm form) {
         var existingDevice = getDeviceById(form.getDeviceId());
         var existingTeacherAssignment = getTeacherAssignmentById(form.getTeacherAssignmentId());
@@ -85,6 +104,7 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     }
 
     @Override
+    @Transactional
     public void updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId) {
         var existingDevice = getDeviceById(form.getDeviceId());
         var existingTeacherAssignment = getTeacherAssignmentById(form.getTeacherAssignmentId());
@@ -100,30 +120,11 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     }
 
     @Override
+    @Transactional
     public void deleteDeviceRegistration(Long registrationId) {
         var existingDeviceRegistration = deviceRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
         deviceRegistrationRepository.delete(existingDeviceRegistration);
-    }
-
-    // Tách logic truy vấn khỏi controller
-    @Override
-    public Page<DeviceRegistrationProjection> getFilteredDeviceRegistrations(String keyword, String filter, String approvalStatus, Pageable pageable) {
-        if ((keyword == null || keyword.isEmpty()) &&
-                (filter == null || filter.isEmpty()) &&
-                (approvalStatus == null || approvalStatus.isEmpty())) {
-            return getAllDeviceRegistrations(pageable);
-        }
-
-        if (filter != null && filter.contains("teacher.fullName")) {
-            return searchByTeacherNameContaining(keyword, pageable);
-        } else if (filter != null && filter.contains("device.deviceName")) {
-            return searchByDeviceNameContaining(keyword, pageable);
-        } else if (approvalStatus != null && !approvalStatus.isEmpty()) {
-            return searchByApprovalStatus(approvalStatus, pageable);
-        }
-
-        return getAllDeviceRegistrations(pageable);
     }
 
     private Device getDeviceById(Long deviceId) {

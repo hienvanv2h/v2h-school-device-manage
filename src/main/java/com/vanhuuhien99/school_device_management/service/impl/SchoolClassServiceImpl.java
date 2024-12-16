@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class SchoolClassServiceImpl implements SchoolClassService {
     }
 
     @Override
+    @Transactional
     public void createNewSchoolClass(SchoolClassForm form) {
         var newSchoolClass = SchoolClass.builder()
                 .className(form.getClassName())
@@ -63,6 +65,7 @@ public class SchoolClassServiceImpl implements SchoolClassService {
     }
 
     @Override
+    @Transactional
     public void updateSchoolClass(SchoolClassForm form, Long classId) {
         SchoolClass existingSchoolClass = getSchoolClassById(classId);
         existingSchoolClass.setClassName(form.getClassName());
@@ -70,6 +73,7 @@ public class SchoolClassServiceImpl implements SchoolClassService {
     }
 
     @Override
+    @Transactional
     public void deleteSchoolClass(Long classId) {
         SchoolClass existingSchoolClass = getSchoolClassById(classId);
         schoolClassRepository.deleteById(existingSchoolClass.getClassId());

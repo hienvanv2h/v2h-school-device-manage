@@ -1,6 +1,7 @@
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
 @import com.vanhuuhien99.school_device_management.projection.ScheduleProjection
+@import com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState
 @import org.springframework.data.domain.Page
 
 @param Map<String, String> columnMapping
@@ -9,9 +10,16 @@
 @param Integer currentPage
 @param String sortField
 @param String sortDirection
+
+@param GlobalTemplateState globalState
+
 @param String apiPath = "/dashboard/schedules"
 
-@template.layout.dashboard(content = @`
+@template.layout.dashboard(
+header = @`
+    @template.dashboard.header(globalState = globalState)
+`,
+content = @`
     <div class="relative">
         <div class="sticky top-0 left-0 right-0 mb-4 bg-gray-800 rounded-lg p-8">
             <div class="flex flex-wrap justify-between items-center gap-2">
@@ -43,7 +51,9 @@
                     </div>
                 </form>
 
-                <a href="${apiPath}/create" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Thêm mới</a>
+                @if(globalState.isAdmin())
+                    <a href="${apiPath}/create" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Thêm mới</a>
+                @endif
             </div>
         </div>
 
@@ -95,15 +105,20 @@
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
                                 ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(schedule.getUpdatedAt())}
                             </td>
-                            <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
-                                <a href="${apiPath}/update/${schedule.getScheduleId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
-                                    Cập nhật
-                                </a>
-                                <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
-                                        onclick="confirmDelete(${schedule.getScheduleId()}, '${apiPath}')">
-                                    Xóa
-                                </button>
-                            </td>
+
+                            @if(globalState.isAdmin())
+                                <td class="flex flex-wrap justify-start items-center gap-2 px-6 py-4 text-center border-b">
+                                    <a href="${apiPath}/update/${schedule.getScheduleId()}" class="w-24 px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300">
+                                        Cập nhật
+                                    </a>
+                                    <button type="button" class="w-24 px-4 py-2 text-sm text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
+                                            onclick="confirmDelete(${schedule.getScheduleId()}, '${apiPath}')">
+                                        Xóa
+                                    </button>
+                                </td>
+                            @else
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b"></td>
+                            @endif
                         </tr>
                     @endfor
                     </tbody>
@@ -120,6 +135,9 @@
         apiPath = apiPath,
         hasSort = sortField != null && !sortField.isEmpty() && sortDirection != null && !sortDirection.isEmpty()
         )
+
+        <%--    CSRF    --%>
+        ${globalState.getCsrfHiddenInput()}
 
         <%-- Modal Dialog --%>
         @template.component.delete-confirm-modal()
