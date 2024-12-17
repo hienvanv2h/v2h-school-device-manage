@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,6 +20,8 @@ public class DeviceRegistrationDTO {
     private String deviceName;
     private String registrationStatus;
     private String approvalStatus;
+    private LocalDate scheduleDate;
+    private LocalDate returnDate;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -32,6 +35,8 @@ public class DeviceRegistrationDTO {
                 .deviceName(deviceRegistration.getDevice().getDeviceName())
                 .registrationStatus(deviceRegistration.getRegistrationStatus())
                 .approvalStatus(deviceRegistration.getApprovalStatus())
+                .scheduleDate(deviceRegistration.getScheduleDate())
+                .returnDate(deviceRegistration.getReturnDate())
                 .description(deviceRegistration.getDescription())
                 .createdAt(deviceRegistration.getCreatedAt())
                 .updatedAt(deviceRegistration.getUpdatedAt())

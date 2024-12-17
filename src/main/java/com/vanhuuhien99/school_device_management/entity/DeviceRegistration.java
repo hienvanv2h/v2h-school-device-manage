@@ -3,6 +3,8 @@ package com.vanhuuhien99.school_device_management.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Builder
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @ToString(callSuper = true)
@@ -27,6 +29,12 @@ public class DeviceRegistration extends BaseEntity {
 
     @Column(name = "ApprovalStatus", length = 50, nullable = false)
     private String approvalStatus;
+
+    @Column(name = "ScheduleDate", nullable = false)
+    private LocalDate scheduleDate;
+
+    @Column(name = "ReturnDate")
+    private LocalDate returnDate;
 
     @Column(name = "Description")
     private String description;

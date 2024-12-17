@@ -131,6 +131,8 @@ public class DeviceRegistrationController {
                 .deviceId(deviceRegistrationDTO.getDeviceId())
                 .registrationStatus(deviceRegistrationDTO.getRegistrationStatus())
                 .approvalStatus(deviceRegistrationDTO.getApprovalStatus())
+                .scheduleDate(deviceRegistrationDTO.getScheduleDate())
+                .returnDate(deviceRegistrationDTO.getReturnDate())
                 .description(deviceRegistrationDTO.getDescription())
                 .build();
 

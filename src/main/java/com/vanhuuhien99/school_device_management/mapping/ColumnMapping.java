@@ -85,6 +85,8 @@ public class ColumnMapping {
                 put("registrationId", "#");
                 put("device.deviceName", "Tên thiết bị");       // DeviceRegistration.device.deviceName
                 put("teacherAssignment.teacher.fullName", "Giáo viên");     // DeviceRegistration.teacherAssignment.teacher.fullName
+                put("scheduleDate", "Ngày mượn");
+                put("returnDate", "Ngày trả");
                 put("description", "Ghi chú");
                 put("registrationStatus", "Trạng thái");
                 put("approvalStatus", "Trạng thái phê duyệt");

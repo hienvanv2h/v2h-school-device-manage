@@ -1,11 +1,16 @@
 package com.vanhuuhien99.school_device_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @ToString(callSuper = true)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "assignmentId")
 @Entity
 @Table(name = "TeacherAssignments")
 public class TeacherAssignment extends BaseEntity {
@@ -31,4 +36,7 @@ public class TeacherAssignment extends BaseEntity {
 
     @Column(name = "Description")
     private String description;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacherAssignment")
+    private List<Schedule> schedules;
 }

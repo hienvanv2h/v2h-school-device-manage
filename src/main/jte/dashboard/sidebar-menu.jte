@@ -112,10 +112,10 @@
             </a>
             <ul class="space-y-2">
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="#">BC số lượng mượn TBDH</a>
+                    <a href="/reports/device-registration-report">BC số lượng mượn TBDH</a>
                 </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/dashboard/summary-reports">BC tình trạng TBDH</a>
+                    <a href="#">BC tình trạng TBDH</a>
                 </li>
             </ul>
         </li>

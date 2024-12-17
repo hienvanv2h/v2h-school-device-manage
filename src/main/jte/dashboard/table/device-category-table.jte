@@ -79,6 +79,7 @@ content = @`
                     </thead>
                     <tbody>
                     @for(var deviceCategory: deviceCategoryPage.getContent())
+                        <%--    Lưu ý: Thứ tự cột cần khớp tương ứng với LinkedHashMap trong ColumnMapping    --%>
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${deviceCategory.getCategoryId()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${deviceCategory.getCategoryName()}</td>

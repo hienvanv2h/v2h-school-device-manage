@@ -3,9 +3,11 @@ package com.vanhuuhien99.school_device_management.service;
 import com.vanhuuhien99.school_device_management.entity.ApprovalStatusDefinition;
 import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
+import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DeviceRegistrationService {
@@ -23,4 +25,6 @@ public interface DeviceRegistrationService {
     void updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId);
 
     void deleteDeviceRegistration(Long registrationId);
+
+    Page<DeviceRegistrationReport> getDeviceRegistrationReportInRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 }

@@ -6,6 +6,7 @@ import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
 import com.vanhuuhien99.school_device_management.entity.TeacherAssignment;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
+import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport;
 import com.vanhuuhien99.school_device_management.repository.ApprovalStatusRepository;
 import com.vanhuuhien99.school_device_management.repository.DeviceRegistrationRepository;
 import com.vanhuuhien99.school_device_management.repository.DeviceRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -98,6 +100,8 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
                 .registrationStatus(form.getRegistrationStatus())
                 .registrationStatus(form.getRegistrationStatus())
                 .approvalStatus(form.getApprovalStatus())
+                .scheduleDate(form.getScheduleDate())
+                .returnDate(form.getReturnDate())
                 .description(form.getDescription())
                 .build();
         deviceRegistrationRepository.save(newDeviceRegistration);
@@ -115,6 +119,8 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
         existingDeviceRegistration.setTeacherAssignment(existingTeacherAssignment);
         existingDeviceRegistration.setRegistrationStatus(form.getRegistrationStatus());
         existingDeviceRegistration.setApprovalStatus(form.getApprovalStatus());
+        existingDeviceRegistration.setScheduleDate(form.getScheduleDate());
+        existingDeviceRegistration.setReturnDate(form.getReturnDate());
         existingDeviceRegistration.setDescription(form.getDescription());
         deviceRegistrationRepository.save(existingDeviceRegistration);
     }
@@ -125,6 +131,11 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
         var existingDeviceRegistration = deviceRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
         deviceRegistrationRepository.delete(existingDeviceRegistration);
+    }
+
+    @Override
+    public Page<DeviceRegistrationReport> getDeviceRegistrationReportInRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        return deviceRegistrationRepository.findDeviceRegistrationReportBetween(startDate, endDate, pageable);
     }
 
     private Device getDeviceById(Long deviceId) {

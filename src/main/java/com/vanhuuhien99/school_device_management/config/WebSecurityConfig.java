@@ -76,6 +76,8 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/dashboard/device-registrations/save/**").hasAnyRole(Role.ADMIN, Role.USER)
                                 .requestMatchers(HttpMethod.PUT, "/dashboard/device-registrations/**").hasRole(Role.ADMIN)
                                 .requestMatchers(HttpMethod.DELETE, "/dashboard/device-registrations/**").hasRole(Role.ADMIN)
+                                // REPORTS
+                                .requestMatchers("/reports/**").hasRole(Role.ADMIN)
                                 .anyRequest().authenticated()
         )
         .formLogin(form -> form
