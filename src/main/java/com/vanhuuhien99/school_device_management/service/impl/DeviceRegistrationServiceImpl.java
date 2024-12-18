@@ -37,8 +37,8 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     private final ApprovalStatusRepository approvalStatusRepository;
 
     @Override
-    public Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, Pageable pageRequest) {
-        return searchByCriteria(keyword, filter, approvalStatus, null, pageRequest);
+    public Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, Pageable pageable) {
+        return searchByCriteria(keyword, filter, approvalStatus, null, pageable);
     }
 
     @Override

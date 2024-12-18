@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface DeviceRegistrationService {
 
-    Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, Pageable pageRequest);
+    Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, Pageable pageable);
 
     Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, String phoneNumber, Pageable pageRequest);
 

@@ -3,8 +3,10 @@ package com.vanhuuhien99.school_device_management.controller;
 import com.vanhuuhien99.school_device_management.entity.Device;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
+import com.vanhuuhien99.school_device_management.projection.SubjectIdAndNameProjection;
 import com.vanhuuhien99.school_device_management.service.DeviceCategoryService;
 import com.vanhuuhien99.school_device_management.service.DeviceService;
+import com.vanhuuhien99.school_device_management.service.SubjectService;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,26 +35,28 @@ public class DeviceController {
     private static final String DEVICE_FORM_TEMPLATE = "dashboard/form/device-form";
 
     private final DeviceService deviceService;
-
     private final DeviceCategoryService deviceCategoryService;
+    private final SubjectService subjectService;
 
     @GetMapping
     public String getDevices(
             @RequestParam(defaultValue = "1" ) int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "deviceId,asc") String[] sort,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) String deviceName,
+            @RequestParam(required = false) String subjectName,
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<Device> devicePage = deviceService.getFilteredDevices(keyword, filter, pageRequest);
+        Page<Device> devicePage = deviceService.searchByCriteria(deviceName, subjectName, pageRequest);
 
         model.addAttribute("devicePage", devicePage);
         model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(Device.class));
         model.addAttribute("currentPage", page);
         model.addAttribute("sortField", sort[0]);
         model.addAttribute("sortDirection", sort[1]);
+
+        model.addAttribute("subjectList", subjectService.getAll(SubjectIdAndNameProjection.class));
 
         return DEVICE_TABLE_TEMPLATE;
     }

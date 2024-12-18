@@ -33,7 +33,7 @@ content = @`
                         <input type="text" name="deviceName" placeholder="Nhập tên thiết bị" class="p-2 border border-gray-300 rounded-md h-10">
 
                         <%--    Thêm lựa chọn lọc theo môn học   --%>
-                        <div class="dropdown relative w-[150px]">
+                        <div class="dropdown relative w-[120px]">
                             <input type="hidden" name="subjectName" value="" class="dropdown-input" />
                             <button type="button" class="dropdown-button bg-white py-2 px-4 border border-gray-300 rounded-md w-full text-left flex justify-between items-center">
                                 <span class="dropdown-selected">Môn học</span>

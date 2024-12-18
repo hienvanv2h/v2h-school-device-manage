@@ -7,11 +7,14 @@ import com.vanhuuhien99.school_device_management.formmodel.DeviceForm;
 import com.vanhuuhien99.school_device_management.repository.DeviceCategoryRepository;
 import com.vanhuuhien99.school_device_management.repository.DeviceRepository;
 import com.vanhuuhien99.school_device_management.service.DeviceService;
+import com.vanhuuhien99.school_device_management.specification.DeviceSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -22,37 +25,24 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceCategoryRepository deviceCategoryRepository;
 
     @Override
-    public Page<Device> getFilteredDevices(String keyword, String filter, Pageable pageable) {
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            return getAllDevices(pageable);
-        } else {
-            // Các giá trị khớp xem trong lớp ColumnMapping
-            if(filter.equalsIgnoreCase("deviceName")) {
-                return searchByDeviceNameContaining(keyword, pageable);
-            } else if(filter.equalsIgnoreCase("subjectName")) {
-                return searchBySubjectName(keyword, pageable);
-            } else {
-                return getAllDevices(pageable);
-            }
+    public Page<Device> searchByCriteria(String providedDeviceName, String subjectName, Pageable pageable) {
+        Specification<Device> spec = Specification.where(null);
+
+        if(StringUtils.hasText(providedDeviceName)) {
+            spec = spec.and(DeviceSpec.containsDeviceName(providedDeviceName));
         }
+
+        if(StringUtils.hasText(subjectName)) {
+            spec = spec.and(DeviceSpec.hasSubjectName(subjectName));
+        }
+
+        return deviceRepository.findAll(spec, pageable);
     }
 
     @Override
     public Page<Device> getAllDevices(Pageable pageable) {
         return deviceRepository.findAll(pageable);
     }
-
-    @Override
-    public Page<Device> searchByDeviceNameContaining(String keyword, Pageable pageable) {
-        return deviceRepository.findByDeviceNameContaining(keyword, pageable);
-    }
-
-    @Override
-    public Page<Device> searchBySubjectName(String subjectName, Pageable pageable) {
-//        return deviceRepository.findDevicesBySubjectName(subjectName, pageable);
-        return getAllDevices(pageable);
-    }
-
 
     @Override
     public Device getDeviceById(Long deviceId) {
