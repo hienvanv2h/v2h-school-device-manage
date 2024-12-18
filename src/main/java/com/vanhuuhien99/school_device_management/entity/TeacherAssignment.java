@@ -31,7 +31,7 @@ public class TeacherAssignment extends BaseEntity {
     @JoinColumn(name = "SubjectID", nullable = false)
     private Subject subject;
 
-    @Column(name = "Semester", length = 20, nullable = false)
+    @Column(name = "Semester", length = 100, nullable = false)
     private String semester;
 
     @Column(name = "Description")

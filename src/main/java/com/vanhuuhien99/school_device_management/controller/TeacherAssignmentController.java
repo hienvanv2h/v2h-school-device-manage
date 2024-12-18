@@ -6,10 +6,7 @@ import com.vanhuuhien99.school_device_management.projection.SchoolClassIdAndName
 import com.vanhuuhien99.school_device_management.projection.SubjectIdAndNameProjection;
 import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
 import com.vanhuuhien99.school_device_management.projection.TeacherIdAndFullNameProjection;
-import com.vanhuuhien99.school_device_management.service.SchoolClassService;
-import com.vanhuuhien99.school_device_management.service.SubjectService;
-import com.vanhuuhien99.school_device_management.service.TeacherAssignmentService;
-import com.vanhuuhien99.school_device_management.service.TeacherService;
+import com.vanhuuhien99.school_device_management.service.*;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,12 +35,10 @@ public class TeacherAssignmentController {
     private static final String TEACHER_ASSIGNMENT_FORM_TEMPLATE = "dashboard/form/teacher-assignment-form";
 
     private final TeacherAssignmentService teacherAssignmentService;
-
     private final SubjectService subjectService;
-
     private final SchoolClassService schoolClassService;
-
     private final TeacherService teacherService;
+    private final SemesterService semesterService;
 
     @GetMapping
     public String getTeacherAssignments(
@@ -159,9 +154,11 @@ public class TeacherAssignmentController {
         var teacherList = teacherService.getAll(TeacherIdAndFullNameProjection.class);
         var schoolClassList = schoolClassService.getAll(SchoolClassIdAndNameProjection.class);
         var subjectList = subjectService.getAll(SubjectIdAndNameProjection.class);
+        var semesterList = semesterService.getAllSemesters();
 
         model.addAttribute("teacherList", teacherList);
         model.addAttribute("schoolClassList", schoolClassList);
         model.addAttribute("subjectList", subjectList);
+        model.addAttribute("semesterList", semesterList);
     }
 }
