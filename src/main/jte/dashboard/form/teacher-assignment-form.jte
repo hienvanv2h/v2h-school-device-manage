@@ -173,9 +173,12 @@ content = @`
                     <label for="description" class="block text-gray-700 font-medium mb-2">
                         Mô tả
                     </label>
-                    <input type="text" id="description" name="description"
-                           value="${teacherAssignmentForm != null && teacherAssignmentForm.getDescription() != null ? teacherAssignmentForm.getDescription() : ""}"
-                           class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2">
+                    <textarea id="description" name="description" rows="3" cols="80"
+                              placeholder="Nhập mô tả vào đây"
+                              class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
+                              style="white-space: pre-wrap; overflow-wrap: break-word;"
+                    >${teacherAssignmentForm != null && teacherAssignmentForm.getDescription() != null
+                        ? teacherAssignmentForm.getDescription().trim() : ""}</textarea>
                 </div>
             </div>
             <div class="flex justify-end mt-4">

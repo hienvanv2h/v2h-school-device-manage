@@ -1,9 +1,6 @@
 package com.vanhuuhien99.school_device_management.formmodel;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +23,6 @@ public class DeviceCategoryForm {
     private String unit;
 
     @NotNull(message = "Unit price is required")
-    @Positive(message = "Unit price must be a positive number")
+    @PositiveOrZero(message = "Unit price must be non-negative number")
     private Double unitPrice;
 }
