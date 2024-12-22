@@ -1,12 +1,13 @@
 package com.vanhuuhien99.school_device_management.controller;
 
+import com.vanhuuhien99.school_device_management.dto.Result;
 import com.vanhuuhien99.school_device_management.entity.Device;
 import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
 import com.vanhuuhien99.school_device_management.entity.User;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationDTO;
-import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
+import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentDTO;
 import com.vanhuuhien99.school_device_management.service.DeviceRegistrationService;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,7 +107,8 @@ public class DeviceRegistrationController {
     public String createNewDeviceRegistration(
             @ModelAttribute("deviceRegistrationForm") @Valid DeviceRegistrationForm deviceRegistrationForm,
             BindingResult result,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         log.info("Create form data for DeviceRegistration: {}", deviceRegistrationForm);
         if (result.hasErrors()) {
@@ -117,8 +120,15 @@ public class DeviceRegistrationController {
             log.info("Validation errors in create device registration form");
             return DEVICE_REGISTRATION_FORM_TEMPLATE;
         }
-        deviceRegistrationService.createNewDeviceRegistration(deviceRegistrationForm);
-        return "redirect:/dashboard";
+        Result<Long> createResult = deviceRegistrationService.createNewDeviceRegistration(deviceRegistrationForm);
+        if(createResult.isSuccess()) {
+            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thuê thiết bị thành công!");
+            return "redirect:/dashboard";
+        } else {
+            model.addAttribute("errors", List.of(createResult.getErrorMessage()));
+            populateFormModelAttributes(model);
+            return  DEVICE_REGISTRATION_FORM_TEMPLATE;
+        }
     }
 
     @GetMapping("/update/{registrationId}")
@@ -149,7 +159,8 @@ public class DeviceRegistrationController {
             @PathVariable("registrationId") Long registrationId,
             @ModelAttribute("deviceRegistrationForm") @Valid DeviceRegistrationForm deviceRegistrationForm,
             BindingResult result,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         log.info("Update form data for DeviceRegistration: {}", deviceRegistrationForm);
         if (result.hasErrors()) {
@@ -161,16 +172,27 @@ public class DeviceRegistrationController {
             log.info("Validation errors in update device registration form");
             return DEVICE_REGISTRATION_FORM_TEMPLATE;
         }
-        deviceRegistrationService.updateDeviceRegistration(deviceRegistrationForm, registrationId);
-        return "redirect:/dashboard/device-registrations";
+        Result<Void> updateResult = deviceRegistrationService.updateDeviceRegistration(deviceRegistrationForm, registrationId);
+        if(updateResult.isSuccess()) {
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thành công!");
+            return "redirect:/dashboard";
+        } else {
+            model.addAttribute("errors", List.of(updateResult.getErrorMessage()));
+            populateFormModelAttributes(model);
+            return  DEVICE_REGISTRATION_FORM_TEMPLATE;
+        }
     }
 
     @DeleteMapping("/delete/{registrationId}")
     @ResponseBody
     public ResponseEntity<String> deleteDeviceRegistration(@PathVariable Long registrationId) {
         log.info("Delete DeviceRegistration with id: {}", registrationId);
-        deviceRegistrationService.deleteDeviceRegistration(registrationId);
-        return ResponseEntity.ok("Xóa thành công!");
+        Result<Void> deleteResult = deviceRegistrationService.deleteDeviceRegistration(registrationId);
+        if(deleteResult.isSuccess()) {
+            return ResponseEntity.ok("Xóa thành công!");
+        } else {
+            return ResponseEntity.badRequest().body("Lỗi khi xóa:" + deleteResult.getErrorMessage());
+        }
     }
 
     private void populateTableModelAttributes(Model model, Page<DeviceRegistrationDTO> deviceRegistrationPage, int currentPage, String sortField, String sortDirection) {
@@ -185,7 +207,7 @@ public class DeviceRegistrationController {
 
     private void populateFormModelAttributes(Model model) {
         // Column mapping for TeacherAssignment & Device table
-        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
         model.addAttribute("DEVICE_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(Device.class));
         var approvalStatusList = deviceRegistrationService.getAllApprovalStatus();
         model.addAttribute("approvalStatusList", approvalStatusList);

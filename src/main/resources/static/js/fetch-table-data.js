@@ -1,14 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const tableBody = document.querySelector("#teacherAssignmentTable tbody");
+  const tableSelector = "#teacherAssignmentTable";
+  const paginationSelector = "#teacherAssignmentPagination";
+  const formInputSelector = "#teacherAssignmentId";
+
+  const tableBody = document.querySelector(`${tableSelector} tbody`);
+  const paginationContainer = document.querySelector(
+    `${paginationSelector} ul`
+  );
+
+  if (!tableBody || !paginationContainer) return;
+
   const apiPath = "/dashboard/teacher-assignments/api/data";
-  const currentPage =
+  const defaultPage =
     new URLSearchParams(window.location.search).get("page") || 1;
-  const size = new URLSearchParams(window.location.search).get("size") || 10;
-  const sort =
+  const defaultSize =
+    new URLSearchParams(window.location.search).get("size") || 10;
+  const defaultSort =
     new URLSearchParams(window.location.search).get("sort") || "updatedAt,desc";
 
   // Gọi API lấy dữ liệu
-  async function fetchTeacherAssignments(page, size, sort) {
+  async function fetchTeacherAssignments({
+    page = defaultPage,
+    size = defaultSize,
+    sort = defaultSort,
+  }) {
     try {
       const response = await fetch(
         `${apiPath}?page=${page}&size=${size}&sort=${sort}`
@@ -19,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const data = await response.json();
       renderTableRows(data.content);
-      renderPagination(data.totalPages, data.number);
+      renderPagination(data.page.totalPages, data.page.number);
     } catch (error) {
       console.error("Error when fetching teacher assignments:", error);
       tableBody.innerHTML = `
@@ -89,9 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Tạo phân trang
   function renderPagination(totalPages, currentPage) {
-    const paginationContainer = document.querySelector("#pagination ul");
-    if (!paginationContainer) return;
-
     paginationContainer.innerHTML = "";
     for (let i = 1; i <= totalPages; i++) {
       const li = document.createElement("li");
@@ -119,5 +131,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Gọi lần đầu khi tải trang
-  fetchTeacherAssignments(currentPage, size, sort);
+  fetchTeacherAssignments({});
 });

@@ -3,7 +3,7 @@ package com.vanhuuhien99.school_device_management.mapping;
 import com.vanhuuhien99.school_device_management.entity.*;
 import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationDTO;
 import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
-import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
+import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentDTO;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class ColumnMapping {
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }},
-            TeacherAssignmentProjection.class, new LinkedHashMap<>() {{
+            TeacherAssignmentDTO.class, new LinkedHashMap<>() {{
                 put("assignmentId", "#");
                 put("teacher.fullName", "Tên giáo viên");       // TeacherAssignment.teacher.fullName
                 put("schoolClass.className", "Tên lớp");         // TeacherAssignment.schoolClass.className
@@ -70,14 +70,14 @@ public class ColumnMapping {
             }},
             ScheduleProjection.class, new LinkedHashMap<>() {{
                 put("scheduleId", "#");
+                put("teacherAssignment.teacher.fullName", "Giáo viên");     // Schedule.teacherAssignment.teacher.fullName
+                put("teacherAssignment.schoolClass.className", "Lớp");      // Schedule.teacherAssignment.schoolClass.className
+                put("teacherAssignment.subject.subjectName", "Môn học");     // Schedule.teacherAssignment.subject.subjectName
                 put("dayOfWeek", "Ngày trong tuần");
                 put("scheduleDate", "Ngày học");
                 put("startTime", "Bắt đầu vào");
                 put("endTime", "Kết thúc vào");
                 put("location", "Địa điểm");
-                put("teacherAssignment.teacher.fullName", "Giáo viên");     // Schedule.teacherAssignment.teacher.fullName
-                put("teacherAssignment.schoolClass.className", "Lớp");      // Schedule.teacherAssignment.schoolClass.className
-                put("teacherAssignment.subject.subjectName", "Môn học");     // Schedule.teacherAssignment.subject.subjectName
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }},

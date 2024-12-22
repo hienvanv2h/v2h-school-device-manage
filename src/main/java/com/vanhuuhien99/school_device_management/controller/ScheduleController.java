@@ -3,7 +3,7 @@ package com.vanhuuhien99.school_device_management.controller;
 import com.vanhuuhien99.school_device_management.formmodel.ScheduleForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
-import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
+import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentDTO;
 import com.vanhuuhien99.school_device_management.service.ScheduleService;
 import com.vanhuuhien99.school_device_management.service.TeacherAssignmentService;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,11 +60,20 @@ public class ScheduleController {
         return SCHEDULE_TABLE_TEMPLATE;
     }
 
+    @GetMapping("/api/data")
+    public ResponseEntity<List<ScheduleProjection>> getAllSchedules(@RequestParam(required = false) Long assignmentId) {
+        if(assignmentId != null) {
+            return ResponseEntity.ok(scheduleService.getScheduleByTeacherAssignmentId(assignmentId));
+        }
+        Page<ScheduleProjection> scheduleProjectionPage = scheduleService.getAllSchedules(Pageable.unpaged());
+        return ResponseEntity.ok(scheduleProjectionPage.getContent());
+    }
+
     @GetMapping("/create")
     public String createScheduleForm(Model model) {
         model.addAttribute("type", "create");
         // Column mapping for TeacherAssignment table
-        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
         return SCHEDULE_FORM_TEMPLATE;
     }
 
@@ -80,7 +90,7 @@ public class ScheduleController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             // Column mapping for TeacherAssignment table
-            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
             log.info("Validation errors in create schedule form");
             return SCHEDULE_FORM_TEMPLATE;
         }
@@ -105,7 +115,7 @@ public class ScheduleController {
         model.addAttribute("id",scheduleId);
         model.addAttribute("scheduleForm", scheduleForm);
         // Column mapping for TeacherAssignment table
-        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
 
         return SCHEDULE_FORM_TEMPLATE;
     }
@@ -124,7 +134,7 @@ public class ScheduleController {
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
             // Column mapping for TeacherAssignment table
-            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
             log.info("Validation errors in update schedule form");
             return SCHEDULE_FORM_TEMPLATE;
         }

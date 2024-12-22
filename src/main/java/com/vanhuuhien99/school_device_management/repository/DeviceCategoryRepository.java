@@ -1,7 +1,7 @@
 package com.vanhuuhien99.school_device_management.repository;
 
 import com.vanhuuhien99.school_device_management.entity.DeviceCategory;
-import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto;
+import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDTO;
 import com.vanhuuhien99.school_device_management.projection.DeviceCategorySummaryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DeviceCategoryRepository extends JpaRepository<DeviceCategory, Long> {
-    @Query("SELECT new com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto(c.categoryId, c.categoryName) FROM DeviceCategory c")
-    List<DeviceCategoryDto> getAllDeviceCategoriesForDropdown();
+    @Query("SELECT new com.vanhuuhien99.school_device_management.projection.DeviceCategoryDTO(c.categoryId, c.categoryName) FROM DeviceCategory c")
+    List<DeviceCategoryDTO> getAllDeviceCategoriesForDropdown();
 
     boolean existsByCategoryName(String categoryName);
 

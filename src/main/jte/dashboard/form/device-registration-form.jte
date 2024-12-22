@@ -20,11 +20,13 @@ header = @`
     @template.dashboard.header(globalState = globalState)
 `,
 content = @`
-    <div class="flex flex-col xl:flex-row justify-between items-center gap-2 max-w-7xl mx-auto h-screen mt-8">
-        <div class="flex flex-col gap-4 h-[100vh]">
+    <div class="flex flex-col xl:flex-row justify-between items-start gap-2 max-w-7xl mx-auto h-screen mt-8">
+        <div class="flex flex-col gap-4 h-[120vh]">
             <div class="flex flex-col justify-between flex-1 max-w-3xl mx-auto max-h-[50%] h-full">
+                <input id="teacherAssignmentSearch" type="text" placeholder="Nhập tên giáo viên"
+                       class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
                 <div class="overflow-auto p-2 flex-1 custom-scrollbar">
-                    <%--    Teacher Assignment list    --%>
+                    <%--    Teacher Assignment Data    --%>
                     <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg shadow-md h-full">
                         <thead>
                         <tr>
@@ -50,8 +52,10 @@ content = @`
             </div>
 
             <div class="flex flex-col justify-between flex-1 max-w-3xl mx-auto max-h-[50%] h-full">
+                <input id="deviceSearch" type="text" placeholder="Nhập tên thiết bị"
+                       class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
                 <div class="overflow-auto p-2 flex-1 custom-scrollbar">
-                    <%--    Device list    --%>
+                    <%--    Device Data    --%>
                     <table id="deviceTable" class="bg-white border border-gray-200 rounded-lg shadow-md h-full">
                         <thead>
                         <tr>
@@ -223,8 +227,6 @@ customStyles = @`
     <link rel="stylesheet" type="text/css" href="/css/custom-scrollbar.css">
 `,
 customScripts = @`
-    <%--    Script định nghĩa hàm lấy dữ liệu bảng (dùng chung)    --%>
-    <script src="/js/table-manager-declaration.js"></script>
     <%--    Script gắn sự kiện chọn dòng từ bảng và ánh xạ giá trị cho input    --%>
     <script src="/js/table-form-binding.js"></script>
     <%--    Script xử lý dropdown    --%>

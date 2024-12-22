@@ -1,6 +1,6 @@
 package com.vanhuuhien99.school_device_management.service.impl;
 
-import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto;
+import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDTO;
 import com.vanhuuhien99.school_device_management.entity.DeviceCategory;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceCategoryForm;
@@ -38,7 +38,7 @@ public class DeviceCategoryServiceImpl implements DeviceCategoryService {
     }
 
     @Override
-    public List<DeviceCategoryDto> getAllDeviceCategoriesForDropdown() {
+    public List<DeviceCategoryDTO> getAllDeviceCategoriesForDropdown() {
         return deviceCategoryRepository.getAllDeviceCategoriesForDropdown();
     }
 

@@ -19,15 +19,15 @@ public class TeacherAssignment extends BaseEntity {
     @Column(name = "AssignmentID")
     private Long assignmentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "TeacherID", nullable = false)
     private Teacher teacher;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "ClassID", nullable = false)
     private SchoolClass schoolClass;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "SubjectID", nullable = false)
     private Subject subject;
 

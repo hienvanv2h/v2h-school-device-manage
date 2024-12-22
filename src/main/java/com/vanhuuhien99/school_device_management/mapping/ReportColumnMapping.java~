@@ -1,6 +1,6 @@
 package com.vanhuuhien99.school_device_management.mapping;
 
-import com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO;
+import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
 public class ReportColumnMapping {
 
     private static final Map<Class<?>, Map<String, String>> REPORT_COLUMN_TRANSLATIONS = Map.of(
-            DeviceRegistrationReportDTO.class, new LinkedHashMap<>() {{
+            DeviceRegistrationReport.class, new LinkedHashMap<>() {{
                 put("registrationDate", "Ngày đăng ký");
                 put("deviceName", "Tên TBGD hoặc hóa chất được sử dụng");
                 put("teacherName", "Giáo viên");

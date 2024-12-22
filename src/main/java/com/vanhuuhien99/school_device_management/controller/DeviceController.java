@@ -3,6 +3,7 @@ package com.vanhuuhien99.school_device_management.controller;
 import com.vanhuuhien99.school_device_management.entity.Device;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
+import com.vanhuuhien99.school_device_management.projection.DeviceDTO;
 import com.vanhuuhien99.school_device_management.projection.SubjectIdAndNameProjection;
 import com.vanhuuhien99.school_device_management.service.DeviceCategoryService;
 import com.vanhuuhien99.school_device_management.service.DeviceService;
@@ -48,7 +49,7 @@ public class DeviceController {
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<Device> devicePage = deviceService.searchByCriteria(deviceName, subjectName, pageRequest);
+        Page<DeviceDTO> devicePage = deviceService.searchByCriteria(deviceName, subjectName, pageRequest);
 
         model.addAttribute("devicePage", devicePage);
         model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(Device.class));
@@ -63,14 +64,15 @@ public class DeviceController {
 
     @GetMapping("/api/data")
     @ResponseBody
-    public ResponseEntity<Page<Device>> getDeviceTableData(
+    public ResponseEntity<Page<DeviceDTO>> getDeviceTableData(
             @RequestParam(defaultValue = "1" ) int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "updatedAt,desc") String[] sort
+            @RequestParam(defaultValue = "updatedAt,desc") String[] sort,
+            @RequestParam(required = false) String deviceName
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<Device> devicePage = deviceService.getAllDevices(pageRequest);
-        return ResponseEntity.ok(devicePage);
+        Page<DeviceDTO> deviceDTOPage = deviceService.searchByCriteria(deviceName, null, pageRequest);
+        return ResponseEntity.ok(deviceDTOPage);
     }
 
     @GetMapping("/create")

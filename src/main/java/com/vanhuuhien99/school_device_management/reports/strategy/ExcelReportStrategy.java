@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ExcelReportStrategy<T> {
 
-    Workbook generateReport(List<T> data);
+    Workbook generateReport(List<T> data, String reportName);
 }

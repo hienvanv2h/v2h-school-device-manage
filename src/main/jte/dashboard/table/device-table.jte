@@ -1,15 +1,13 @@
-@import java.net.URLEncoder
-@import java.nio.charset.StandardCharsets
 @import java.time.format.DateTimeFormatter
 @import java.util.List
 @import java.util.Map
-@import com.vanhuuhien99.school_device_management.entity.Device
+@import com.vanhuuhien99.school_device_management.projection.DeviceDTO
 @import com.vanhuuhien99.school_device_management.projection.SubjectIdAndNameProjection
 @import com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState
 @import org.springframework.data.domain.Page
 
 @param Map<String, String> columnMapping
-@param Page<Device> devicePage
+@param Page<DeviceDTO> devicePage
 
 @param Integer currentPage
 @param String sortField
@@ -93,7 +91,7 @@ content = @`
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDeviceId()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDeviceName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
-                                ${device.getDeviceCategory() != null ? device.getDeviceCategory().getCategoryName() : ""}
+                                ${device.getCategoryName() != null ? device.getCategoryName() : ""}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDescription()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getStatus()}</td>

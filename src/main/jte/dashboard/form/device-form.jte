@@ -1,10 +1,10 @@
-@import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto
+@import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDTO
 
 @param java.util.List<String> errors
 @param String type
 @param Long id
 @param com.vanhuuhien99.school_device_management.formmodel.DeviceForm deviceForm
-@param java.util.List<DeviceCategoryDto> deviceCategoryDropdown
+@param java.util.List<DeviceCategoryDTO> deviceCategoryDropdown
 @param String[] statusList = new String[]{"Còn nguyên", "Hỏng", "Mất"}
 
 @param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState
@@ -66,7 +66,7 @@ content = @`
                                     && deviceCategoryDropdown != null && !deviceCategoryDropdown.isEmpty() && deviceForm != null)
                                 ${deviceCategoryDropdown.stream()
                                         .filter(dc -> dc.getCategoryId().equals(deviceForm.getDeviceCategoryId()))
-                                        .map(DeviceCategoryDto::getCategoryName)
+                                        .map(DeviceCategoryDTO::getCategoryName)
                                         .findFirst()
                                         .orElse("")}
                             @else

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DeviceCategoryDto {
+public class DeviceCategoryDTO {
     private Long categoryId;
     private String categoryName;
 }

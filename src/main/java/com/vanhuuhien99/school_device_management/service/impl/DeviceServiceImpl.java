@@ -4,6 +4,7 @@ import com.vanhuuhien99.school_device_management.entity.Device;
 import com.vanhuuhien99.school_device_management.entity.DeviceCategory;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceForm;
+import com.vanhuuhien99.school_device_management.projection.DeviceDTO;
 import com.vanhuuhien99.school_device_management.repository.DeviceCategoryRepository;
 import com.vanhuuhien99.school_device_management.repository.DeviceRepository;
 import com.vanhuuhien99.school_device_management.service.DeviceService;
@@ -25,7 +26,7 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceCategoryRepository deviceCategoryRepository;
 
     @Override
-    public Page<Device> searchByCriteria(String providedDeviceName, String subjectName, Pageable pageable) {
+    public Page<DeviceDTO> searchByCriteria(String providedDeviceName, String subjectName, Pageable pageable) {
         Specification<Device> spec = Specification.where(null);
 
         if(StringUtils.hasText(providedDeviceName)) {
@@ -36,12 +37,8 @@ public class DeviceServiceImpl implements DeviceService {
             spec = spec.and(DeviceSpec.hasSubjectName(subjectName));
         }
 
-        return deviceRepository.findAll(spec, pageable);
-    }
-
-    @Override
-    public Page<Device> getAllDevices(Pageable pageable) {
-        return deviceRepository.findAll(pageable);
+        Page<Device> devicePage = deviceRepository.findAll(spec, pageable);
+        return devicePage.map(DeviceDTO::fromDevice);
     }
 
     @Override

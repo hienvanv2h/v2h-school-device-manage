@@ -20,10 +20,12 @@ header = @`
 content = @`
     <div class="flex flex-col xl:flex-row justify-between items-start gap-2 max-w-7xl mx-auto h-screen mt-8">
         <div class="flex flex-col justify-between max-w-3xl max-h-[80%] h-full">
-            <div class="overflow-auto p-2 flex-1 custom-scrollbar">
+            <input id="teacherAssignmentSearch" type="text" placeholder="Nhập tên giáo viên"
+                   class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
+            <div class="relative flex-1 overflow-auto custom-scrollbar">
                 <%--    Teacher Assignment list    --%>
                 <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg shadow-md h-full">
-                    <thead>
+                    <thead class="sticky top-0 left-0 right-0 z-10 bg-gray-100">
                         <tr>
                             @for(Map.Entry<String, String> entry: TA_COLUMN_MAPPING.entrySet())
                                 <th id="${entry.getKey() + "Header"}" class="px-6 py-3 text-left text-sm font-medium text-gray-700 bg-gray-100 border-b min-w-[160px]">
@@ -152,8 +154,6 @@ customStyles = @`
     <link rel="stylesheet" type="text/css" href="/css/custom-scrollbar.css">
 `,
 customScripts = @`
-    <%--    Script định nghĩa hàm lấy dữ liệu bảng (dùng chung)    --%>
-    <script src="/js/table-manager-declaration.js"></script>
     <%--    Script gắn sự kiện chọn dòng từ bảng và ánh xạ giá trị cho input    --%>
     <script src="/js/table-form-binding.js"></script>
     <%--    Script xử lý dropdown    --%>

@@ -2,10 +2,7 @@ package com.vanhuuhien99.school_device_management.controller;
 
 import com.vanhuuhien99.school_device_management.formmodel.TeacherAssignmentForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
-import com.vanhuuhien99.school_device_management.projection.SchoolClassIdAndNameProjection;
-import com.vanhuuhien99.school_device_management.projection.SubjectIdAndNameProjection;
-import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
-import com.vanhuuhien99.school_device_management.projection.TeacherIdAndFullNameProjection;
+import com.vanhuuhien99.school_device_management.projection.*;
 import com.vanhuuhien99.school_device_management.service.*;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
 import jakarta.validation.Valid;
@@ -50,7 +47,7 @@ public class TeacherAssignmentController {
             Model model
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<TeacherAssignmentProjection> teacherAssignmentPage = teacherAssignmentService.getFilteredTeacherAssignments(keyword, filter, pageRequest);
+        Page<TeacherAssignmentDTO> teacherAssignmentPage = teacherAssignmentService.searchByCriteria(keyword, filter, pageRequest);
 
         populateTableModelAttributes(model, teacherAssignmentPage, page, sort[0], sort[1]);
         return TEACHER_ASSIGNMENT_TABLE_TEMPLATE;
@@ -59,13 +56,15 @@ public class TeacherAssignmentController {
     // Endpoint trả về dữ liệu trang
     @GetMapping("/api/data")
     @ResponseBody
-    public ResponseEntity<Page<TeacherAssignmentProjection>> getTeacherAssignmentTableData(
+    public ResponseEntity<Page<TeacherAssignmentDTO>> getTeacherAssignmentTableData(
             @RequestParam(defaultValue = "1" ) int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "updatedAt,desc") String[] sort
+            @RequestParam(defaultValue = "updatedAt,desc") String[] sort,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String filter
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<TeacherAssignmentProjection> teacherAssignmentList = teacherAssignmentService.getAllTeacherAssignments(pageRequest);
+        Page<TeacherAssignmentDTO> teacherAssignmentList = teacherAssignmentService.searchByCriteria(keyword, filter, pageRequest);
         return ResponseEntity.ok(teacherAssignmentList);
     }
 
@@ -144,7 +143,7 @@ public class TeacherAssignmentController {
 
     private void populateTableModelAttributes(Model model, Page<?> pageData, int currentPage, String sortField, String sortDirection) {
         model.addAttribute("teacherAssignmentPage", pageData);
-        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentProjection.class));
+        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDirection", sortDirection);

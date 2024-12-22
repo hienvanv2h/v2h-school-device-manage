@@ -6,17 +6,20 @@ import com.vanhuuhien99.school_device_management.entity.Teacher;
 import com.vanhuuhien99.school_device_management.entity.TeacherAssignment;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.TeacherAssignmentForm;
-import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection;
+import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentDTO;
 import com.vanhuuhien99.school_device_management.repository.SchoolClassRepository;
 import com.vanhuuhien99.school_device_management.repository.SubjectRepository;
 import com.vanhuuhien99.school_device_management.repository.TeacherAssignmentRepository;
 import com.vanhuuhien99.school_device_management.repository.TeacherRepository;
 import com.vanhuuhien99.school_device_management.service.TeacherAssignmentService;
+import com.vanhuuhien99.school_device_management.specification.TeacherAssignmentSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -31,47 +34,27 @@ public class TeacherAssignmentServiceImpl implements TeacherAssignmentService {
     private final SubjectRepository subjectRepository;
 
     @Override
-    public Page<TeacherAssignmentProjection> getFilteredTeacherAssignments(String keyword, String filter, Pageable pageable) {
-        if(keyword == null || keyword.isEmpty() || filter == null || filter.isEmpty()) {
-            return getAllTeacherAssignments(pageable);
-        } else {
-            // Các giá trị khớp xem trong lớp ColumnMapping
-            if(filter.equalsIgnoreCase("teacher.fullName")) {
-                return searchAssignmentByTeacherNameContaining(keyword, pageable);
+    public Page<TeacherAssignmentDTO> searchByCriteria(String keyword, String filter, Pageable pageable) {
+        Specification<TeacherAssignment> spec = Specification.where(null);
+        if(StringUtils.hasText(filter) && StringUtils.hasText(keyword)) {
+            if(filter.equalsIgnoreCase("teacher.fullName") || filter.equals("teacherName")) {
+                spec = spec.and(TeacherAssignmentSpec.containsTeacherFullName(keyword));
             } else if(filter.equalsIgnoreCase("schoolClass.className")) {
-                return searchAssignmentByClassNameContaining(keyword, pageable);
+                spec = spec.and(TeacherAssignmentSpec.containsSchoolClassName(keyword));
             } else if(filter.equalsIgnoreCase("semester")) {
-                return searchAssignmentBySemesterContaining(keyword, pageable);
-            } else {
-                return getAllTeacherAssignments(pageable);
+                spec = spec.and(TeacherAssignmentSpec.containsSemesterName(keyword));
             }
         }
+
+        var page = teacherAssignmentRepository.findAll(spec, pageable);
+        return page.map(TeacherAssignmentDTO::fromTeacherAssignment);
     }
 
     @Override
-    public Page<TeacherAssignmentProjection> getAllTeacherAssignments(Pageable pageable) {
-        return teacherAssignmentRepository.findAllAssignments(pageable);
-    }
-
-    @Override
-    public Page<TeacherAssignmentProjection> searchAssignmentByTeacherNameContaining(String keyword, Pageable pageable) {
-        return teacherAssignmentRepository.findByTeacherFullNameContaining(keyword, pageable);
-    }
-
-    @Override
-    public Page<TeacherAssignmentProjection> searchAssignmentByClassNameContaining(String keyword, Pageable pageable) {
-        return teacherAssignmentRepository.findByClassNameContaining(keyword, pageable);
-    }
-
-    @Override
-    public Page<TeacherAssignmentProjection> searchAssignmentBySemesterContaining(String keyword, Pageable pageable) {
-        return teacherAssignmentRepository.findBySemesterContaining(keyword, pageable);
-    }
-
-    @Override
-    public TeacherAssignmentProjection getTeacherAssignmentById(Long assignmentId) {
-        return teacherAssignmentRepository.findTeacherAssignmentDetailsById(assignmentId)
+    public TeacherAssignmentDTO getTeacherAssignmentById(Long assignmentId) {
+        var teacherAssignment = teacherAssignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find teacher assignment with id: " + assignmentId));
+        return TeacherAssignmentDTO.fromTeacherAssignment(teacherAssignment);
     }
 
     @Override

@@ -85,6 +85,9 @@ content = @`
                         <%--    Lưu ý: Thứ tự cột cần khớp tương ứng với LinkedHashMap trong ColumnMapping    --%>
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getScheduleId()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getTeacherName()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getClassName()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getSubjectName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getDayOfWeek()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
                                 ${DateTimeFormatter.ofPattern("dd/MM/yyyy").format(schedule.getScheduleDate())}
@@ -96,9 +99,6 @@ content = @`
                                 ${DateTimeFormatter.ofPattern("HH:mm").format(schedule.getEndTime())}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getLocation()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getTeacherName()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getClassName()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getSubjectName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
                                 ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(schedule.getCreatedAt())}
                             </td>

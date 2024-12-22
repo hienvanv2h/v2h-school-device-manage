@@ -1,10 +1,17 @@
 @param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState
+@param String successMessage
 
 @template.layout.dashboard(
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,
 content = @`
+    @if(successMessage != null)
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+            <span class="block sm:inline">${successMessage}</span>
+        </div>
+    @endif
+
     <h1 class="text-3xl font-bold mb-6">Trang chủ</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-gray-100 p-6 rounded-lg shadow-md">

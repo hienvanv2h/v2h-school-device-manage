@@ -22,9 +22,9 @@ public class DeviceRegistrationReportStrategy implements ExcelReportStrategy<Dev
     private static final String DATE_TIME_FORMAT = "HH:mm dd/MM/yyyy";
 
     @Override
-    public Workbook generateReport(List<DeviceRegistrationReportDTO> data, String reportName) {
+    public Workbook generateReport(List<DeviceRegistrationReportDTO> data) {
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(reportName);
+        Sheet sheet = workbook.createSheet("BÁO CÁO MƯỢN TRẢ");
 
         // Tạo cell style
         CellStyle dateCellStyle = createCellStyle(workbook, DATE_FORMAT);

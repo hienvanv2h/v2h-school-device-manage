@@ -10,4 +10,6 @@ public interface ExcelExportService {
     void exportDeviceRegistrationReport(HttpServletResponse response) throws IOException;
 
     void exportDeviceRegistrationReport(HttpServletResponse response, LocalDateTime startDate, LocalDateTime endDate) throws IOException;
+
+    void exportDeviceSummaryReport(HttpServletResponse response, LocalDateTime startDate, LocalDateTime endDate) throws IOException;
 }

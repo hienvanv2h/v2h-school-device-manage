@@ -115,7 +115,7 @@
                     <a href="/reports/device-registration-report">BC số lượng mượn TBDH</a>
                 </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/reports/device-summary-report">BC tổng hợp tình trạng TBDH</a>
+                    <a href="/reports/device-summary-report" target="_blank">BC tổng hợp tình trạng TBDH</a>
                 </li>
             </ul>
         </li>

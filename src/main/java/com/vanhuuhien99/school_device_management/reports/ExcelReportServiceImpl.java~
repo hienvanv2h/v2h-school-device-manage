@@ -71,7 +71,6 @@ public class ExcelReportServiceImpl implements ExcelExportService {
                     .totalImportedDuringYear(totalImportedDuringYear == null ? 0 : totalImportedDuringYear)
                     .totalDamagedOrLostDuringYear(totalDamagedOrLostDuringYear == null ? 0 : totalDamagedOrLostDuringYear)
                     .totalAtEndOfYear(totalAtEndOfYear == null ? 0 : totalAtEndOfYear)
-                    .description(deviceCategory.getDescription())
                     .build();
             deviceSummaryReportDTOList.add(report);
         }

@@ -4,7 +4,7 @@ import com.vanhuuhien99.school_device_management.dto.Result;
 import com.vanhuuhien99.school_device_management.entity.ApprovalStatusDefinition;
 import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
-import com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO;
+import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,5 +27,5 @@ public interface DeviceRegistrationService {
 
     Result<Void> deleteDeviceRegistration(Long registrationId);
 
-    Page<DeviceRegistrationReportDTO> getDeviceRegistrationReportInRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+    Page<DeviceRegistrationReport> getDeviceRegistrationReportInRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 }

@@ -1,19 +1,23 @@
+@import java.time.LocalDate
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
-@import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport
+@import com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO
 @import com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState
 @import org.springframework.data.domain.Page
 
-@param Page<DeviceRegistrationReport> deviceRegistrationReportPage
+@param Page<DeviceRegistrationReportDTO> deviceRegistrationReportPage
 @param Map<String, String> columnMapping
 
 @param Integer currentPage
 @param String sortField
 @param String sortDirection
 
+@param LocalDate startDate
+@param LocalDate endDate
+
 @param GlobalTemplateState globalState
 
-@param String currentPath = "/reports//device-registration-report"
+@param String currentPath = "/reports/device-registration-report"
 @param String exportExcelPath = "/reports/device-registration-report/export"
 
 @template.layout.dashboard(
@@ -24,7 +28,23 @@ content = @`
     <div class="relative">
         <div class="sticky top-0 left-0 right-0 mb-4 bg-gray-800 rounded-lg p-8">
             <div class="flex flex-wrap justify-between items-start gap-2">
-                <a href="${exportExcelPath}" target="_blank" class="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Xuất Excel</a>
+                <form id="filterForm" action="${currentPath}" method="GET">
+                    <div class="flex flex-wrap gap-2 items-center h-full">
+                        <input type="date" name="startDate"
+                               value="${startDate != null ? startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : ""}"
+                               class="p-2 border border-gray-300 rounded-md h-10">
+                        <input type="date" name="endDate"
+                               value="${endDate != null ? endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : ""}"
+                               class="p-2 border border-gray-300 rounded-md h-10">
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 h-10">Tìm kiếm</button>
+                    </div>
+                </form>
+
+                <a href="${startDate != null && endDate != null
+                        ? String.format("%s?startDate=%s&endDate=%s", exportExcelPath, startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        : exportExcelPath
+                    }"
+                   target="_blank" class="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 h-10">Xuất Excel</a>
             </div>
         </div>
 

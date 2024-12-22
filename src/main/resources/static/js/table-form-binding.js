@@ -11,8 +11,8 @@ function bindTableDataToFormOnSelect(tableSelector, formInputSelector) {
       // Thêm lớp cho dòng hiện tại
       row.classList.add("bg-blue-100");
 
-      const assignmentId = row.cells[0].textContent.trim();
-      formInput.value = assignmentId;
+      const idValue = row.cells[0].textContent.trim();
+      formInput.value = Number(idValue) || 0;
     }
   });
 }

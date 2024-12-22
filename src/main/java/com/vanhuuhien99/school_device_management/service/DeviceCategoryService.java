@@ -1,6 +1,6 @@
 package com.vanhuuhien99.school_device_management.service;
 
-import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto;
+import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDTO;
 import com.vanhuuhien99.school_device_management.entity.DeviceCategory;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceCategoryForm;
 import com.vanhuuhien99.school_device_management.projection.DeviceCategorySummaryDTO;
@@ -14,7 +14,7 @@ public interface DeviceCategoryService {
 
     Page<DeviceCategory> getFilteredDeviceCategories(String keyword, String filter, Pageable pageable);
 
-    List<DeviceCategoryDto> getAllDeviceCategoriesForDropdown();
+    List<DeviceCategoryDTO> getAllDeviceCategoriesForDropdown();
 
     Page<DeviceCategory> getAllDeviceCategories(Pageable pageable);
 

@@ -1,11 +1,11 @@
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
-@import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentProjection
+@import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentDTO
 @import com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState
 @import org.springframework.data.domain.Page
 
 @param Map<String, String> columnMapping
-@param Page<TeacherAssignmentProjection> teacherAssignmentPage
+@param Page<TeacherAssignmentDTO> teacherAssignmentPage
 
 @param Integer currentPage
 @param String sortField

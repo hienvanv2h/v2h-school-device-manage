@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
@@ -48,6 +50,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleProjection getScheduleById(Long scheduleId) {
         return scheduleRepository.findScheduleById(scheduleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find schedule with id: " + scheduleId));
+    }
+
+    @Override
+    public List<ScheduleProjection> getScheduleByTeacherAssignmentId(Long assignmentId) {
+        return scheduleRepository.findByTeacherAssignmentAssignmentId(assignmentId);
     }
 
     @Override

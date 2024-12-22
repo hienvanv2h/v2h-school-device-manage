@@ -1,7 +1,7 @@
 package com.vanhuuhien99.school_device_management.repository;
 
+import com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO;
 import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
-import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,7 +21,7 @@ public interface DeviceRegistrationRepository extends JpaRepository<DeviceRegist
     Page<DeviceRegistration> findAll(Specification<DeviceRegistration> spec, @NonNull Pageable pageable);
 
     @Query("""
-        SELECT new com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport(
+        SELECT new com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO(
             dr.createdAt,
             d.deviceName,
             t.fullName,
@@ -31,14 +31,15 @@ public interface DeviceRegistrationRepository extends JpaRepository<DeviceRegist
             dr.description
         )
         FROM DeviceRegistration dr
-        JOIN dr.device d
-        JOIN dr.teacherAssignment ta
-        JOIN ta.teacher t
-        JOIN ta.schoolClass sc
-        JOIN ta.schedules s
+        LEFT JOIN dr.device d
+        LEFT JOIN dr.teacherAssignment ta
+        LEFT JOIN ta.teacher t
+        LEFT JOIN ta.schoolClass sc
+        LEFT JOIN ta.schedules s
         WHERE dr.createdAt between :startDate and :endDate
+        AND dr.scheduleDate = s.scheduleDate
     """)
-    Page<DeviceRegistrationReport> findDeviceRegistrationReportBetween(
+    Page<DeviceRegistrationReportDTO> findDeviceRegistrationReportBetween(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable

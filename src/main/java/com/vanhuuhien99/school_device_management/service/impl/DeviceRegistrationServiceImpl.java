@@ -1,16 +1,14 @@
 package com.vanhuuhien99.school_device_management.service.impl;
 
+import com.vanhuuhien99.school_device_management.dto.Result;
 import com.vanhuuhien99.school_device_management.entity.ApprovalStatusDefinition;
 import com.vanhuuhien99.school_device_management.entity.Device;
 import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
 import com.vanhuuhien99.school_device_management.entity.TeacherAssignment;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
-import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationReport;
-import com.vanhuuhien99.school_device_management.repository.ApprovalStatusRepository;
-import com.vanhuuhien99.school_device_management.repository.DeviceRegistrationRepository;
-import com.vanhuuhien99.school_device_management.repository.DeviceRepository;
-import com.vanhuuhien99.school_device_management.repository.TeacherAssignmentRepository;
+import com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO;
+import com.vanhuuhien99.school_device_management.repository.*;
 import com.vanhuuhien99.school_device_management.service.DeviceRegistrationService;
 import com.vanhuuhien99.school_device_management.specification.DeviceRegistrationSpec;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +27,10 @@ import java.util.List;
 public class DeviceRegistrationServiceImpl implements DeviceRegistrationService {
 
     private final DeviceRegistrationRepository deviceRegistrationRepository;
-
     private final DeviceRepository deviceRepository;
-
     private final TeacherAssignmentRepository teacherAssignmentRepository;
-
     private final ApprovalStatusRepository approvalStatusRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Override
     public Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, Pageable pageable) {
@@ -84,9 +80,21 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
 
     @Override
     @Transactional
-    public void createNewDeviceRegistration(DeviceRegistrationForm form) {
+    public Result<Long> createNewDeviceRegistration(DeviceRegistrationForm form) {
+        var availableSchedules = scheduleRepository.findByTeacherAssignmentAssignmentId(form.getTeacherAssignmentId());
+        if(availableSchedules.isEmpty()) {
+            return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
+        }
+        // Kiểm tra nếu ngày đăng ký trong form đã tồn tại khớp trong thời khóa biểu
+        boolean hasMatchedScheduleDate = availableSchedules.stream()
+                .anyMatch(schedule -> schedule.getScheduleDate().isEqual(form.getScheduleDate()));
+        if(!hasMatchedScheduleDate) {
+            return Result.failure("Chưa đăng ký thời khóa biểu cho ngày này");
+        }
+
         var existingDevice = getDeviceById(form.getDeviceId());
         var existingTeacherAssignment = getTeacherAssignmentById(form.getTeacherAssignmentId());
+
         if(form.getRegistrationStatus() == null || form.getRegistrationStatus().trim().isEmpty()) {
             form.setRegistrationStatus("Tạo mới");
         }
@@ -104,12 +112,24 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
                 .returnDate(form.getReturnDate())
                 .description(form.getDescription())
                 .build();
-        deviceRegistrationRepository.save(newDeviceRegistration);
+        var savedDeviceRegistration =  deviceRegistrationRepository.save(newDeviceRegistration);
+        return Result.success(savedDeviceRegistration.getRegistrationId());
     }
 
     @Override
     @Transactional
-    public void updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId) {
+    public Result<Void> updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId) {
+        var availableSchedules = scheduleRepository.findByTeacherAssignmentAssignmentId(form.getTeacherAssignmentId());
+        if(availableSchedules.isEmpty()) {
+            return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
+        }
+        // Kiểm tra nếu ngày đăng ký trong form đã tồn tại khớp trong thời khóa biểu
+        boolean hasMatchedScheduleDate = availableSchedules.stream()
+                .anyMatch(schedule -> schedule.getScheduleDate().isEqual(form.getScheduleDate()));
+        if(!hasMatchedScheduleDate) {
+            return Result.failure("Chưa đăng ký thời khóa biểu cho ngày này");
+        }
+
         var existingDevice = getDeviceById(form.getDeviceId());
         var existingTeacherAssignment = getTeacherAssignmentById(form.getTeacherAssignmentId());
 
@@ -123,18 +143,20 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
         existingDeviceRegistration.setReturnDate(form.getReturnDate());
         existingDeviceRegistration.setDescription(form.getDescription());
         deviceRegistrationRepository.save(existingDeviceRegistration);
+        return Result.success(null);
     }
 
     @Override
     @Transactional
-    public void deleteDeviceRegistration(Long registrationId) {
+    public Result<Void> deleteDeviceRegistration(Long registrationId) {
         var existingDeviceRegistration = deviceRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
         deviceRegistrationRepository.delete(existingDeviceRegistration);
+        return Result.success(null);
     }
 
     @Override
-    public Page<DeviceRegistrationReport> getDeviceRegistrationReportInRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+    public Page<DeviceRegistrationReportDTO> getDeviceRegistrationReportInRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
         return deviceRegistrationRepository.findDeviceRegistrationReportBetween(startDate, endDate, pageable);
     }
 

@@ -1,8 +1,8 @@
-@import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDto
+@import com.vanhuuhien99.school_device_management.projection.DeviceCategoryDTO
 @import com.vanhuuhien99.school_device_management.projection.SubjectIdAndNameProjection
 
 @param java.util.List<String> errors
-@param java.util.List<DeviceCategoryDto> DEVICE_CATEGORY_DROPDOWN
+@param java.util.List<DeviceCategoryDTO> DEVICE_CATEGORY_DROPDOWN
 @param java.util.List<SubjectIdAndNameProjection> SUBJECT_LIST
 
 @param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState
