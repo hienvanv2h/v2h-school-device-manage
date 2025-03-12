@@ -87,28 +87,44 @@ document.addEventListener("DOMContentLoaded", function () {
       tr.classList.add("border-b", "hover:bg-gray-50");
       tr.innerHTML = `
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${row.assignmentId}
+            <div style="height: 50px; overflow:hidden;">
+                ${row.assignmentId}
+            </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${row.teacherName}
+            <div style="height: 50px; width: 200px; overflow:hidden;">
+                ${row.teacherName}
+            </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${row.className}
+            <div style="height: 50px; overflow:hidden;">
+                ${row.className}
+            </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${row.subjectName}
+            <div style="height: 50px; overflow:hidden;">
+                ${row.subjectName}
+            </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${row.semester}
+            <div style="height: 50px; overflow:hidden;">
+                ${row.semester}
+            </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${row.description}
+            <div style="height: 50px; width: 200px; overflow:hidden;">
+                ${row.description}
+            </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${formatDateTime(row.createdAt)}
+            <div style="height: 50px; overflow:hidden;">
+                ${formatDateTime(row.createdAt)}
+            </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-          ${formatDateTime(row.updatedAt)}
+            <div style="height: 50px; overflow:hidden;">
+                ${formatDateTime(row.updatedAt)}
+            </div>
         </td>
       `;
 

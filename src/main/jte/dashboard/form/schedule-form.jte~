@@ -108,7 +108,7 @@ content = @`
                         <input type="time" id="startTime" name="startTime"
                                value="${scheduleForm != null && scheduleForm.getStartTime() != null ? scheduleForm.getStartTime().toString() : ""}"
                                class="px-4 py-2 w-28 border border-gray-300 rounded-md mt-2"
-                               min="00:00" max="23:59" step="any"
+                               min="00:00" max="23:59" step="60"
                                required>
                         <label for="endTime" class="inline-block text-gray-700 font-medium mb-2">
                             Đến <span class="text-red-500">*</span>
@@ -116,7 +116,7 @@ content = @`
                         <input type="time" id="endTime" name="endTime"
                                value="${scheduleForm != null && scheduleForm.getEndTime() != null ? scheduleForm.getEndTime().toString() : ""}"
                                class="px-4 py-2 w-28 border border-gray-300 rounded-md mt-2"
-                               min="00:00" max="23:59" step="any"
+                               min="00:00" max="23:59" step="60"
                                required>
                     </div>
                     <div>
