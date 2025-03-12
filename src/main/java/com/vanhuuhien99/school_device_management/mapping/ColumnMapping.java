@@ -58,6 +58,12 @@ public class ColumnMapping {
                 put("createdAt", "Ngày tạo");
                 put("updatedAt", "Ngày cập nhật");
             }},
+            Semester.class, new LinkedHashMap<>() {{
+                put("semesterId", "#");
+                put("semesterName", "Tên học kỳ");
+                put("startDate", "Ngày bắt đầu");
+                put("endDate", "Ngày kết thúc");
+            }},
             TeacherAssignmentDTO.class, new LinkedHashMap<>() {{
                 put("assignmentId", "#");
                 put("teacher.fullName", "Tên giáo viên");       // TeacherAssignment.teacher.fullName

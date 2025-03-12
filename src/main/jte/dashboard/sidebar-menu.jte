@@ -1,4 +1,4 @@
-<nav class="flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
+<nav class="custom-scrollbar flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
     <ul class="space-y-2">
         <li>
             <a href="/dashboard"
@@ -56,6 +56,9 @@
                 Phân công giảng dạy
             </span>
             <ul class="space-y-2">
+                <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
+                    <a href="/dashboard/semesters">Học kỳ</a>
+                </li>
                 <li class="pl-6 truncate p-2 hover:bg-gray-700 rounded transition duration-200">
                     <a href="/dashboard/teacher-assignments">Phân công chuyên môn</a>
                 </li>

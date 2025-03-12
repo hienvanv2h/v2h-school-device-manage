@@ -20,7 +20,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(
                 authorize ->
                         authorize
-                                .requestMatchers("/", "/dashboard", "/login", "/register").permitAll()
+                                .requestMatchers("/", "/dashboard", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                                 // SUBJECT
                                 .requestMatchers(HttpMethod.GET, "/dashboard/subjects").hasAnyRole(Role.ADMIN, Role.USER)
                                 .requestMatchers(HttpMethod.GET, "/dashboard/subjects/**").hasRole(Role.ADMIN)

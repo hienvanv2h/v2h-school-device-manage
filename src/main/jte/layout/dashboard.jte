@@ -24,6 +24,7 @@
 
     <%--  Tailwind CSS  --%>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="/css/custom-scrollbar.css">
     <%--  Custom styles  --%>
     @if(customStyles != null)
         ${customStyles}

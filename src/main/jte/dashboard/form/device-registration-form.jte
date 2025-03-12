@@ -171,7 +171,7 @@ content = @`
                                value="${deviceRegistrationForm != null && deviceRegistrationForm.getRegistrationStatus() != null
                                         ? deviceRegistrationForm.getRegistrationStatus() : "Tạo mới"}"
                                class="px-4 py-2 w-full bg-yellow-300 border border-gray-300 rounded-md mt-2"
-                               required>
+                               required readonly="${deviceRegistrationForm == null}">
                     </div>
 
                     @if(type != null && type.equals("update"))
@@ -222,9 +222,6 @@ content = @`
             </form>
         </div>
     </div>
-`,
-customStyles = @`
-    <link rel="stylesheet" type="text/css" href="/css/custom-scrollbar.css">
 `,
 customScripts = @`
     <%--    Script gắn sự kiện chọn dòng từ bảng và ánh xạ giá trị cho input    --%>

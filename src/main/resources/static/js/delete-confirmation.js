@@ -13,11 +13,11 @@ function confirmDelete(id, apiPath, options = null) {
     deleteUrl = `${apiPath}/delete/${id}`;
   }
   redirectUrl = apiPath;
-  document.getElementById("confirmModal").classList.remove("hidden");
+  document.getElementById("confirmDeleteModal").classList.remove("hidden");
 }
 
 document.getElementById("cancelBtn").addEventListener("click", function () {
-  document.getElementById("confirmModal").classList.add("hidden");
+  document.getElementById("confirmDeleteModal").classList.add("hidden");
 });
 
 document
@@ -46,5 +46,5 @@ document
       console.error("Lỗi khi xóa:", error);
       alert("Đã xảy ra lỗi, vui lòng thử lại.");
     }
-    document.getElementById("confirmModal").classList.add("hidden");
+    document.getElementById("confirmDeleteModal").classList.add("hidden");
   });

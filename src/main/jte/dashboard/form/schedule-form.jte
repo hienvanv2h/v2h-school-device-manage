@@ -150,9 +150,6 @@ content = @`
         </div>
     </div>
 `,
-customStyles = @`
-    <link rel="stylesheet" type="text/css" href="/css/custom-scrollbar.css">
-`,
 customScripts = @`
     <%--    Script gắn sự kiện chọn dòng từ bảng và ánh xạ giá trị cho input    --%>
     <script src="/js/table-form-binding.js"></script>
