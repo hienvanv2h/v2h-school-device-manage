@@ -44,6 +44,7 @@ public interface DeviceRegistrationRepository extends JpaRepository<DeviceRegist
         LEFT JOIN ta.teacher t
         LEFT JOIN ta.schoolClass sc
         WHERE dr.createdAt between :startDate and :endDate
+        AND dr.scheduleDate = s.scheduleDate
     """)
     Page<DeviceRegistrationReportDTO> findDeviceRegistrationReportBetween(
             @Param("startDate") LocalDateTime startDate,

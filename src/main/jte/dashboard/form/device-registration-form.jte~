@@ -110,8 +110,8 @@ content = @`
                             Assignment ID <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="teacherAssignmentId" name="teacherAssignmentId"
-                               value="${deviceRegistrationForm != null && deviceRegistrationForm.getScheduleId() != null
-                                        ? deviceRegistrationForm.getScheduleId().toString() : ""}"
+                               value="${deviceRegistrationForm != null && deviceRegistrationForm.getTeacherAssignmentId() != null
+                                        ? deviceRegistrationForm.getTeacherAssignmentId().toString() : ""}"
                                class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
                                required readonly>
                     </div>

@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,12 +60,18 @@ public class ScheduleController {
     }
 
     @GetMapping("/api/data")
-    public ResponseEntity<List<ScheduleProjection>> getAllSchedules(@RequestParam(required = false) Long assignmentId) {
+    public ResponseEntity<Page<ScheduleProjection>> getAllSchedules(
+            @RequestParam(defaultValue = "1" ) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "updatedAt,desc") String[] sort,
+            @RequestParam(required = false) Long assignmentId
+    ) {
+        PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
         if(assignmentId != null) {
-            return ResponseEntity.ok(scheduleService.getScheduleByTeacherAssignmentId(assignmentId));
+            return ResponseEntity.ok(scheduleService.getSchedulesByTeacherAssignmentId(assignmentId, pageRequest));
         }
-        Page<ScheduleProjection> scheduleProjectionPage = scheduleService.getAllSchedules(Pageable.unpaged());
-        return ResponseEntity.ok(scheduleProjectionPage.getContent());
+        Page<ScheduleProjection> scheduleProjectionPage = scheduleService.getAllSchedules(pageRequest);
+        return ResponseEntity.ok(scheduleProjectionPage);
     }
 
     @GetMapping("/create")

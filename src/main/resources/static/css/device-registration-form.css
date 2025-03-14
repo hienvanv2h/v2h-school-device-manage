@@ -1,0 +1,31 @@
+td {
+  max-height: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.2; /* Điều chỉnh dòng cho vừa */
+  padding: 10px 24px; /* Khớp padding với Tailwind */
+}
+
+.steps {
+    display: flex;
+    height: 70%;
+    transition: transform 0.5s ease;
+}
+.step {
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 20px;
+}
+.hidden {
+    display: none;
+}

@@ -35,7 +35,7 @@ public class DeviceRegistrationDTO {
                 .deviceName(deviceRegistration.getDevice().getDeviceName())
                 .registrationStatus(deviceRegistration.getRegistrationStatus())
                 .approvalStatus(deviceRegistration.getApprovalStatus())
-                .scheduleDate(deviceRegistration.getSchedule().getScheduleDate())
+                .scheduleDate(deviceRegistration.getScheduleDate())
                 .returnDate(deviceRegistration.getReturnDate())
                 .description(deviceRegistration.getDescription())
                 .createdAt(deviceRegistration.getCreatedAt())

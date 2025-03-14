@@ -152,7 +152,7 @@ content = @`
 `,
 customScripts = @`
     <%--    Script gắn sự kiện chọn dòng từ bảng và ánh xạ giá trị cho input    --%>
-    <script src="/js/form/table-form-binding.js"></script>
+    <script src="/js/table-form-binding.js"></script>
     <%--    Script xử lý dropdown    --%>
     <script src="/js/dropdown.js"></script>
     <%--    Script tạo tablemananager và ánh xạ giá trị table-form (TeacherAssignment)   --%>

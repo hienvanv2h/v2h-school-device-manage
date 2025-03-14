@@ -12,7 +12,7 @@ function bindTableDataToFormOnSelect(tableSelector, formInputSelector) {
       row.classList.add("bg-blue-100");
 
       const idValue = row.cells[0].textContent.trim();
-      formInput.value = Number(idValue) || 0;
+      if(formInput) formInput.value = Number(idValue) || 0;
     }
   });
 }

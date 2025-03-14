@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
@@ -53,8 +51,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleProjection> getScheduleByTeacherAssignmentId(Long assignmentId) {
-        return scheduleRepository.findByTeacherAssignmentAssignmentId(assignmentId);
+    public Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId) {
+        return scheduleRepository.findByTeacherAssignmentId(assignmentId, Pageable.unpaged());
+    }
+
+    @Override
+    public Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId, Pageable pageable) {
+        return scheduleRepository.findByTeacherAssignmentId(assignmentId, pageable);
     }
 
     @Override

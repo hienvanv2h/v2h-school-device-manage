@@ -90,7 +90,7 @@ public class ColumnMapping {
             DeviceRegistrationDTO.class, new LinkedHashMap<>() {{
                 put("registrationId", "#");
                 put("device.deviceName", "Tên thiết bị");       // DeviceRegistration.device.deviceName
-                put("teacherAssignment.teacher.fullName", "Giáo viên");     // DeviceRegistration.teacherAssignment.teacher.fullName
+                put("schedule.teacherAssignment.teacher.fullName", "Giáo viên");     // DeviceRegistration.schedule.teacherAssignment.teacher.fullName
                 put("scheduleDate", "Ngày mượn");
                 put("returnDate", "Ngày trả");
                 put("description", "Ghi chú");

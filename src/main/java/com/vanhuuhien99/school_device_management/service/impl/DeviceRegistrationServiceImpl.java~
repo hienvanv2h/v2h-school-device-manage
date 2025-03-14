@@ -108,9 +108,7 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     @Override
     @Transactional
     public Result<Void> updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId) {
-        var availableSchedules = scheduleRepository
-                .findByTeacherAssignmentId(form.getScheduleId(), Pageable.unpaged())
-                .getContent();
+        var availableSchedules = scheduleRepository.findByTeacherAssignmentId(form.getScheduleId()).getContent();
         if(availableSchedules.isEmpty()) {
             return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
         }

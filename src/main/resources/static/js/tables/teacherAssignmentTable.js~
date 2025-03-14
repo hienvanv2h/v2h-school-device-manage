@@ -1,8 +1,3 @@
-window._teacherAssignmentState = {
-  assignmentId: "",
-};
-
-
 document.addEventListener("DOMContentLoaded", function () {
   const tableSelector = "#teacherAssignmentTable";
   const paginationSelector = "#teacherAssignmentPagination";
@@ -90,51 +85,30 @@ document.addEventListener("DOMContentLoaded", function () {
     rows.forEach((row) => {
       const tr = document.createElement("tr");
       tr.classList.add("border-b", "hover:bg-gray-50");
-      tr.setAttribute("data-id", row.assignmentId);
-      if(window._teacherAssignmentState.assignmentId == row.assignmentId) { //loose comparison
-        tr.classList.add("bg-blue-100");
-      }
-
       tr.innerHTML = `
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div>
-                ${row.assignmentId}
-            </div>
+          ${row.assignmentId}
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div class="w-[200px]">
-                ${row.teacherName}
-            </div>
+          ${row.teacherName}
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div>
-                ${row.className}
-            </div>
+          ${row.className}
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div>
-                ${row.subjectName}
-            </div>
+          ${row.subjectName}
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div>
-                ${row.semester}
-            </div>
+          ${row.semester}
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div class="w-[200px] truncate">
-                ${row.description}
-            </div>
+          ${row.description}
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div>
-                ${formatDateTime(row.createdAt)}
-            </div>
+          ${formatDateTime(row.createdAt)}
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div>
-                ${formatDateTime(row.updatedAt)}
-            </div>
+          ${formatDateTime(row.updatedAt)}
         </td>
       `;
 
@@ -173,16 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Ánh xạ giá trị chọn dòng của bảng cho form input (hàm khai báo trong file table-form-binding.js)
   bindTableDataToFormOnSelect(tableSelector, formInputSelector);
-
-  // tableBody.addEventListener("click", (event) => {
-  //   const selectedRow = event.target.closest("tr");
-  //   window._teacherAssignmentState.assignmentId = selectedRow.dataset.id;
-  //   // Xóa lớp được chọn từ tất cả các dòng
-  //   const rows = tableBody.querySelectorAll("tr");
-  //   rows.forEach((r) => r.classList.remove("bg-blue-100"));
-  //   // Thêm lớp cho dòng hiện tại
-  //   selectedRow.classList.add("bg-blue-100");
-  // });
 
   // Gắn sự kiện cho paginationContainer (Event delegation)
   paginationContainer.addEventListener("click", (event) => {

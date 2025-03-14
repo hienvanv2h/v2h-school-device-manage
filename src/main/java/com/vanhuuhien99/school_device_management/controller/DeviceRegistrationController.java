@@ -7,6 +7,7 @@ import com.vanhuuhien99.school_device_management.entity.User;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationDTO;
+import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
 import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentDTO;
 import com.vanhuuhien99.school_device_management.service.DeviceRegistrationService;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
@@ -36,7 +37,7 @@ public class DeviceRegistrationController {
     private static final Logger log = LoggerFactory.getLogger(DeviceRegistrationController.class);
 
     private static final String DEVICE_REGISTRATION_TABLE_TEMPLATE = "dashboard/table/device-registration-table";
-    private static final String DEVICE_REGISTRATION_FORM_TEMPLATE = "dashboard/form/device-registration-form";
+    private static final String DEVICE_REGISTRATION_FORM_TEMPLATE = "dashboard/form/device-registration-form2";
 
     private final DeviceRegistrationService deviceRegistrationService;
 
@@ -137,11 +138,10 @@ public class DeviceRegistrationController {
         var deviceRegistrationDTO = DeviceRegistrationDTO.fromDeviceRegistration(deviceRegistration);
         // Fill data to form
         var deviceRegistrationForm = DeviceRegistrationForm.builder()
-                .teacherAssignmentId(deviceRegistrationDTO.getTeacherAssignmentId())
+                .scheduleId(deviceRegistrationDTO.getScheduleId())
                 .deviceId(deviceRegistrationDTO.getDeviceId())
                 .registrationStatus(deviceRegistrationDTO.getRegistrationStatus())
                 .approvalStatus(deviceRegistrationDTO.getApprovalStatus())
-                .scheduleDate(deviceRegistrationDTO.getScheduleDate())
                 .returnDate(deviceRegistrationDTO.getReturnDate())
                 .description(deviceRegistrationDTO.getDescription())
                 .build();
@@ -208,6 +208,7 @@ public class DeviceRegistrationController {
     private void populateFormModelAttributes(Model model) {
         // Column mapping for TeacherAssignment & Device table
         model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
+        model.addAttribute("SCHEDULE_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(ScheduleProjection.class));
         model.addAttribute("DEVICE_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(Device.class));
         var approvalStatusList = deviceRegistrationService.getAllApprovalStatus();
         model.addAttribute("approvalStatusList", approvalStatusList);
