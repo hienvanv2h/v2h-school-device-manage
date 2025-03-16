@@ -76,7 +76,7 @@
             ${header}
 
             <!-- Main Content -->
-            <main class="flex-1 bg-white px-8 py-4 overflow-y-auto mt-24">
+            <main class="flex-1 bg-white p-8 overflow-y-auto mt-24">
                 ${content}
             </main>
         </div>

@@ -25,16 +25,30 @@ customStyles = @`
 `,
 content = @`
     <div class="relative w-[80%] max-w-7xl mx-auto my-8 min-h-full overflow-hidden">
-        <div class="controls">
-            <button id="prevBtn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 hidden" onclick="prevStep()">Quay lại</button>
-            <button id="nextBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="nextStep()">Tiếp theo</button>
+        @if(errors != null)
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <ul>
+                    @for(var error: errors)
+                        <li>${error}</li>
+                    @endfor
+                </ul>
+            </div>
+        @endif
+
+        <div class="flex flex-row justify-between items-center gap-2">
+            <h2 id="step-title" class="text-2xl font-semibold text-gray-700 mb-4">Đăng ký mượn thiết bị dạy học</h2>
+            <div class="controls">
+                <button id="prevBtn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 hidden" onclick="prevStep()">Quay lại</button>
+                <button id="nextBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="nextStep()">Tiếp theo</button>
+            </div>
         </div>
 
         <div id="steps" class="steps">
             <!-- Step 1: Chọn Assignment -->
-            <div class="step flex flex-col justify-between flex-1 w-full h-[80%]">
+            <div class="step flex flex-col justify-between flex-1 gap-2 w-full h-[80%]">
+                <h3 class="text-lg font-semibold text-gray-700">Bước 1: Chọn phân công chuyên môn</h3>
                 <input id="teacherAssignmentSearch" type="text" placeholder="Nhập tên giáo viên"
-                       class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
+                       class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mx-2">
                 <div class="overflow-auto p-2 custom-scrollbar h-[60vh]">
                     <%--    Teacher Assignment Data    --%>
                     <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg">
@@ -62,7 +76,8 @@ content = @`
             </div>
 
             <!-- Step 2: Chọn Schedule -->
-            <div class="step flex flex-col justify-between flex-1 w-full h-full">
+            <div class="step flex flex-col justify-between flex-1 gap-2 w-full h-full">
+                <h3 class="text-lg font-semibold text-gray-700">Bước 2: Chọn thời khóa biểu thuộc phân công vừa chọn ở bước 1</h3>
                 <div class="overflow-auto p-2 custom-scrollbar h-[60vh]">
                     <%--    Schedule Data    --%>
                     <table id="scheduleTable" class="bg-white border border-gray-200 rounded-lg">
@@ -90,9 +105,10 @@ content = @`
             </div>
 
             <!-- Step 3: Chọn Device -->
-            <div class="step flex flex-col justify-between flex-1 w-full h-full">
+            <div class="step flex flex-col justify-between flex-1 gap-2 w-full h-full">
+                <h3 class="text-lg font-semibold text-gray-700">Bước 3: Chọn thiết bị</h3>
                 <input id="deviceSearch" type="text" placeholder="Nhập tên thiết bị"
-                       class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
+                       class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mx-2">
                 <div class="overflow-auto p-2 custom-scrollbar h-[60vh]">
                     <%--    Device Data    --%>
                     <table id="deviceTable" class="bg-white border border-gray-200 rounded-lg">
@@ -121,10 +137,11 @@ content = @`
 
             <!-- Step 4: Form xác nhận thông tin -->
             <div class="step w-full h-full">
+                <h3 class="text-lg font-semibold text-gray-700">Bước 4: Xác nhận đơn đăng ký</h3>
                 <form id="form" name="deviceRegistrationForm"
                       action="${apiPath}/save${type == null || type.equals("create") ? "" : "/" + id}"
                       method="POST"
-                      class="bg-slate-100 p-6 rounded-lg shadow-md">
+                      class="bg-slate-100 p-6 rounded-lg shadow-md mt-2">
                     <h2 class="text-2xl font-semibold text-gray-700 mb-4">Đăng ký mượn thiết bị</h2>
                     @if(errors != null)
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
