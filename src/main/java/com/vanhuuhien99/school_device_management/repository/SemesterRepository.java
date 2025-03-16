@@ -6,8 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SemesterRepository extends JpaRepository<Semester, Long> {
+
+    Optional<Semester> findBySemesterName(String semesterName);
 
     Page<Semester> findBySemesterNameContaining(String keyword, Pageable pageable);
 }

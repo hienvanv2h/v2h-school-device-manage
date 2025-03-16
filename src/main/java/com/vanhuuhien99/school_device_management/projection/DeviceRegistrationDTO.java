@@ -27,15 +27,20 @@ public class DeviceRegistrationDTO {
     private LocalDateTime updatedAt;
 
     public static DeviceRegistrationDTO fromDeviceRegistration(DeviceRegistration deviceRegistration) {
+        var scheduleId = deviceRegistration.getSchedule() != null ? deviceRegistration.getSchedule().getScheduleId() : null;
+        var teacherName = deviceRegistration.getSchedule() != null ? deviceRegistration.getSchedule().getTeacherAssignment().getTeacher().getFullName() : null;
+        var deviceId = deviceRegistration.getDevice() != null ? deviceRegistration.getDevice().getDeviceId() : null;
+        var deviceName = deviceRegistration.getDevice() != null ? deviceRegistration.getDevice().getDeviceName() : null;
+        var scheduleDate = deviceRegistration.getSchedule() != null ? deviceRegistration.getSchedule().getScheduleDate() : null;
         return DeviceRegistrationDTO.builder()
                 .registrationId(deviceRegistration.getRegistrationId())
-                .scheduleId(deviceRegistration.getSchedule().getScheduleId())
-                .teacherName(deviceRegistration.getSchedule().getTeacherAssignment().getTeacher().getFullName())
-                .deviceId(deviceRegistration.getDevice().getDeviceId())
-                .deviceName(deviceRegistration.getDevice().getDeviceName())
+                .scheduleId(scheduleId)
+                .teacherName(teacherName)
+                .deviceId(deviceId)
+                .deviceName(deviceName)
                 .registrationStatus(deviceRegistration.getRegistrationStatus())
                 .approvalStatus(deviceRegistration.getApprovalStatus())
-                .scheduleDate(deviceRegistration.getSchedule().getScheduleDate())
+                .scheduleDate(scheduleDate)
                 .returnDate(deviceRegistration.getReturnDate())
                 .description(deviceRegistration.getDescription())
                 .createdAt(deviceRegistration.getCreatedAt())

@@ -25,6 +25,11 @@ customStyles = @`
 `,
 content = @`
     <div class="relative w-[80%] max-w-7xl mx-auto my-8 min-h-full overflow-hidden">
+        <div class="controls">
+            <button id="prevBtn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 hidden" onclick="prevStep()">Quay lại</button>
+            <button id="nextBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="nextStep()">Tiếp theo</button>
+        </div>
+
         <div id="steps" class="steps">
             <!-- Step 1: Chọn Assignment -->
             <div class="step flex flex-col justify-between flex-1 w-full h-[80%]">
@@ -186,13 +191,12 @@ content = @`
                         ? deviceRegistrationForm.getDescription().trim() : ""}</textarea>
                         </div>
 
-                        <div>
+                        <div class="hidden">
                             <label for="registrationStatus" class="block text-gray-700 font-medium mb-2">
                                 Trạng thái đơn đăng ký <span class="text-red-500">*</span>
                             </label>
                             <input type="text" id="registrationStatus" name="registrationStatus"
-                                   value="${deviceRegistrationForm != null && deviceRegistrationForm.getRegistrationStatus() != null
-                                        ? deviceRegistrationForm.getRegistrationStatus() : "Tạo mới"}"
+                                   value="Tạo mới"
                                    class="px-4 py-2 w-full bg-yellow-300 border border-gray-300 rounded-md mt-2"
                                    required readonly="${deviceRegistrationForm == null}">
                         </div>
@@ -244,11 +248,6 @@ content = @`
                     </div>
                 </form>
             </div>
-        </div>
-
-        <div class="controls">
-            <button id="prevBtn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 hidden" onclick="prevStep()">Quay lại</button>
-            <button id="nextBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="nextStep()">Tiếp theo</button>
         </div>
     </div>
 `,

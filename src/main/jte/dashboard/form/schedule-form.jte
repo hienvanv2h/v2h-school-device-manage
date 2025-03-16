@@ -22,9 +22,9 @@ content = @`
         <div class="flex flex-col justify-between max-w-3xl max-h-[80%] h-full">
             <input id="teacherAssignmentSearch" type="text" placeholder="Nhập tên giáo viên"
                    class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
-            <div class="relative flex-1 overflow-auto custom-scrollbar">
+            <div class="relative flex-1 overflow-auto custom-scrollbar max-h-[80vh]">
                 <%--    Teacher Assignment list    --%>
-                <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg shadow-md h-full">
+                <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg shadow-md">
                     <thead class="sticky top-0 left-0 right-0 z-10 bg-gray-100">
                         <tr>
                             @for(Map.Entry<String, String> entry: TA_COLUMN_MAPPING.entrySet())
@@ -48,7 +48,7 @@ content = @`
             </nav>
         </div>
 
-        <div class="max-w-2xl mx-auto h-full">
+        <div class="max-w-2xl mx-auto h-full max-h-[80vh]">
             <form name="scheduleForm"
                   action="${apiPath}/save${type == null || type.equals("create") ? "" : "/" + id}"
                   method="POST"

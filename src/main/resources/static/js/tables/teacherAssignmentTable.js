@@ -174,16 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Ánh xạ giá trị chọn dòng của bảng cho form input (hàm khai báo trong file table-form-binding.js)
   bindTableDataToFormOnSelect(tableSelector, formInputSelector);
 
-  // tableBody.addEventListener("click", (event) => {
-  //   const selectedRow = event.target.closest("tr");
-  //   window._teacherAssignmentState.assignmentId = selectedRow.dataset.id;
-  //   // Xóa lớp được chọn từ tất cả các dòng
-  //   const rows = tableBody.querySelectorAll("tr");
-  //   rows.forEach((r) => r.classList.remove("bg-blue-100"));
-  //   // Thêm lớp cho dòng hiện tại
-  //   selectedRow.classList.add("bg-blue-100");
-  // });
-
   // Gắn sự kiện cho paginationContainer (Event delegation)
   paginationContainer.addEventListener("click", (event) => {
     const target = event.target;

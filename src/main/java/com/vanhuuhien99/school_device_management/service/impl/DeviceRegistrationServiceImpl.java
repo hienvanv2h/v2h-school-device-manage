@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 
 @Service
@@ -59,8 +61,8 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
         if(StringUtils.hasText(approvalStatus)) {
             spec = spec.and(DeviceRegistrationSpec.hasApprovalStatus(approvalStatus));
         }
-
-        return deviceRegistrationRepository.findAll(spec, pageable);
+        var result = deviceRegistrationRepository.findAll(spec, pageable);
+        return result;
     }
 
     @Override
@@ -108,11 +110,15 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     @Override
     @Transactional
     public Result<Void> updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId) {
-        var availableSchedules = scheduleRepository
-                .findByTeacherAssignmentId(form.getScheduleId(), Pageable.unpaged())
-                .getContent();
+        var availableSchedules = scheduleRepository.findScheduleById(form.getScheduleId());
         if(availableSchedules.isEmpty()) {
             return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
+        }
+
+        // Kiểm tra ngày trả
+        var scheduleDate = availableSchedules.get().getScheduleDate();
+        if(form.getReturnDate() == null || form.getReturnDate().isBefore(ChronoLocalDate.from(scheduleDate))) {
+            return Result.failure("Ngày trả phải trong hoặc sau ngày mượn");
         }
 
         var existingDevice = getDeviceById(form.getDeviceId());

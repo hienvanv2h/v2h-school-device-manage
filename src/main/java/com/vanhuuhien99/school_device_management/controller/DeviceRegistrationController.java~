@@ -174,7 +174,6 @@ public class DeviceRegistrationController {
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
-            model.addAttribute("id",registrationId);
             populateFormModelAttributes(model);
             log.info("Validation errors in update device registration form");
             return DEVICE_REGISTRATION_FORM_TEMPLATE_UPDATE;
@@ -185,7 +184,6 @@ public class DeviceRegistrationController {
             return "redirect:/dashboard";
         } else {
             model.addAttribute("errors", List.of(updateResult.getErrorMessage()));
-            model.addAttribute("id",registrationId);
             populateFormModelAttributes(model);
             return  DEVICE_REGISTRATION_FORM_TEMPLATE_UPDATE;
         }

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
   
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         renderTableRows(data.content);
         renderPagination(data.page.totalPages, data.page.number);
       } catch (error) {
@@ -59,6 +59,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const month = (date.getMonth() + 1).toString().padStart(2, "0");
       const year = date.getFullYear();
       return `${hours}:${minutes} ${day}/${month}/${year}`;
+    }
+
+    function formatTime(time) {
+      return time.split(":").slice(0, 2).join(":"); // Tách bằng dấu ':' rồi nối lại HH:mm
     }
   
     // Tạo và hiển thị các dòng bản ghi trong bảng
@@ -110,12 +114,12 @@ document.addEventListener("DOMContentLoaded", function () {
           </td>
           <td class="px-6 py-4 text-sm text-gray-700 border-b">
               <div>
-                  ${formatDateTime(row.startTime)}
+                  ${formatTime(row.startTime)}
               </div>
           </td>
           <td class="px-6 py-4 text-sm text-gray-700 border-b">
               <div>
-                  ${formatDateTime(row.endTime)}
+                  ${formatTime(row.endTime)}
               </div>
           </td>
           <td class="px-6 py-4 text-sm text-gray-700 border-b">
