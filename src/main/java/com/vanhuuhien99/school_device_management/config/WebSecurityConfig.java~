@@ -92,7 +92,7 @@ public class WebSecurityConfig {
                 .permitAll()
         )
         .exceptionHandling(exc -> exc
-                .accessDeniedHandler(new CustomAccessDeniedHandler())   // 403
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
         );
 
         return http.build();
