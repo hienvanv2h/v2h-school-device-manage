@@ -53,8 +53,6 @@ public class ColumnMapping {
                 put("deviceId", "#");
                 put("deviceName", "Tên thiết bị");
                 put("categoryId", "Loại thiết bị");
-                put("totalQuantity", "Số lượng ban đầu");
-                put("remainingQuantity", "Số lượng còn lại");
                 put("description", "Mô tả");
                 put("status", "Tình trạng TB");
                 put("createdAt", "Ngày tạo");

@@ -51,14 +51,12 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     public void createNewDevice(DeviceForm form) {
         DeviceCategory existingDeviceCategory = getDeviceCategoryById(form.getDeviceCategoryId());
-        int remainingQtt = form.getRemainingQuantity() != null && form.getRemainingQuantity() != 0
-                ? form.getRemainingQuantity() : form.getTotalQuantity();
 
         Device newDevice = Device.builder()
                 .deviceName(form.getDeviceName())
                 .deviceCategory(existingDeviceCategory)
                 .totalQuantity(form.getTotalQuantity())
-                .remainingQuantity(remainingQtt)
+                .remainingQuantity(form.getRemainingQuantity())
                 .description(form.getDescription())
                 .status(form.getStatus())
                 .build();

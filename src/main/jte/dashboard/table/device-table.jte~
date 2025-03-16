@@ -105,7 +105,7 @@ content = @`
                                 <div class="min-w-[60px]">${device.getRemainingQuantity()}</div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
-                                <div class="min-w-[160px]">${device.getDescription()}</div>
+                                <div class="min-w-[200px]">${device.getDescription()}</div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
                                 <div class="min-w-[100px]">${device.getStatus()}</div>

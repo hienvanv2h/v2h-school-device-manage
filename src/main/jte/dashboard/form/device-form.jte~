@@ -95,7 +95,7 @@ content = @`
                         Số lượng ban đầu <span class="text-red-500">*</span>
                     </label>
                     <input type="number" id="totalQuantity" name="totalQuantity"
-                           value="${deviceForm != null && deviceForm.getTotalQuantity() != null ? deviceForm.getTotalQuantity().toString() : "1"}"
+                           value="${deviceForm != null ? deviceForm.getTotalQuantity().toString() : "1"}"
                            placeholder="Nhập số lượng ban đầu"
                            class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
                            min="1"
@@ -108,7 +108,7 @@ content = @`
                             Số lượng còn lại <span class="text-red-500">*</span>
                         </label>
                         <input type="number" id="remainingQuantity" name="remainingQuantity"
-                               value="${deviceForm != null && deviceForm.getRemainingQuantity() != null ? deviceForm.getRemainingQuantity().toString() : "0"}"
+                               value="${deviceForm != null ? deviceForm.getRemainingQuantity().toString() : "0"}"
                                placeholder="Nhập số lượng còn lại"
                                class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
                                min="0"
