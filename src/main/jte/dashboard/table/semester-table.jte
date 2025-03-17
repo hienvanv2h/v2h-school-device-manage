@@ -16,6 +16,7 @@
 @param String apiPath = "/dashboard/semesters"
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,

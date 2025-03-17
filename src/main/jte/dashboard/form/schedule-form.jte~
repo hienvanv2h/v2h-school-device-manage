@@ -15,6 +15,7 @@
 @param String apiPath = "/dashboard/schedules"
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,
@@ -49,7 +50,7 @@ content = @`
             </nav>
         </div>
 
-        <div class="max-w-2xl mx-auto h-full">
+        <div class="max-w-2xl mx-auto h-full max-h-[80vh]">
             <form name="scheduleForm"
                   action="${apiPath}/save${type == null || type.equals("create") ? "" : "/" + id}"
                   method="POST"
@@ -87,7 +88,7 @@ content = @`
                             Ngày học <span class="text-red-500">*</span>
                         </label>
                         <input type="date" id="scheduleDate" name="scheduleDate"
-                            value="${scheduleForm != null && scheduleForm.getScheduleDate() != null ? scheduleForm.getScheduleDate().toString() : LocalDate.now().toString()}"
+                               value="${scheduleForm != null && scheduleForm.getScheduleDate() != null ? scheduleForm.getScheduleDate().toString() : LocalDate.now().toString()}"
                                class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
                                required>
                     </div>
@@ -108,7 +109,7 @@ content = @`
                         <input type="time" id="startTime" name="startTime"
                                value="${scheduleForm != null && scheduleForm.getStartTime() != null ? scheduleForm.getStartTime().toString() : ""}"
                                class="px-4 py-2 w-28 border border-gray-300 rounded-md mt-2"
-                               min="00:00" max="23:59"
+                               min="00:00" max="23:59" step="any"
                                required>
                         <label for="endTime" class="inline-block text-gray-700 font-medium mb-2">
                             Đến <span class="text-red-500">*</span>
@@ -116,7 +117,7 @@ content = @`
                         <input type="time" id="endTime" name="endTime"
                                value="${scheduleForm != null && scheduleForm.getEndTime() != null ? scheduleForm.getEndTime().toString() : ""}"
                                class="px-4 py-2 w-28 border border-gray-300 rounded-md mt-2"
-                               min="00:00" max="23:59"
+                               min="00:00" max="23:59" step="any"
                                required>
                     </div>
                     <div>

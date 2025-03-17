@@ -11,6 +11,7 @@
 @param String exportExcelPath = "/reports/device-summary-report/export"
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,

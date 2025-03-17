@@ -9,6 +9,7 @@
 @param Content customScripts = null
 
 @param boolean isAuthenticated = false
+@param com.vanhuuhien99.school_device_management.viewmodel.GlobalTemplateState globalState = null
 
 <!doctype html>
 <html lang="en">
@@ -51,7 +52,7 @@
 
             <div class="pl-2">
                 <!-- Sidebar Menu -->
-                @template.dashboard.sidebar-menu()
+                @template.dashboard.sidebar-menu(header = header)
             </div>
 
             <!-- Sidebar Bottom -->
@@ -71,12 +72,11 @@
         </aside>
 
         <div class="relative flex-1 flex flex-col ml-64 overflow-x-auto">
-            <%--    Header    --%>
-<%--            @template.dashboard.header(isAuthenticated = isAuthenticated)--%>
             ${header}
 
             <!-- Main Content -->
             <main class="flex-1 bg-white px-8 py-4 overflow-y-auto mt-24">
+                <div class="mb-4 text-red-500">Username: ${globalState != null ? globalState.getUsername() : ""}</div>
                 ${content}
             </main>
         </div>

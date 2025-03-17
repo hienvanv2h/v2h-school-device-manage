@@ -27,7 +27,7 @@ content = @`
                        class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
                 <div class="overflow-auto p-2 flex-1 custom-scrollbar">
                     <%--    Teacher Assignment Data    --%>
-                    <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg shadow-md ">
+                    <table id="teacherAssignmentTable" class="bg-white border border-gray-200 rounded-lg shadow-md">
                         <thead>
                         <tr>
                             @for(Map.Entry<String, String> entry: TA_COLUMN_MAPPING.entrySet())
@@ -56,7 +56,7 @@ content = @`
                        class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mx-2">
                 <div class="overflow-auto p-2 flex-1 custom-scrollbar">
                     <%--    Device Data    --%>
-                    <table id="deviceTable" class="bg-white border border-gray-200 rounded-lg shadow-md h-full">
+                    <table id="deviceTable" class="bg-white border border-gray-200 rounded-lg shadow-md">
                         <thead>
                         <tr>
                             @for(Map.Entry<String, String> entry: DEVICE_COLUMN_MAPPING.entrySet())
@@ -110,8 +110,8 @@ content = @`
                             Assignment ID <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="teacherAssignmentId" name="teacherAssignmentId"
-                               value="${deviceRegistrationForm != null && deviceRegistrationForm.getTeacherAssignmentId() != null
-                                        ? deviceRegistrationForm.getTeacherAssignmentId().toString() : ""}"
+                               value="${deviceRegistrationForm != null && deviceRegistrationForm.getScheduleId() != null
+                                        ? deviceRegistrationForm.getScheduleId().toString() : ""}"
                                class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
                                required readonly>
                     </div>

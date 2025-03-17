@@ -17,6 +17,7 @@
 @param String apiPath = "/dashboard/device-registrations"
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,

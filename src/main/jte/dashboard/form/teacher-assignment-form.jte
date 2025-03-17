@@ -19,6 +19,7 @@
 @param String apiPath = "/dashboard/teacher-assignments"
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,

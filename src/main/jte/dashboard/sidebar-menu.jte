@@ -1,3 +1,6 @@
+@import gg.jte.Content
+@param Content header = null
+
 <nav class="sidebar custom-scrollbar flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
     <ul class="space-y-2">
         <li>

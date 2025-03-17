@@ -19,6 +19,7 @@
 @param String[] mapsIdNames = new String[]{"categoryId", "subjectId"}
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,

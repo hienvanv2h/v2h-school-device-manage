@@ -8,6 +8,7 @@
 @param String apiPath = "/manage/users"
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,

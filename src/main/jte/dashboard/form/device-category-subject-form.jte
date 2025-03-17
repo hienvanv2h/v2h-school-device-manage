@@ -10,6 +10,7 @@
 @param String createUrl = "/dashboard/device-category-subject/save"
 
 @template.layout.dashboard(
+globalState = globalState,
 header = @`
     @template.dashboard.header(globalState = globalState)
 `,
