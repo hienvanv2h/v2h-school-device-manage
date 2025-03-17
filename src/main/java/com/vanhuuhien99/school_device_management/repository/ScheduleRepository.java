@@ -51,7 +51,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             "JOIN ta.subject sub " +
             "WHERE ta.assignmentId = :assignmentId "
     )
-    List<ScheduleProjection> findByTeacherAssignmentAssignmentId(Long assignmentId);
+    Page<ScheduleProjection> findByTeacherAssignmentId(Long assignmentId, Pageable pageable);
 
     @Query("SELECT s.scheduleId AS scheduleId, s.dayOfWeek AS dayOfWeek, " +
             "s.scheduleDate AS scheduleDate, s.startTime AS startTime, s.endTime AS endTime, s.location AS location, " +

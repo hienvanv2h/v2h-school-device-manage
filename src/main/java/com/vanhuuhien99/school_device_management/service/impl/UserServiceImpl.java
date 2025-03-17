@@ -1,0 +1,151 @@
+package com.vanhuuhien99.school_device_management.service.impl;
+
+import com.vanhuuhien99.school_device_management.dto.Result;
+import com.vanhuuhien99.school_device_management.entity.Role;
+import com.vanhuuhien99.school_device_management.entity.User;
+import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
+import com.vanhuuhien99.school_device_management.formmodel.UserFormCreate;
+import com.vanhuuhien99.school_device_management.formmodel.UserFormUpdate;
+import com.vanhuuhien99.school_device_management.projection.UserDTO;
+import com.vanhuuhien99.school_device_management.repository.RoleRepository;
+import com.vanhuuhien99.school_device_management.repository.TeacherRepository;
+import com.vanhuuhien99.school_device_management.repository.UserRepository;
+import com.vanhuuhien99.school_device_management.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
+    private final RoleRepository roleRepository;
+
+    private final TeacherRepository teacherRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        var allUsers = userRepository.findAll(pageable);
+        return allUsers.map(UserDTO::fromUser);
+    }
+
+    @Override
+    public Page<UserDTO> searchUsersByUsername(String username, Pageable pageable) {
+        return userRepository.findByUsernameContaining(username, pageable).map(UserDTO::fromUser);
+    }
+
+    @Override
+    public UserDTO getUserById(Long userId) {
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find user with id: " + userId));
+        return UserDTO.fromUser(user);
+    }
+
+    @Override
+    public UserDTO getUserByUsername(String username) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find user with username: " + username));
+        return UserDTO.fromUser(user);
+    }
+
+    @Override
+    @Transactional
+    public Result<Long> createUser(UserFormCreate form) {
+        // Kiểm tra nếu đã tồn tại tài khoản có username hoặc số điện thoại
+        var hasThisUsername = userRepository.existsByUsername(form.getUsername());
+        if(hasThisUsername) {
+            return Result.failure("Username already exists");
+        }
+
+        var hasThisPhoneNumber = userRepository.findByPhoneNumber(form.getPhoneNumber()).isPresent();
+        if(hasThisPhoneNumber) {
+            return Result.failure("Phone number already exists");
+        }
+
+        // Kiểm tra nếu số điện thoại không tương ứng với sđt đã đăng ký cho giáo viên
+        var hasTeacherPhoneNumber = teacherRepository.existsByPhoneNumber(form.getPhoneNumber());
+        if(!hasTeacherPhoneNumber) {
+            return Result.failure("Phone number doesn't belong to any teacher");
+        }
+
+        // Kiểm tra khớp mật khẩu
+        if(!form.getPassword().equals(form.getConfirmPassword())) {
+            return Result.failure("Passwords do not match");
+        }
+
+        String encodedPassword = passwordEncoder.encode(form.getPassword());
+        Role role = roleRepository.findById(form.getRoleId())
+                .orElseGet(() ->
+                        roleRepository.findByRoleName(Role.USER).orElseThrow(() -> new ResourceNotFoundException("Default role USER not found in DB"))
+                );
+        var newUser = User.builder()
+                .username(form.getUsername())
+                .password(encodedPassword)
+                .fullName(form.getFullName())
+                .phoneNumber(form.getPhoneNumber())
+                .role(role)
+                .isActive(true)
+                .build();
+        var savedUser = userRepository.save(newUser);
+        return Result.success(savedUser.getUserId());
+    }
+
+    @Override
+    @Transactional
+    public Result<Long> updateUser(UserFormUpdate form, Long userId) {
+        var existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find user with id: " + userId));
+
+        // Kiểm tra nếu tồn tại tài khoản với sđt này nhưng không phải tài khoản hiện tại
+        var hasThisPhoneNumber = userRepository.findByPhoneNumber(form.getPhoneNumber()).isPresent();
+        var notThisUserPhoneNumber = !existingUser.getPhoneNumber().equals(form.getPhoneNumber());
+        if(hasThisPhoneNumber && notThisUserPhoneNumber) {
+            return Result.failure("There is already an user with this phone number");
+        }
+
+        // Kiểm tra nếu số điện thoại không tương ứng với sđt đã đăng ký cho giáo viên
+        var hasTeacherPhoneNumber = teacherRepository.existsByPhoneNumber(form.getPhoneNumber());
+        if(!hasTeacherPhoneNumber) {
+            return Result.failure("Phone number doesn't belong to any teacher");
+        }
+
+        // Kiểm tra khớp mật khẩu
+        if(form.getPassword() != null && !form.getPassword().equals(form.getConfirmPassword())) {
+            return Result.failure("Passwords do not match");
+        }
+
+        if(form.getPassword() != null && !form.getPassword().isBlank()) {
+            String encodedPassword = passwordEncoder.encode(form.getPassword());
+            existingUser.setPassword(encodedPassword);
+        }
+
+        Role role = roleRepository.findById(form.getRoleId())
+                .orElseGet(() ->
+                        roleRepository.findByRoleName(Role.USER).orElseThrow(() -> new ResourceNotFoundException("Default role USER not found in DB"))
+                );
+
+        existingUser.setFullName(form.getFullName());
+        existingUser.setPhoneNumber(form.getPhoneNumber());
+        existingUser.setRole(role);
+        existingUser.setIsActive(form.getIsActive());
+
+        var updatedUser = userRepository.save(existingUser);
+        return Result.success(updatedUser.getUserId());
+    }
+
+    @Override
+    @Transactional
+    public Result<Long> deleteUser(Long userId) {
+        var existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find user with id: " + userId));
+        userRepository.delete(existingUser);
+        return Result.success(userId);
+    }
+}

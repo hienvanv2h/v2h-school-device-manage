@@ -21,17 +21,14 @@ public class DeviceRegistration extends BaseEntity {
     private Device device;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "AssignmentID")
-    private TeacherAssignment teacherAssignment;
+    @JoinColumn(name = "ScheduleID")
+    private Schedule schedule;
 
     @Column(name = "RegistrationStatus", length = 50, nullable = false)
     private String registrationStatus;
 
     @Column(name = "ApprovalStatus", length = 50, nullable = false)
     private String approvalStatus;
-
-    @Column(name = "ScheduleDate", nullable = false)
-    private LocalDate scheduleDate;
 
     @Column(name = "ReturnDate")
     private LocalDate returnDate;

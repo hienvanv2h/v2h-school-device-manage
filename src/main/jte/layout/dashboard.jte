@@ -24,6 +24,7 @@
 
     <%--  Tailwind CSS  --%>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
     <link rel="stylesheet" type="text/css" href="/css/custom-scrollbar.css">
     <%--  Custom styles  --%>
     @if(customStyles != null)
@@ -33,11 +34,10 @@
 <body class="bg-gray-100 h-screen">
     <div class="flex h-full">
         <!-- Sidebar -->
-        <aside
-                class="bg-gray-800 text-white w-64 flex flex-col justify-between p-2 h-screen fixed z-10">
-            <div>
-                <!-- Sidebar Top -->
-                <div class="p-2 flex items-center mb-8">
+        <aside class="bg-gray-800 text-white w-64 flex flex-col justify-between h-screen fixed z-10">
+            <!-- Sidebar Top -->
+            <div class="px-2 pt-2">
+                <div class="p-2 flex items-center mb-4">
                     <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd"
                               d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 01-1.265.633L5.432 15.5l-2.539.639a1 1 0 01-1.265-.633l-1-3a1 1 0 01.633-1.265L4 9.5l2.961-8.822a1 1 0 011.265-.633l3 1z"
@@ -45,8 +45,11 @@
                     </svg>
                     <h2 class="text-xl font-bold">Dashboard</h2>
                 </div>
-                <div class="h-px border border-gray-700 my-2"></div>
 
+                <div class="h-px border border-gray-700 my-2 px-2"></div>
+            </div>
+
+            <div class="pl-2">
                 <!-- Sidebar Menu -->
                 @template.dashboard.sidebar-menu()
             </div>
@@ -73,12 +76,13 @@
             ${header}
 
             <!-- Main Content -->
-            <main class="flex-1 bg-white p-8 overflow-y-auto mt-24">
+            <main class="flex-1 bg-white px-8 py-4 overflow-y-auto mt-24">
                 ${content}
             </main>
         </div>
     </div>
 
+    <script src="/js/sidebar-active.js"></script>
     <%--  Custom styles  --%>
     @if(customScripts != null)
         ${customScripts}

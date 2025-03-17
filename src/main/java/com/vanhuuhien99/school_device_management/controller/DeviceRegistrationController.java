@@ -7,6 +7,7 @@ import com.vanhuuhien99.school_device_management.entity.User;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.projection.DeviceRegistrationDTO;
+import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
 import com.vanhuuhien99.school_device_management.projection.TeacherAssignmentDTO;
 import com.vanhuuhien99.school_device_management.service.DeviceRegistrationService;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;
@@ -36,7 +37,8 @@ public class DeviceRegistrationController {
     private static final Logger log = LoggerFactory.getLogger(DeviceRegistrationController.class);
 
     private static final String DEVICE_REGISTRATION_TABLE_TEMPLATE = "dashboard/table/device-registration-table";
-    private static final String DEVICE_REGISTRATION_FORM_TEMPLATE = "dashboard/form/device-registration-form";
+    private static final String DEVICE_REGISTRATION_FORM_TEMPLATE = "dashboard/form/device-registration-form2";
+    private static final String DEVICE_REGISTRATION_FORM_TEMPLATE_UPDATE = "dashboard/form/device-registration-form-update";
 
     private final DeviceRegistrationService deviceRegistrationService;
 
@@ -79,10 +81,16 @@ public class DeviceRegistrationController {
         var principal = authentication.getPrincipal();
         if(principal instanceof User user) {
             String userPhoneNumber = user.getPhoneNumber();
+            var isAdmin = user.getAuthorities().stream()
+                    .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
 
             PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-            Page<DeviceRegistration> deviceRegistrationPage = deviceRegistrationService
-                    .searchByCriteria(keyword, filter, approvalStatus, userPhoneNumber, pageRequest);
+            Page<DeviceRegistration> deviceRegistrationPage;
+            if(isAdmin) {
+                deviceRegistrationPage = deviceRegistrationService.searchByCriteria(keyword, filter, approvalStatus, pageRequest);
+            } else {
+                deviceRegistrationPage = deviceRegistrationService.searchByCriteria(keyword, filter, approvalStatus, userPhoneNumber, pageRequest);
+            }
             // Ánh xạ sang DTO class
             Page<DeviceRegistrationDTO> deviceRegistrationDTOPage = deviceRegistrationPage
                     .map(DeviceRegistrationDTO::fromDeviceRegistration);
@@ -137,21 +145,19 @@ public class DeviceRegistrationController {
         var deviceRegistrationDTO = DeviceRegistrationDTO.fromDeviceRegistration(deviceRegistration);
         // Fill data to form
         var deviceRegistrationForm = DeviceRegistrationForm.builder()
-                .teacherAssignmentId(deviceRegistrationDTO.getTeacherAssignmentId())
+                .scheduleId(deviceRegistrationDTO.getScheduleId())
                 .deviceId(deviceRegistrationDTO.getDeviceId())
                 .registrationStatus(deviceRegistrationDTO.getRegistrationStatus())
                 .approvalStatus(deviceRegistrationDTO.getApprovalStatus())
-                .scheduleDate(deviceRegistrationDTO.getScheduleDate())
                 .returnDate(deviceRegistrationDTO.getReturnDate())
                 .description(deviceRegistrationDTO.getDescription())
                 .build();
 
-        model.addAttribute("type", "update");
         model.addAttribute("id",registrationId);
         model.addAttribute("deviceRegistrationForm", deviceRegistrationForm);
         populateFormModelAttributes(model);
 
-        return DEVICE_REGISTRATION_FORM_TEMPLATE;
+        return DEVICE_REGISTRATION_FORM_TEMPLATE_UPDATE;
     }
 
     @PutMapping("/save/{registrationId}")
@@ -168,9 +174,10 @@ public class DeviceRegistrationController {
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
+            model.addAttribute("id",registrationId);
             populateFormModelAttributes(model);
             log.info("Validation errors in update device registration form");
-            return DEVICE_REGISTRATION_FORM_TEMPLATE;
+            return DEVICE_REGISTRATION_FORM_TEMPLATE_UPDATE;
         }
         Result<Void> updateResult = deviceRegistrationService.updateDeviceRegistration(deviceRegistrationForm, registrationId);
         if(updateResult.isSuccess()) {
@@ -178,8 +185,9 @@ public class DeviceRegistrationController {
             return "redirect:/dashboard";
         } else {
             model.addAttribute("errors", List.of(updateResult.getErrorMessage()));
+            model.addAttribute("id",registrationId);
             populateFormModelAttributes(model);
-            return  DEVICE_REGISTRATION_FORM_TEMPLATE;
+            return  DEVICE_REGISTRATION_FORM_TEMPLATE_UPDATE;
         }
     }
 
@@ -208,6 +216,7 @@ public class DeviceRegistrationController {
     private void populateFormModelAttributes(Model model) {
         // Column mapping for TeacherAssignment & Device table
         model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
+        model.addAttribute("SCHEDULE_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(ScheduleProjection.class));
         model.addAttribute("DEVICE_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(Device.class));
         var approvalStatusList = deviceRegistrationService.getAllApprovalStatus();
         model.addAttribute("approvalStatusList", approvalStatusList);

@@ -16,7 +16,14 @@ import java.time.LocalDateTime;
 
 public interface DeviceRegistrationRepository extends JpaRepository<DeviceRegistration, Long>, JpaSpecificationExecutor<DeviceRegistration> {
 
-    @EntityGraph(attributePaths = {"device", "teacherAssignment", "teacherAssignment.teacher"})
+    @EntityGraph(attributePaths = {
+            "device",
+            "schedule",
+            "schedule.teacherAssignment",
+            "schedule.teacherAssignment.teacher",
+            "schedule.teacherAssignment.schoolClass",
+            "schedule.teacherAssignment.subject",
+    })
     @NonNull
     Page<DeviceRegistration> findAll(Specification<DeviceRegistration> spec, @NonNull Pageable pageable);
 
@@ -32,12 +39,11 @@ public interface DeviceRegistrationRepository extends JpaRepository<DeviceRegist
         )
         FROM DeviceRegistration dr
         LEFT JOIN dr.device d
-        LEFT JOIN dr.teacherAssignment ta
+        LEFT JOIN dr.schedule s
+        LEFT JOIN s.teacherAssignment ta
         LEFT JOIN ta.teacher t
         LEFT JOIN ta.schoolClass sc
-        LEFT JOIN ta.schedules s
         WHERE dr.createdAt between :startDate and :endDate
-        AND dr.scheduleDate = s.scheduleDate
     """)
     Page<DeviceRegistrationReportDTO> findDeviceRegistrationReportBetween(
             @Param("startDate") LocalDateTime startDate,

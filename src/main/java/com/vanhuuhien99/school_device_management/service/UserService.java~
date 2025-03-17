@@ -1,0 +1,25 @@
+package com.vanhuuhien99.school_device_management.service;
+
+import com.vanhuuhien99.school_device_management.dto.Result;
+import com.vanhuuhien99.school_device_management.formmodel.UserFormCreate;
+import com.vanhuuhien99.school_device_management.formmodel.UserFormUpdate;
+import com.vanhuuhien99.school_device_management.projection.UserDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+public interface UserService {
+
+    Page<UserDTO> getAllUsers(Pageable pageable);
+
+
+
+    UserDTO getUserById(Long userId);
+
+    UserDTO getUserByUsername(String username);
+
+    Result<Long> createUser(UserFormCreate form);
+
+    Result<Long> updateUser(UserFormUpdate form, Long userId);
+
+    Result<Long> deleteUser(Long userId);
+}

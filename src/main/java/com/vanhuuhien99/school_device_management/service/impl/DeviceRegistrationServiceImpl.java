@@ -1,10 +1,7 @@
 package com.vanhuuhien99.school_device_management.service.impl;
 
 import com.vanhuuhien99.school_device_management.dto.Result;
-import com.vanhuuhien99.school_device_management.entity.ApprovalStatusDefinition;
-import com.vanhuuhien99.school_device_management.entity.Device;
-import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
-import com.vanhuuhien99.school_device_management.entity.TeacherAssignment;
+import com.vanhuuhien99.school_device_management.entity.*;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
 import com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO;
@@ -20,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,7 +27,6 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
 
     private final DeviceRegistrationRepository deviceRegistrationRepository;
     private final DeviceRepository deviceRepository;
-    private final TeacherAssignmentRepository teacherAssignmentRepository;
     private final ApprovalStatusRepository approvalStatusRepository;
     private final ScheduleRepository scheduleRepository;
 
@@ -63,8 +61,8 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
         if(StringUtils.hasText(approvalStatus)) {
             spec = spec.and(DeviceRegistrationSpec.hasApprovalStatus(approvalStatus));
         }
-
-        return deviceRegistrationRepository.findAll(spec, pageable);
+        var result = deviceRegistrationRepository.findAll(spec, pageable);
+        return result;
     }
 
     @Override
@@ -81,19 +79,13 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     @Override
     @Transactional
     public Result<Long> createNewDeviceRegistration(DeviceRegistrationForm form) {
-        var availableSchedules = scheduleRepository.findByTeacherAssignmentAssignmentId(form.getTeacherAssignmentId());
-        if(availableSchedules.isEmpty()) {
+        var optionalSchedule = scheduleRepository.findScheduleById(form.getScheduleId());
+        if(optionalSchedule.isEmpty()) {
             return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
-        }
-        // Kiểm tra nếu ngày đăng ký trong form đã tồn tại khớp trong thời khóa biểu
-        boolean hasMatchedScheduleDate = availableSchedules.stream()
-                .anyMatch(schedule -> schedule.getScheduleDate().isEqual(form.getScheduleDate()));
-        if(!hasMatchedScheduleDate) {
-            return Result.failure("Chưa đăng ký thời khóa biểu cho ngày này");
         }
 
         var existingDevice = getDeviceById(form.getDeviceId());
-        var existingTeacherAssignment = getTeacherAssignmentById(form.getTeacherAssignmentId());
+        var existingSchedule = getScheduleById(form.getScheduleId());
 
         if(form.getRegistrationStatus() == null || form.getRegistrationStatus().trim().isEmpty()) {
             form.setRegistrationStatus("Tạo mới");
@@ -104,11 +96,10 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
 
         DeviceRegistration newDeviceRegistration = DeviceRegistration.builder()
                 .device(existingDevice)
-                .teacherAssignment(existingTeacherAssignment)
+                .schedule(existingSchedule)
                 .registrationStatus(form.getRegistrationStatus())
                 .registrationStatus(form.getRegistrationStatus())
                 .approvalStatus(form.getApprovalStatus())
-                .scheduleDate(form.getScheduleDate())
                 .returnDate(form.getReturnDate())
                 .description(form.getDescription())
                 .build();
@@ -119,27 +110,26 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
     @Override
     @Transactional
     public Result<Void> updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId) {
-        var availableSchedules = scheduleRepository.findByTeacherAssignmentAssignmentId(form.getTeacherAssignmentId());
+        var availableSchedules = scheduleRepository.findScheduleById(form.getScheduleId());
         if(availableSchedules.isEmpty()) {
             return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
         }
-        // Kiểm tra nếu ngày đăng ký trong form đã tồn tại khớp trong thời khóa biểu
-        boolean hasMatchedScheduleDate = availableSchedules.stream()
-                .anyMatch(schedule -> schedule.getScheduleDate().isEqual(form.getScheduleDate()));
-        if(!hasMatchedScheduleDate) {
-            return Result.failure("Chưa đăng ký thời khóa biểu cho ngày này");
+
+        // Kiểm tra ngày trả
+        var scheduleDate = availableSchedules.get().getScheduleDate();
+        if(form.getReturnDate() == null || form.getReturnDate().isBefore(ChronoLocalDate.from(scheduleDate))) {
+            return Result.failure("Ngày trả phải trong hoặc sau ngày mượn");
         }
 
         var existingDevice = getDeviceById(form.getDeviceId());
-        var existingTeacherAssignment = getTeacherAssignmentById(form.getTeacherAssignmentId());
+        var existingSchedule = getScheduleById(form.getScheduleId());
 
         DeviceRegistration existingDeviceRegistration = deviceRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
         existingDeviceRegistration.setDevice(existingDevice);
-        existingDeviceRegistration.setTeacherAssignment(existingTeacherAssignment);
+        existingDeviceRegistration.setSchedule(existingSchedule);
         existingDeviceRegistration.setRegistrationStatus(form.getRegistrationStatus());
         existingDeviceRegistration.setApprovalStatus(form.getApprovalStatus());
-        existingDeviceRegistration.setScheduleDate(form.getScheduleDate());
         existingDeviceRegistration.setReturnDate(form.getReturnDate());
         existingDeviceRegistration.setDescription(form.getDescription());
         deviceRegistrationRepository.save(existingDeviceRegistration);
@@ -165,8 +155,8 @@ public class DeviceRegistrationServiceImpl implements DeviceRegistrationService 
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find device with id: " + deviceId));
     }
 
-    private TeacherAssignment getTeacherAssignmentById(Long teacherAssignmentId) {
-        return teacherAssignmentRepository.findById(teacherAssignmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot find teacher assignment with id: " + teacherAssignmentId));
+    private Schedule getScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find schedule with id: " + scheduleId));
     }
 }

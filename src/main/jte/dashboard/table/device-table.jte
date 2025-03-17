@@ -71,7 +71,7 @@ content = @`
                     <thead>
                     <tr>
                         @for(Map.Entry<String, String> entry: columnMapping.entrySet())
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 bg-gray-100 border-b min-w-[160px]">
+                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 bg-gray-100 border-b">
                                 <a href="${apiPath}?page=${currentPage}&size=${devicePage.getSize()}&sort=${entry.getKey()},${sortField.equals(entry.getKey()) && sortDirection.equalsIgnoreCase("asc") ? "desc" : "asc"}"
                                    class="hover:underline">
                                     <%--    Tên cột hiển thị    --%>
@@ -87,19 +87,38 @@ content = @`
                     </thead>
                     <tbody>
                     @for(var device: devicePage.getContent())
+                        <%--    Lưu ý: Thứ tự cột cần khớp tương ứng với LinkedHashMap trong ColumnMapping    --%>
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDeviceId()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDeviceName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
-                                ${device.getCategoryName() != null ? device.getCategoryName() : ""}
+                                <div>${device.getDeviceId()}</div>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getDescription()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${device.getStatus()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(device.getCreatedAt())}
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
+                                <div class="min-w-[140px]">${device.getDeviceName()}</div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
+                                <div class="min-w-[140px]">${device.getCategoryName() != null ? device.getCategoryName() : ""}</div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
+                                <div class="min-w-[60px]">${device.getTotalQuantity()}</div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
+                                <div class="min-w-[60px]">${device.getRemainingQuantity()}</div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
+                                <div class="min-w-[160px]">${device.getDescription()}</div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
+                                <div class="min-w-[100px]">${device.getStatus()}</div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(device.getUpdatedAt())}
+                                <div class="min-w-[160px]">
+                                    ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(device.getCreatedAt())}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 border-b">
+                                <div class="min-w-[160px]">
+                                    ${DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy").format(device.getUpdatedAt())}
+                                </div>
                             </td>
 
                             @if(globalState.isAdmin())

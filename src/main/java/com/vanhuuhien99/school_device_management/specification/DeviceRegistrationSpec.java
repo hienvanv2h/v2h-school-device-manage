@@ -1,9 +1,6 @@
 package com.vanhuuhien99.school_device_management.specification;
 
-import com.vanhuuhien99.school_device_management.entity.Device;
-import com.vanhuuhien99.school_device_management.entity.DeviceRegistration;
-import com.vanhuuhien99.school_device_management.entity.Teacher;
-import com.vanhuuhien99.school_device_management.entity.TeacherAssignment;
+import com.vanhuuhien99.school_device_management.entity.*;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,7 +13,9 @@ public class DeviceRegistrationSpec {
             if(!StringUtils.hasText(keyword)) {
                 return cb.conjunction();
             }
-            Join<DeviceRegistration, TeacherAssignment> teacherAssignmentJoin = root.join("teacherAssignment", JoinType.INNER);
+
+            Join<DeviceRegistration, Schedule> scheduleJoin = root.join("schedule", JoinType.INNER);
+            Join<Schedule, TeacherAssignment> teacherAssignmentJoin = scheduleJoin.join("teacherAssignment", JoinType.INNER);
             Join<TeacherAssignment, Teacher> teacherJoin = teacherAssignmentJoin.join("teacher", JoinType.INNER);
             return cb.like(
                     cb.lower(teacherJoin.get("fullName")),
@@ -41,7 +40,8 @@ public class DeviceRegistrationSpec {
             if(!StringUtils.hasText(phoneNumber)) {
                 return cb.conjunction();
             }
-            Join<DeviceRegistration, TeacherAssignment> teacherAssignmentJoin = root.join("teacherAssignment", JoinType.INNER);
+            Join<DeviceRegistration, Schedule> scheduleJoin = root.join("schedule", JoinType.INNER);
+            Join<Schedule, TeacherAssignment> teacherAssignmentJoin = scheduleJoin.join("teacherAssignment", JoinType.INNER);
             Join<TeacherAssignment, Teacher> teacherJoin = teacherAssignmentJoin.join("teacher", JoinType.INNER);
             return cb.equal(teacherJoin.get("phoneNumber"), phoneNumber);
         };

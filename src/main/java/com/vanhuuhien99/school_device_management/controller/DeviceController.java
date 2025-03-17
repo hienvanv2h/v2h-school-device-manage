@@ -108,6 +108,8 @@ public class DeviceController {
         var deviceForm = DeviceForm.builder()
                 .deviceName(device.getDeviceName())
                 .deviceCategoryId(device.getDeviceCategory().getCategoryId())
+                .totalQuantity(device.getTotalQuantity())
+                .remainingQuantity(device.getRemainingQuantity())
                 .description(device.getDescription())
                 .status(device.getStatus())
                 .build();

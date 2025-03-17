@@ -66,8 +66,8 @@ public class TeacherAssignmentController {
             @RequestParam(required = false) String filter
     ) {
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<TeacherAssignmentDTO> teacherAssignmentList = teacherAssignmentService.searchByCriteria(keyword, filter, pageRequest);
-        return ResponseEntity.ok(teacherAssignmentList);
+        Page<TeacherAssignmentDTO> teacherAssignmentPage = teacherAssignmentService.searchByCriteria(keyword, filter, pageRequest);
+        return ResponseEntity.ok(teacherAssignmentPage);
     }
 
     @GetMapping("/create")

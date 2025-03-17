@@ -1,0 +1,153 @@
+package com.vanhuuhien99.school_device_management.controller;
+
+import com.vanhuuhien99.school_device_management.entity.Role;
+import com.vanhuuhien99.school_device_management.formmodel.UserFormCreate;
+import com.vanhuuhien99.school_device_management.formmodel.UserFormUpdate;
+import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
+import com.vanhuuhien99.school_device_management.projection.UserDTO;
+import com.vanhuuhien99.school_device_management.service.RoleService;
+import com.vanhuuhien99.school_device_management.service.UserService;
+import com.vanhuuhien99.school_device_management.utils.AppHelper;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Controller
+@RequestMapping("/manage/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    public static final Logger log = LoggerFactory.getLogger(UserController.class);
+
+    private static final String USER_TABLE_TEMPLATE = "dashboard/table/user-table";
+    private static final String USER_FORM_CREATE_TEMPLATE = "dashboard/form/user-form-create";
+    private static final String USER_FORM_UPDATE_TEMPLATE = "dashboard/form/user-form-update";
+
+    private final UserService userService;
+
+    private final RoleService roleService;
+
+    @GetMapping
+    public String getAllUsers(
+            @RequestParam(defaultValue = "1" ) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "userId,asc") String[] sort,
+            @RequestParam(required = false) String keyword,
+            Model model
+    ) {
+        PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
+        Page<UserDTO> userPage;
+        if(keyword != null && !keyword.trim().isEmpty()) {
+            userPage = userService.searchUsersByUsername(keyword, pageRequest);
+        } else {
+            userPage = userService.getAllUsers(pageRequest);
+        }
+
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("columnMapping", ColumnMapping.getColumnTranslationMapping(UserDTO.class));
+        model.addAttribute("currentPage", page);
+        model.addAttribute("sortField", sort[0]);
+        model.addAttribute("sortDirection", sort[1]);
+
+        return USER_TABLE_TEMPLATE;
+    }
+
+    @GetMapping("/create")
+    public String createForm(Model model) {
+        List<Role> roles = roleService.getAllRoles();
+        model.addAttribute("roles", roles);
+        return USER_FORM_CREATE_TEMPLATE;
+    }
+
+    @PostMapping("/save")
+    public String createNewUser(
+            @ModelAttribute("userForm") @Valid UserFormCreate userForm,
+            BindingResult result,
+            Model model
+    ) {
+        log.info("Create form data for User: {}", userForm);
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errors", errorMessages);
+            log.info("Validation errors when creating user");
+            return USER_FORM_CREATE_TEMPLATE;
+        }
+        var created = userService.createUser(userForm);
+        if(created.isSuccess()) {
+            return "redirect:/manage/users";
+        } else {
+            model.addAttribute("errors", List.of(created.getErrorMessage()));
+            return USER_FORM_CREATE_TEMPLATE;
+        }
+    }
+
+    @GetMapping("/update/{userId}")
+    public String updateForm(@PathVariable("userId") Long userId, Model model) {
+        var user = userService.getUserById(userId);
+        Long roleId = roleService.getRoleByName(user.getRole()).getRoleId();
+        // Fill data to form
+        var userForm = UserFormUpdate.builder()
+                .fullName(user.getFullName())
+                .phoneNumber(user.getPhoneNumber())
+                .roleId(roleId)
+                .isActive(user.getIsActive())
+                .build();
+        List<Role> roles = roleService.getAllRoles();
+
+        model.addAttribute("form", userForm);
+        model.addAttribute("roles", roles);
+        model.addAttribute("id", userId);
+        return USER_FORM_UPDATE_TEMPLATE;
+    }
+
+    @PutMapping("/save/{userId}")
+    public String updateUser(
+            @PathVariable("userId") Long userId,
+            @ModelAttribute("userForm") @Valid UserFormUpdate userForm,
+            BindingResult result,
+            Model model
+    ) {
+        log.info("Update form data for User: {}", userForm);
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errors", errorMessages);
+            log.info("Validation errors when updating user");
+            return USER_FORM_UPDATE_TEMPLATE;
+        }
+        var updated = userService.updateUser(userForm, userId);
+        if(updated.isSuccess()) {
+            return "redirect:/manage/users";
+        } else {
+            model.addAttribute("errors", List.of(updated.getErrorMessage()));
+            return USER_FORM_UPDATE_TEMPLATE;
+        }
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
+        log.info("Delete User with id: {}", userId);
+        var deleted = userService.deleteUser(userId);
+        if(deleted.isSuccess()) {
+            return ResponseEntity.ok("Xóa thành công!");
+        } else {
+            return ResponseEntity.internalServerError().body("Đã có lỗi xảy ra khi xóa:" + deleted.getErrorMessage());
+        }
+    }
+}

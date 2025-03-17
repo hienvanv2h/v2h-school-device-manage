@@ -1,5 +1,6 @@
 package com.vanhuuhien99.school_device_management.formmodel;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,6 +21,12 @@ public class DeviceForm {
 
     @NotNull(message = "Device category is required")
     private Long deviceCategoryId;
+
+    @Min(value = 1, message = "Total quantity must be at least 1")
+    private Integer totalQuantity;
+
+    @Min(value = 0, message = "Remaining quantity must be at least 0")
+    private Integer remainingQuantity;
 
     private String description;
 

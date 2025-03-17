@@ -110,8 +110,8 @@ content = @`
                             Assignment ID <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="teacherAssignmentId" name="teacherAssignmentId"
-                               value="${deviceRegistrationForm != null && deviceRegistrationForm.getTeacherAssignmentId() != null
-                                        ? deviceRegistrationForm.getTeacherAssignmentId().toString() : ""}"
+                               value="${deviceRegistrationForm != null && deviceRegistrationForm.getScheduleId() != null
+                                        ? deviceRegistrationForm.getScheduleId().toString() : ""}"
                                class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
                                required readonly>
                     </div>
@@ -225,7 +225,7 @@ content = @`
 `,
 customScripts = @`
     <%--    Script gắn sự kiện chọn dòng từ bảng và ánh xạ giá trị cho input    --%>
-    <script src="/js/table-form-binding.js"></script>
+    <script src="/js/form/table-form-binding.js"></script>
     <%--    Script xử lý dropdown    --%>
     <script src="/js/dropdown.js"></script>
     <%--    Script tạo tablemananager và ánh xạ giá trị table-form (TeacherAssignment)   --%>

@@ -15,6 +15,8 @@ public class DeviceDTO {
     private Long deviceId;
     private String deviceName;
     private String categoryName;
+    private int totalQuantity;
+    private int remainingQuantity;
     private String description;
     private String status;
     private LocalDateTime createdAt;
@@ -25,6 +27,8 @@ public class DeviceDTO {
                 .deviceId(device.getDeviceId())
                 .deviceName(device.getDeviceName())
                 .categoryName(device.getDeviceCategory() != null ? device.getDeviceCategory().getCategoryName() : "")
+                .totalQuantity(device.getTotalQuantity())
+                .remainingQuantity(device.getRemainingQuantity())
                 .description(device.getDescription())
                 .status(device.getStatus())
                 .createdAt(device.getCreatedAt())

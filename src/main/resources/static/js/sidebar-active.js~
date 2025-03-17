@@ -1,0 +1,17 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const navLinks = document.querySelectorAll(".sidebar a");
+    const currentPath = window.location.pathname;
+
+    console.log("Current path:", currentPath);
+
+    navLinks.forEach(link => {
+        const listItem = link.closest("li");
+        console.log("Link href:", link.href);
+        // So sánh đường dẫn tuyệt đối hoặc kiểm tra chứa chuỗi
+        if (link.pathname === currentPath) {
+            listItem.classList.add("active-link"); // Thêm class active
+        } else {
+            listItem.classList.remove("active-link");
+        }
+    });
+});

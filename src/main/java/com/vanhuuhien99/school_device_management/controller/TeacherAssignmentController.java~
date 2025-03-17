@@ -161,6 +161,6 @@ public class TeacherAssignmentController {
         model.addAttribute("teacherList", teacherList);
         model.addAttribute("schoolClassList", schoolClassList);
         model.addAttribute("subjectList", subjectList);
-        model.addAttribute("semesterList", semesterList.reversed());
+        model.addAttribute("semesterList", semesterList);
     }
 }

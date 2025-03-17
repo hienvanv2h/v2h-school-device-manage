@@ -5,8 +5,6 @@ import com.vanhuuhien99.school_device_management.projection.ScheduleProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface ScheduleService {
 
     Page<ScheduleProjection> getFilteredSchedules(String keyword, String filter, Pageable pageable);
@@ -15,7 +13,9 @@ public interface ScheduleService {
 
     ScheduleProjection getScheduleById(Long scheduleId);
 
-    List<ScheduleProjection> getScheduleByTeacherAssignmentId(Long assignmentId);
+    Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId);
+
+    Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId, Pageable pageable);
 
     Page<ScheduleProjection> searchSchedulesByTeacherNameContaining(String keyword, Pageable pageable);
 

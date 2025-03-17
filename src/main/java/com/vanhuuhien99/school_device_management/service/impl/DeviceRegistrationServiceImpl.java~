@@ -1,0 +1,162 @@
+package com.vanhuuhien99.school_device_management.service.impl;
+
+import com.vanhuuhien99.school_device_management.dto.Result;
+import com.vanhuuhien99.school_device_management.entity.*;
+import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
+import com.vanhuuhien99.school_device_management.formmodel.DeviceRegistrationForm;
+import com.vanhuuhien99.school_device_management.dto.DeviceRegistrationReportDTO;
+import com.vanhuuhien99.school_device_management.repository.*;
+import com.vanhuuhien99.school_device_management.service.DeviceRegistrationService;
+import com.vanhuuhien99.school_device_management.specification.DeviceRegistrationSpec;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class DeviceRegistrationServiceImpl implements DeviceRegistrationService {
+
+    private final DeviceRegistrationRepository deviceRegistrationRepository;
+    private final DeviceRepository deviceRepository;
+    private final ApprovalStatusRepository approvalStatusRepository;
+    private final ScheduleRepository scheduleRepository;
+
+    @Override
+    public Page<DeviceRegistration> searchByCriteria(String keyword, String filter, String approvalStatus, Pageable pageable) {
+        return searchByCriteria(keyword, filter, approvalStatus, null, pageable);
+    }
+
+    @Override
+    public Page<DeviceRegistration> searchByCriteria(
+            String keyword,
+            String filter,
+            String approvalStatus,
+            String phoneNumber,
+            Pageable pageable
+    ) {
+        Specification<DeviceRegistration> spec = Specification.where(null);
+
+        if(StringUtils.hasText(filter) && StringUtils.hasText(keyword)) {
+            if(filter.contains("teacher.fullName")) {
+                spec = spec.and(DeviceRegistrationSpec.containsTeacherFullName(keyword));
+            }
+            if(filter.contains("device.deviceName")) {
+                spec = spec.and(DeviceRegistrationSpec.containsDeviceName(keyword));
+            }
+        }
+
+        if(StringUtils.hasText(phoneNumber)) {
+            spec = spec.and(DeviceRegistrationSpec.hasTeacherPhoneNumber(phoneNumber));
+        }
+
+        if(StringUtils.hasText(approvalStatus)) {
+            spec = spec.and(DeviceRegistrationSpec.hasApprovalStatus(approvalStatus));
+        }
+
+        return deviceRegistrationRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public List<ApprovalStatusDefinition> getAllApprovalStatus() {
+        return approvalStatusRepository.findAll();
+    }
+
+    @Override
+    public DeviceRegistration getDeviceRegistrationById(Long registrationId) {
+        return deviceRegistrationRepository.findById(registrationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
+    }
+
+    @Override
+    @Transactional
+    public Result<Long> createNewDeviceRegistration(DeviceRegistrationForm form) {
+        var optionalSchedule = scheduleRepository.findScheduleById(form.getScheduleId());
+        if(optionalSchedule.isEmpty()) {
+            return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
+        }
+
+        var existingDevice = getDeviceById(form.getDeviceId());
+        var existingSchedule = getScheduleById(form.getScheduleId());
+
+        if(form.getRegistrationStatus() == null || form.getRegistrationStatus().trim().isEmpty()) {
+            form.setRegistrationStatus("Tạo mới");
+        }
+        if(form.getApprovalStatus() == null || form.getApprovalStatus().trim().isEmpty()) {
+            form.setApprovalStatus("Chờ phê duyệt");    // Mặc định khi tạo
+        }
+
+        DeviceRegistration newDeviceRegistration = DeviceRegistration.builder()
+                .device(existingDevice)
+                .schedule(existingSchedule)
+                .registrationStatus(form.getRegistrationStatus())
+                .registrationStatus(form.getRegistrationStatus())
+                .approvalStatus(form.getApprovalStatus())
+                .returnDate(form.getReturnDate())
+                .description(form.getDescription())
+                .build();
+        var savedDeviceRegistration =  deviceRegistrationRepository.save(newDeviceRegistration);
+        return Result.success(savedDeviceRegistration.getRegistrationId());
+    }
+
+    @Override
+    @Transactional
+    public Result<Void> updateDeviceRegistration(DeviceRegistrationForm form, Long registrationId) {
+        var availableSchedules = scheduleRepository.findScheduleById(form.getScheduleId());
+        if(availableSchedules.isEmpty()) {
+            return Result.failure("Chưa có thông tin thời khóa biểu cho phân công này");
+        }
+
+        // Kiểm tra ngày trả
+        var scheduleDate = availableSchedules.get().getScheduleDate();
+        if(form.getReturnDate() == null || form.getReturnDate().isBefore(ChronoLocalDate.from(scheduleDate))) {
+            return Result.failure("Ngày trả phải trong hoặc sau ngày mượn");
+        }
+
+        var existingDevice = getDeviceById(form.getDeviceId());
+        var existingSchedule = getScheduleById(form.getScheduleId());
+
+        DeviceRegistration existingDeviceRegistration = deviceRegistrationRepository.findById(registrationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
+        existingDeviceRegistration.setDevice(existingDevice);
+        existingDeviceRegistration.setSchedule(existingSchedule);
+        existingDeviceRegistration.setRegistrationStatus(form.getRegistrationStatus());
+        existingDeviceRegistration.setApprovalStatus(form.getApprovalStatus());
+        existingDeviceRegistration.setReturnDate(form.getReturnDate());
+        existingDeviceRegistration.setDescription(form.getDescription());
+        deviceRegistrationRepository.save(existingDeviceRegistration);
+        return Result.success(null);
+    }
+
+    @Override
+    @Transactional
+    public Result<Void> deleteDeviceRegistration(Long registrationId) {
+        var existingDeviceRegistration = deviceRegistrationRepository.findById(registrationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find device registration with id: " + registrationId));
+        deviceRegistrationRepository.delete(existingDeviceRegistration);
+        return Result.success(null);
+    }
+
+    @Override
+    public Page<DeviceRegistrationReportDTO> getDeviceRegistrationReportInRange(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        return deviceRegistrationRepository.findDeviceRegistrationReportBetween(startDate, endDate, pageable);
+    }
+
+    private Device getDeviceById(Long deviceId) {
+        return deviceRepository.findById(deviceId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find device with id: " + deviceId));
+    }
+
+    private Schedule getScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find schedule with id: " + scheduleId));
+    }
+}

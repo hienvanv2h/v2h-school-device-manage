@@ -76,7 +76,11 @@ public class SemesterController {
             model.addAttribute("errors", errorMessages);
             return SEMESTER_FORM_TEMPLATE;
         }
-        semesterService.createNewSemester(semesterForm);
+        var created = semesterService.createNewSemester(semesterForm);
+        if(!created.isSuccess()) {
+            model.addAttribute("errors", List.of(created.getErrorMessage()));
+            return SEMESTER_FORM_TEMPLATE;
+        }
         return "redirect:/dashboard/semesters";
     }
 
@@ -109,7 +113,11 @@ public class SemesterController {
             model.addAttribute("errors", errorMessages);
             return SEMESTER_FORM_TEMPLATE;
         }
-        semesterService.updateSemester(semesterForm, semesterId);
+        var updated = semesterService.updateSemester(semesterForm, semesterId);
+        if(!updated.isSuccess()) {
+            model.addAttribute("errors", List.of(updated.getErrorMessage()));
+            return SEMESTER_FORM_TEMPLATE;
+        }
         return "redirect:/dashboard/semesters";
     }
 

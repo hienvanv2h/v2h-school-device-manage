@@ -51,10 +51,14 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     public void createNewDevice(DeviceForm form) {
         DeviceCategory existingDeviceCategory = getDeviceCategoryById(form.getDeviceCategoryId());
+        int remainingQtt = form.getRemainingQuantity() != null && form.getRemainingQuantity() != 0
+                ? form.getRemainingQuantity() : form.getTotalQuantity();
 
         Device newDevice = Device.builder()
                 .deviceName(form.getDeviceName())
                 .deviceCategory(existingDeviceCategory)
+                .totalQuantity(form.getTotalQuantity())
+                .remainingQuantity(remainingQtt)
                 .description(form.getDescription())
                 .status(form.getStatus())
                 .build();
@@ -69,6 +73,8 @@ public class DeviceServiceImpl implements DeviceService {
         var existingDevice = getDeviceById(deviceId);
         existingDevice.setDeviceName(form.getDeviceName());
         existingDevice.setDeviceCategory(existingDeviceCategory);
+        existingDevice.setTotalQuantity(form.getTotalQuantity());
+        existingDevice.setRemainingQuantity(form.getRemainingQuantity());
         existingDevice.setDescription(form.getDescription());
         existingDevice.setStatus(form.getStatus());
         deviceRepository.save(existingDevice);

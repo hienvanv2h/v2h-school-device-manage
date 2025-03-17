@@ -19,11 +19,8 @@ public class DeviceRegistrationForm {
     @NotNull(message = "Device ID is required")
     private Long deviceId;
 
-    @NotNull(message = "Teacher assignment ID is required")
-    private Long teacherAssignmentId;
-
-    @NotNull(message = "Schedule date is required")
-    private LocalDate scheduleDate;
+    @NotNull(message = "Schedule ID is required")
+    private Long scheduleId;
 
     private LocalDate returnDate;
 

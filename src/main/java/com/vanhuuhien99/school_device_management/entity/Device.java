@@ -23,6 +23,12 @@ public class Device extends BaseEntity {
     @JsonBackReference
     private DeviceCategory deviceCategory;
 
+    @Column(name = "TotalQuantity", nullable = false)
+    private int totalQuantity;
+
+    @Column(name = "RemainingQuantity", nullable = false)
+    private int remainingQuantity;
+
     @Column(name = "Description")
     private String description;
 

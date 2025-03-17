@@ -91,6 +91,32 @@ content = @`
                 </div>
 
                 <div>
+                    <label for="totalQuantity" class="block text-gray-700 font-medium mb-2">
+                        Số lượng ban đầu <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" id="totalQuantity" name="totalQuantity"
+                           value="${deviceForm != null && deviceForm.getTotalQuantity() != null ? deviceForm.getTotalQuantity().toString() : "1"}"
+                           placeholder="Nhập số lượng ban đầu"
+                           class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
+                           min="1"
+                           required>
+                </div>
+
+                @if(type != null && type.equalsIgnoreCase("update"))
+                    <div>
+                        <label for="remainingQuantity" class="block text-gray-700 font-medium mb-2">
+                            Số lượng còn lại <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" id="remainingQuantity" name="remainingQuantity"
+                               value="${deviceForm != null && deviceForm.getRemainingQuantity() != null ? deviceForm.getRemainingQuantity().toString() : "0"}"
+                               placeholder="Nhập số lượng còn lại"
+                               class="px-4 py-2 w-full border border-gray-300 rounded-md mt-2"
+                               min="0"
+                               required>
+                    </div>
+                @endif
+
+                <div>
                     <label for="description" class="block text-gray-700 font-medium mb-2">
                         Mô tả
                     </label>

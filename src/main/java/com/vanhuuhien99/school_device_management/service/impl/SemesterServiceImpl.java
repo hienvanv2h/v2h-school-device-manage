@@ -1,12 +1,13 @@
 package com.vanhuuhien99.school_device_management.service.impl;
 
+import com.vanhuuhien99.school_device_management.dto.Result;
 import com.vanhuuhien99.school_device_management.entity.Semester;
-import com.vanhuuhien99.school_device_management.entity.Subject;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.SemesterForm;
 import com.vanhuuhien99.school_device_management.repository.SemesterRepository;
 import com.vanhuuhien99.school_device_management.service.SemesterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,13 +53,18 @@ public class SemesterServiceImpl implements SemesterService {
 
     @Override
     @Transactional
-    public void createNewSemester(SemesterForm form) {
+    public Result<Semester> createNewSemester(SemesterForm form) {
+        var existingSemester = semesterRepository.findBySemesterName(form.getSemesterName());
+        if(existingSemester.isPresent()) {
+            return Result.failure("Semester name already exists");
+        }
         var newSemester = Semester.builder()
                 .semesterName(form.getSemesterName())
                 .startDate(form.getStartDate())
                 .endDate(form.getEndDate())
                 .build();
-        semesterRepository.save(newSemester);
+        var savedSemester = semesterRepository.save(newSemester);
+        return Result.success(savedSemester);
     }
 
     @Override
@@ -70,12 +76,17 @@ public class SemesterServiceImpl implements SemesterService {
 
     @Override
     @Transactional
-    public void updateSemester(SemesterForm form, Long semesterId) {
-        var existingSemester = getSemesterById(semesterId);
-        existingSemester.setSemesterName(form.getSemesterName());
-        existingSemester.setStartDate(form.getStartDate());
-        existingSemester.setEndDate(form.getEndDate());
-        semesterRepository.save(existingSemester);
+    public Result<Semester> updateSemester(SemesterForm form, Long semesterId) {
+        var existingSemester = semesterRepository.findBySemesterName(form.getSemesterName());
+        if(existingSemester.isPresent()) {
+            return Result.failure("Semester name already exists");
+        }
+        var semester = getSemesterById(semesterId);
+        semester.setSemesterName(form.getSemesterName());
+        semester.setStartDate(form.getStartDate());
+        semester.setEndDate(form.getEndDate());
+        var updatedSemester = semesterRepository.save(semester);
+        return Result.success(updatedSemester);
     }
 
     @Override

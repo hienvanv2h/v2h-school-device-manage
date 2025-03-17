@@ -1,3 +1,8 @@
+window._teacherAssignmentState = {
+  assignmentId: "",
+};
+
+
 document.addEventListener("DOMContentLoaded", function () {
   const tableSelector = "#teacherAssignmentTable";
   const paginationSelector = "#teacherAssignmentPagination";
@@ -85,6 +90,11 @@ document.addEventListener("DOMContentLoaded", function () {
     rows.forEach((row) => {
       const tr = document.createElement("tr");
       tr.classList.add("border-b", "hover:bg-gray-50");
+      tr.setAttribute("data-id", row.assignmentId);
+      if(window._teacherAssignmentState.assignmentId == row.assignmentId) { //loose comparison
+        tr.classList.add("bg-blue-100");
+      }
+
       tr.innerHTML = `
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
             <div style="height: 50px; overflow:hidden;">
@@ -92,37 +102,37 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div style="height: 50px; width: 200px; overflow:hidden;">
+            <div>
                 ${row.teacherName}
             </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div style="height: 50px; overflow:hidden;">
+            <div>
                 ${row.className}
             </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div style="height: 50px; overflow:hidden;">
+            <div>
                 ${row.subjectName}
             </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div style="height: 50px; overflow:hidden;">
+            <div>
                 ${row.semester}
             </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div style="height: 50px; width: 200px; overflow:hidden;">
+            <div class="w-[200px] truncate">
                 ${row.description}
             </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div style="height: 50px; overflow:hidden;">
+            <div>
                 ${formatDateTime(row.createdAt)}
             </div>
         </td>
         <td class="px-6 py-4 text-sm text-gray-700 border-b">
-            <div style="height: 50px; overflow:hidden;">
+            <div>
                 ${formatDateTime(row.updatedAt)}
             </div>
         </td>

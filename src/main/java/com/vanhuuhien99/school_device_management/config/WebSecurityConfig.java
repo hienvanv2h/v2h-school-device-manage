@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -82,13 +83,16 @@ public class WebSecurityConfig {
         )
         .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/dashboard", true)
+                .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
                 .failureUrl("/login?error=true")
                 .permitAll()
         )
         .logout(logout -> logout
                 .logoutSuccessUrl("/")
                 .permitAll()
+        )
+        .exceptionHandling(exc -> exc
+                .accessDeniedHandler(new CustomAccessDeniedHandler())   // 403
         );
 
         return http.build();
