@@ -1,6 +1,6 @@
 package com.vanhuuhien99.school_device_management.entity;
 
-import com.vanhuuhien99.school_device_management.enums.Gender;
+import com.vanhuuhien99.school_device_management.customtypes.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 

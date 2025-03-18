@@ -1,7 +1,7 @@
 package com.vanhuuhien99.school_device_management.service.impl;
 
 import com.vanhuuhien99.school_device_management.entity.Teacher;
-import com.vanhuuhien99.school_device_management.enums.Gender;
+import com.vanhuuhien99.school_device_management.customtypes.Gender;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.TeacherForm;
 import com.vanhuuhien99.school_device_management.repository.TeacherRepository;
