@@ -21,7 +21,7 @@
     @if(page != null && !page.description().isEmpty())
         <meta name="description" content="${page.description()}">
     @endif
-    <title>${(page != null && !page.title().isEmpty()) ? page.title() : "Quản lý thiết bị học tập"}</title>
+    <title>${(page != null && !page.title().isEmpty()) ? page.title() : "Quản lý thiết bị học tập | THCS An Đà"}</title>
 
     <%--  Tailwind CSS  --%>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,20 +39,21 @@
             <!-- Sidebar Top -->
             <div class="px-2 pt-2">
                 <div class="p-2 flex items-center mb-4">
-                    <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                              d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 01-1.265.633L5.432 15.5l-2.539.639a1 1 0 01-1.265-.633l-1-3a1 1 0 01.633-1.265L4 9.5l2.961-8.822a1 1 0 011.265-.633l3 1z"
-                              clip-rule="evenodd" />
-                    </svg>
-                    <h2 class="text-xl font-bold">Dashboard</h2>
+<%--                    <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">--%>
+<%--                        <path fill-rule="evenodd"--%>
+<%--                              d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 01-1.265.633L5.432 15.5l-2.539.639a1 1 0 01-1.265-.633l-1-3a1 1 0 01.633-1.265L4 9.5l2.961-8.822a1 1 0 011.265-.633l3 1z"--%>
+<%--                              clip-rule="evenodd" />--%>
+<%--                    </svg>--%>
+                    <img class="w-10 h-10 mr-3 rounded-lg" src="/images/logo-thcs-anda.jpg" alt="Logo THCS An Đà">
+                    <h2 class="text-xl font-bold text-center">THCS AN ĐÀ</h2>
                 </div>
 
                 <div class="h-px border border-gray-700 my-2 px-2"></div>
             </div>
 
-            <div class="pl-2">
+            <div class="grow pl-2">
                 <!-- Sidebar Menu -->
-                @template.dashboard.sidebar-menu(header = header)
+                @template.dashboard.sidebar-menu(globalState = globalState)
             </div>
 
             <!-- Sidebar Bottom -->
@@ -76,7 +77,6 @@
 
             <!-- Main Content -->
             <main class="flex-1 bg-white px-8 py-4 overflow-y-auto mt-24">
-                <div class="mb-4 text-red-500">Username: ${globalState != null ? globalState.getUsername() : ""}</div>
                 ${content}
             </main>
         </div>

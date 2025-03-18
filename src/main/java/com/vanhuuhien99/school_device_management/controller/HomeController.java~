@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomeController {
@@ -14,11 +15,13 @@ public class HomeController {
     private static final String INDEX_TEMPLATE = "pages/index";
 
     @GetMapping("/")
+    @ResponseBody
     public String index(Model model) {
         return "redirect:/dashboard";
     }
 
     @GetMapping("/dashboard")
+    @ResponseBody
     public String dashboard(Model model) {
         return INDEX_TEMPLATE;
     }

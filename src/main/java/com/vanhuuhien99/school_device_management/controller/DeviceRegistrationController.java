@@ -85,12 +85,8 @@ public class DeviceRegistrationController {
                     .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
 
             PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-            Page<DeviceRegistration> deviceRegistrationPage;
-            if(isAdmin) {
-                deviceRegistrationPage = deviceRegistrationService.searchByCriteria(keyword, filter, approvalStatus, pageRequest);
-            } else {
-                deviceRegistrationPage = deviceRegistrationService.searchByCriteria(keyword, filter, approvalStatus, userPhoneNumber, pageRequest);
-            }
+            Page<DeviceRegistration> deviceRegistrationPage = deviceRegistrationService
+                    .searchByCriteria(keyword, filter, approvalStatus, userPhoneNumber, pageRequest);
             // Ánh xạ sang DTO class
             Page<DeviceRegistrationDTO> deviceRegistrationDTOPage = deviceRegistrationPage
                     .map(DeviceRegistrationDTO::fromDeviceRegistration);

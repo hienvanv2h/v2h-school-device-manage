@@ -15,9 +15,6 @@ public class GlobalTemplateState {
     // Kiểm tra quyền admin
     private boolean isAdmin;
 
-    // Kiểm tra quyền manager
-    private boolean isManager;
-
     // Kiểm tra trạng thái xác thực (true nếu đã đăng nhập)
     private boolean isAuthenticated;
 
@@ -28,8 +25,6 @@ public class GlobalTemplateState {
         this.csrfHiddenInput = new CsrfHiddenInput(csrfToken);
         this.isAdmin = authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
-        this.isManager = authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(role -> role.getAuthority().equals("ROLE_MANAGER"));
         this.isAuthenticated = authentication != null && authentication.isAuthenticated();
         this.username = authentication != null ? authentication.getName() : null;
     }
