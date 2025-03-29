@@ -39,6 +39,8 @@ public class TeacherAssignmentServiceImpl implements TeacherAssignmentService {
         if(StringUtils.hasText(filter) && StringUtils.hasText(keyword)) {
             if(filter.equalsIgnoreCase("teacher.fullName") || filter.equals("teacherName")) {
                 spec = spec.and(TeacherAssignmentSpec.containsTeacherFullName(keyword));
+            } else if (filter.contains("phoneNumber")) {
+                spec = spec.and(TeacherAssignmentSpec.containsTeacherPhoneNumber(keyword));
             } else if(filter.equalsIgnoreCase("schoolClass.className")) {
                 spec = spec.and(TeacherAssignmentSpec.containsSchoolClassName(keyword));
             } else if(filter.equalsIgnoreCase("semester")) {

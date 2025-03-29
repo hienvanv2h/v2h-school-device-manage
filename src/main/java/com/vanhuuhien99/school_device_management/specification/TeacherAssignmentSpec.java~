@@ -20,16 +20,6 @@ public class TeacherAssignmentSpec {
         };
     }
 
-    public static Specification<TeacherAssignment> containsTeacherPhoneNumber(String keyword) {
-        return (root, query, cb) -> {
-            if(!StringUtils.hasText(keyword)) {
-                return cb.conjunction();
-            }
-            Join<TeacherAssignment, Teacher> teacherJoin = root.join("teacher", JoinType.INNER);
-            return cb.like(cb.lower(teacherJoin.get("phoneNumber")), "%" + keyword + "%");
-        };
-    }
-
     public static Specification<TeacherAssignment> containsSchoolClassName(String keyword) {
         return (root, query, cb) -> {
             if(!StringUtils.hasText(keyword)) {
