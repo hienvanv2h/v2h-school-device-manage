@@ -1,6 +1,7 @@
 package com.vanhuuhien99.school_device_management.controller;
 
 import com.vanhuuhien99.school_device_management.entity.Semester;
+import com.vanhuuhien99.school_device_management.entity.User;
 import com.vanhuuhien99.school_device_management.formmodel.TeacherAssignmentForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.projection.*;
@@ -12,13 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,10 +68,33 @@ public class TeacherAssignmentController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "updatedAt,desc") String[] sort,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String filter
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) boolean currentUser,
+            Authentication authentication
     ) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create("/login"));
+            return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();
+        }
+
         PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
-        Page<TeacherAssignmentDTO> teacherAssignmentPage = teacherAssignmentService.searchByCriteria(keyword, filter, pageRequest);
+        Page<TeacherAssignmentDTO> teacherAssignmentPage;
+
+        var principal = authentication.getPrincipal();
+        if(principal instanceof User user) {
+            String userPhoneNumber = user.getPhoneNumber();
+            boolean isAdminOrManager = user.getAuthorities().stream()
+                    .anyMatch(role ->
+                            role.getAuthority().equals("ROLE_ADMIN") || role.getAuthority().equals("ROLE_MANAGER"));
+            if(isAdminOrManager) {
+                teacherAssignmentPage = teacherAssignmentService.searchByCriteria(keyword, filter, pageRequest);
+            } else {
+                teacherAssignmentPage = teacherAssignmentService.searchByCriteria(userPhoneNumber, "phoneNumber", pageRequest);
+            }
+        } else {
+            teacherAssignmentPage = Page.empty();
+        }
         return ResponseEntity.ok(teacherAssignmentPage);
     }
 

@@ -81,6 +81,9 @@ public class DeviceRegistrationController {
         var principal = authentication.getPrincipal();
         if(principal instanceof User user) {
             String userPhoneNumber = user.getPhoneNumber();
+            var isAdmin = user.getAuthorities().stream()
+                    .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
             PageRequest pageRequest = AppHelper.createPageRequest(page, size, sort);
             Page<DeviceRegistration> deviceRegistrationPage = deviceRegistrationService
                     .searchByCriteria(keyword, filter, approvalStatus, userPhoneNumber, pageRequest);
