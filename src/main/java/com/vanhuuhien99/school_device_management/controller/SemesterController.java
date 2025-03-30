@@ -1,9 +1,7 @@
 package com.vanhuuhien99.school_device_management.controller;
 
 import com.vanhuuhien99.school_device_management.entity.Semester;
-import com.vanhuuhien99.school_device_management.entity.Subject;
 import com.vanhuuhien99.school_device_management.formmodel.SemesterForm;
-import com.vanhuuhien99.school_device_management.formmodel.SubjectForm;
 import com.vanhuuhien99.school_device_management.mapping.ColumnMapping;
 import com.vanhuuhien99.school_device_management.service.SemesterService;
 import com.vanhuuhien99.school_device_management.utils.AppHelper;

@@ -13,6 +13,8 @@ public interface ScheduleService {
 
     ScheduleProjection getScheduleById(Long scheduleId);
 
+    Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId);
+
     Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId, Pageable pageable);
 
     Page<ScheduleProjection> searchSchedulesByTeacherNameContaining(String keyword, Pageable pageable);

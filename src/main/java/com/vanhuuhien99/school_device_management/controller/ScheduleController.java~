@@ -77,7 +77,8 @@ public class ScheduleController {
     @GetMapping("/create")
     public String createScheduleForm(Model model) {
         model.addAttribute("type", "create");
-        populateFormModelAttributes(model);
+        // Column mapping for TeacherAssignment table
+        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
         return SCHEDULE_FORM_TEMPLATE;
     }
 
@@ -93,7 +94,8 @@ public class ScheduleController {
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
-            populateFormModelAttributes(model);
+            // Column mapping for TeacherAssignment table
+            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
             log.info("Validation errors in create schedule form");
             return SCHEDULE_FORM_TEMPLATE;
         }
@@ -121,7 +123,8 @@ public class ScheduleController {
         model.addAttribute("type", "update");
         model.addAttribute("id",scheduleId);
         model.addAttribute("scheduleForm", scheduleForm);
-        populateFormModelAttributes(model);
+        // Column mapping for TeacherAssignment table
+        model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
 
         return SCHEDULE_FORM_TEMPLATE;
     }
@@ -139,7 +142,8 @@ public class ScheduleController {
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.toList());
             model.addAttribute("errors", errorMessages);
-            populateFormModelAttributes(model);
+            // Column mapping for TeacherAssignment table
+            model.addAttribute("TA_COLUMN_MAPPING", ColumnMapping.getColumnTranslationMapping(TeacherAssignmentDTO.class));
             log.info("Validation errors in update schedule form");
             return SCHEDULE_FORM_TEMPLATE;
         }

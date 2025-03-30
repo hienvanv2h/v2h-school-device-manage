@@ -7,13 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("SELECT s.scheduleId AS scheduleId, s.dayOfWeek AS dayOfWeek, " +
-            "s.scheduleDate AS scheduleDate, s.startTime AS startTime, s.endTime AS endTime, s.location AS location, " +
+            "s.scheduleDate AS scheduleDate, s.periods AS periods, s.location AS location, " +
             "ta.assignmentId AS assignmentId, " +
             "t.fullName AS teacherName, sc.className AS className, sub.subjectName AS subjectName, " +
             "s.createdAt AS createdAt, s.updatedAt AS updatedAt " +
@@ -26,7 +25,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Page<ScheduleProjection> findAllSchedules(Pageable pageable);
 
     @Query("SELECT s.scheduleId AS scheduleId, s.dayOfWeek AS dayOfWeek, " +
-            "s.scheduleDate AS scheduleDate, s.startTime AS startTime, s.endTime AS endTime, s.location AS location, " +
+            "s.scheduleDate AS scheduleDate, s.periods AS periods, s.location AS location, " +
             "ta.assignmentId AS assignmentId, " +
             "t.fullName AS teacherName, sc.className AS className, sub.subjectName AS subjectName, " +
             "s.createdAt AS createdAt, s.updatedAt AS updatedAt " +
@@ -40,7 +39,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Optional<ScheduleProjection> findScheduleById(Long scheduleId);
 
     @Query("SELECT s.scheduleId AS scheduleId, s.dayOfWeek AS dayOfWeek, " +
-            "s.scheduleDate AS scheduleDate, s.startTime AS startTime, s.endTime AS endTime, s.location AS location, " +
+            "s.scheduleDate AS scheduleDate, s.periods AS periods, s.location AS location, " +
             "ta.assignmentId AS assignmentId, " +
             "t.fullName AS teacherName, sc.className AS className, sub.subjectName AS subjectName, " +
             "s.createdAt AS createdAt, s.updatedAt AS updatedAt " +
@@ -54,7 +53,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Page<ScheduleProjection> findByTeacherAssignmentId(Long assignmentId, Pageable pageable);
 
     @Query("SELECT s.scheduleId AS scheduleId, s.dayOfWeek AS dayOfWeek, " +
-            "s.scheduleDate AS scheduleDate, s.startTime AS startTime, s.endTime AS endTime, s.location AS location, " +
+            "s.scheduleDate AS scheduleDate, s.periods AS periods, s.location AS location, " +
             "ta.assignmentId AS assignmentId, " +
             "t.fullName AS teacherName, sc.className AS className, sub.subjectName AS subjectName, " +
             "s.createdAt AS createdAt, s.updatedAt AS updatedAt " +
@@ -68,7 +67,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Page<ScheduleProjection> findByTeacherFullNameContaining(String keyword, Pageable pageable);
 
     @Query("SELECT s.scheduleId AS scheduleId, s.dayOfWeek AS dayOfWeek, " +
-            "s.scheduleDate AS scheduleDate, s.startTime AS startTime, s.endTime AS endTime, s.location AS location, " +
+            "s.scheduleDate AS scheduleDate, s.periods AS periods, s.location AS location, " +
             "ta.assignmentId AS assignmentId, " +
             "t.fullName AS teacherName, sc.className AS className, sub.subjectName AS subjectName, " +
             "s.createdAt AS createdAt, s.updatedAt AS updatedAt " +
@@ -82,7 +81,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Page<ScheduleProjection> findByClassNameContaining(String keyword, Pageable pageable);
 
     @Query("SELECT s.scheduleId AS scheduleId, s.dayOfWeek AS dayOfWeek, " +
-            "s.scheduleDate AS scheduleDate, s.startTime AS startTime, s.endTime AS endTime, s.location AS location, " +
+            "s.scheduleDate AS scheduleDate, s.periods AS periods, s.location AS location, " +
             "ta.assignmentId AS assignmentId, " +
             "t.fullName AS teacherName, sc.className AS className, sub.subjectName AS subjectName, " +
             "s.createdAt AS createdAt, s.updatedAt AS updatedAt " +

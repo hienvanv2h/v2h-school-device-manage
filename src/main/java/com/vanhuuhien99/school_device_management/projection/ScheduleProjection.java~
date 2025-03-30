@@ -1,7 +1,5 @@
 package com.vanhuuhien99.school_device_management.projection;
 
-import com.vanhuuhien99.school_device_management.customtypes.DynamicData;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,7 +11,7 @@ public interface ScheduleProjection {
 
     LocalDate getScheduleDate();
 
-    DynamicData getPeriods();
+    String getPeriods();
 
     String getLocation();
 

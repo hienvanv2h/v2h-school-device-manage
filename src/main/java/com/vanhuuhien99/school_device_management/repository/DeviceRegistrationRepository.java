@@ -33,7 +33,7 @@ public interface DeviceRegistrationRepository extends JpaRepository<DeviceRegist
             d.deviceName,
             t.fullName,
             sc.className,
-            CONCAT(FORMAT(s.startTime, 'HH:mm'), '-', FORMAT(s.endTime, 'HH:mm'), ' ', FORMAT(s.scheduleDate, 'dd/MM/yyyy')),
+            FORMAT(s.scheduleDate, 'dd/MM/yyyy'),
             dr.returnDate,
             dr.description
         )

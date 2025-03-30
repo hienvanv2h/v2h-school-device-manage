@@ -1,5 +1,6 @@
 package com.vanhuuhien99.school_device_management.service.impl;
 
+import com.vanhuuhien99.school_device_management.customtypes.DynamicData;
 import com.vanhuuhien99.school_device_management.entity.Schedule;
 import com.vanhuuhien99.school_device_management.exception.ResourceNotFoundException;
 import com.vanhuuhien99.school_device_management.formmodel.ScheduleForm;
@@ -51,11 +52,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId) {
-        return scheduleRepository.findByTeacherAssignmentId(assignmentId, Pageable.unpaged());
-    }
-
-    @Override
     public Page<ScheduleProjection> getSchedulesByTeacherAssignmentId(Long assignmentId, Pageable pageable) {
         return scheduleRepository.findByTeacherAssignmentId(assignmentId, pageable);
     }
@@ -80,12 +76,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void createNewSchedule(ScheduleForm form) {
         var existingTeacherAssignment = teacherAssignmentRepository.findById(form.getTeacherAssignmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find teacher assignment with id: " + form.getTeacherAssignmentId()));
+
+        var periodData = new DynamicData(form.getPeriods());
+
         Schedule newSchedule = Schedule.builder()
                 .teacherAssignment(existingTeacherAssignment)
                 .dayOfWeek(form.getDayOfWeek())
                 .scheduleDate(form.getScheduleDate())
-                .startTime(form.getStartTime())
-                .endTime(form.getEndTime())
+                .periods(periodData)
                 .location(form.getLocation())
                 .build();
         scheduleRepository.save(newSchedule);
@@ -100,11 +98,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         var existingTeacherAssignment = teacherAssignmentRepository.findById(form.getTeacherAssignmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find teacher assignment with id: " + form.getTeacherAssignmentId()));
 
+        var periodData = new DynamicData(form.getPeriods());
+
         existingSchedule.setTeacherAssignment(existingTeacherAssignment);
         existingSchedule.setDayOfWeek(form.getDayOfWeek());
         existingSchedule.setScheduleDate(form.getScheduleDate());
-        existingSchedule.setStartTime(form.getStartTime());
-        existingSchedule.setEndTime(form.getEndTime());
+        existingSchedule.setPeriods(periodData);
         existingSchedule.setLocation(form.getLocation());
         scheduleRepository.save(existingSchedule);
     }

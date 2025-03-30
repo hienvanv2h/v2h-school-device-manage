@@ -36,7 +36,7 @@ content = @`
             </div>
         @endif
 
-        <div class="flex flex-wrap flex-row justify-between items-center gap-2">
+        <div class="flex flex-row justify-between items-center gap-2">
             <h2 id="step-title" class="text-2xl font-semibold text-gray-700 mb-4">Đăng ký mượn thiết bị dạy học</h2>
             <div class="controls">
                 <button id="prevBtn" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 hidden" onclick="prevStep()">Quay lại</button>

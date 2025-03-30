@@ -3,7 +3,6 @@ package com.vanhuuhien99.school_device_management.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.vanhuuhien99.school_device_management.customtypes.DynamicData;
-import com.vanhuuhien99.school_device_management.customtypes.DynamicDataConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,8 +30,7 @@ public class Schedule extends BaseEntity {
     @Column(name = "ScheduleDate", nullable = false)
     private LocalDate scheduleDate;
 
-    @Convert(converter = DynamicDataConverter.class)
-    @Column(name = "Periods", columnDefinition = "NVARCHAR(100)")
+    @Column(name = "Periods")
     private DynamicData periods;
 
     @Column(name = "Location")

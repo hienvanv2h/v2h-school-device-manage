@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
   
         const data = await response.json();
-        // console.log(data);
+        console.log(data);
         renderTableRows(data.content);
         renderPagination(data.page.totalPages, data.page.number);
       } catch (error) {
@@ -114,12 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
           </td>
           <td class="px-6 py-4 text-sm text-gray-700 border-b">
               <div>
-                  ${formatTime(row.startTime)}
-              </div>
-          </td>
-          <td class="px-6 py-4 text-sm text-gray-700 border-b">
-              <div>
-                  ${formatTime(row.endTime)}
+                  ${row.periods.jsonNode.join(",")}
               </div>
           </td>
           <td class="px-6 py-4 text-sm text-gray-700 border-b">

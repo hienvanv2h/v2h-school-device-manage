@@ -1,4 +1,4 @@
-package com.vanhuuhien99.school_device_management.projection;
+package com.vanhuuhien99.school_device_management.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeviceRegistrationReport {
+public class DeviceRegistrationReportDTO {
 
     private LocalDateTime registrationDate;
     private String deviceName;

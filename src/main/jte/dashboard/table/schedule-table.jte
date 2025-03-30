@@ -94,10 +94,7 @@ content = @`
                                 ${DateTimeFormatter.ofPattern("dd/MM/yyyy").format(schedule.getScheduleDate())}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm").format(schedule.getStartTime())}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">
-                                ${DateTimeFormatter.ofPattern("HH:mm").format(schedule.getEndTime())}
+                                ${String.join(",", schedule.getPeriods().getAsList().stream().map(Object::toString).toList())}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${schedule.getLocation()}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 border-b">

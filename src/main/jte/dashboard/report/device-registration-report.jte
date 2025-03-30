@@ -82,7 +82,7 @@ content = @`
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${reportItem.getDeviceName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${reportItem.getTeacherName()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">${reportItem.getClassName()}</td>
-                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${reportItem.getScheduleTime()}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 border-b">${reportItem.getScheduleDate()}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 border-b">
                                 ${reportItem.getReturnDate() != null
                                     ? DateTimeFormatter.ofPattern("dd/MM/yyyy").format(reportItem.getReturnDate()) : ""}

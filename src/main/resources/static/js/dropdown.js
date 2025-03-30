@@ -1,6 +1,9 @@
 const dropdowns = document.querySelectorAll(".dropdown");
 
 dropdowns.forEach((dropdown) => {
+  const isMultiselect = dropdown.getAttribute("data-multiselect") === "true";
+  const delimiter = dropdown.getAttribute("data-delimiter") || ",";
+
   const button = dropdown.querySelector(".dropdown-button");
   const menu = dropdown.querySelector(".dropdown-menu");
   const selected = dropdown.querySelector(".dropdown-selected");
@@ -20,14 +23,40 @@ dropdowns.forEach((dropdown) => {
     const item = event.target.closest(".dropdown-item");
     if (item) {
       const value = item.getAttribute("data-id");
-      const text = item.textContent;
+      const text = item.textContent.trim();
 
-      // Update selected text and hidden input
-      selected.textContent = text;
+      // Update selected text
+      const currentContent = selected.textContent.trim();
+      let selectedArray = isMultiselect && currentContent !== "" 
+        ? currentContent.split(delimiter).map(item => item.trim())
+        : [];
 
-      // Update input if it exists
+      if (selectedArray.includes(value)) {
+        selectedArray = selectedArray.filter(item => item !== value);
+      } else {
+        selectedArray.push(value);
+      }
+
+      // Sắp xếp lại thứ tự trước khi hiển thị
+      selectedArray.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+      selected.textContent = selectedArray.join(delimiter);
+
+      // Update hidden input if it exists
       if (input == null) return;
-      input.value = value;
+      const currentInputValue = input.value.trim();
+      let inputArray = isMultiselect && currentInputValue !== "" 
+        ? currentInputValue.split(delimiter).map(item => item.trim())
+        : [];
+
+      if (inputArray.includes(value)) {
+        inputArray = inputArray.filter(item => item !== value);
+      } else {
+        inputArray.push(value);
+      }
+
+      // Sắp xếp lại thứ tự trước khi gán input value
+      inputArray.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+      input.value = inputArray.join(delimiter);
 
       // Close dropdown
       menu.classList.add("hidden");

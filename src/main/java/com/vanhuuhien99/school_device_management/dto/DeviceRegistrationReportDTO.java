@@ -18,7 +18,7 @@ public class DeviceRegistrationReportDTO {
     private String deviceName;
     private String teacherName;
     private String className;
-    private String scheduleTime;
+    private String scheduleDate;
     private LocalDate returnDate;
     private String description;
 }

@@ -1,5 +1,6 @@
 package com.vanhuuhien99.school_device_management.formmodel;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -25,11 +26,8 @@ public class ScheduleForm {
     @NotNull(message = "Schedule date is required")
     private LocalDate scheduleDate;
 
-    @NotNull(message = "Start time is required")
-    private LocalTime startTime;
-
-    @NotNull(message = "End time is required")
-    private LocalTime endTime;
+    @NotEmpty(message = "Periods are required")
+    private List<String> periods;     // VD: 1,2,3
 
     @Size(max = 100, message = "Location must not exceed 100 characters")
     private String location;

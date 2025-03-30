@@ -91,7 +91,7 @@ public class DeviceRegistrationReportStrategy implements ExcelReportStrategy<Dev
         row.createCell(COLUMN_INDEX_CLASS_NAME).setCellValue(reportDTO.getClassName());
 
         cell = row.createCell(COLUMN_INDEX_SCHEDULE_TIME);
-        cell.setCellValue(reportDTO.getScheduleTime());
+        cell.setCellValue(reportDTO.getScheduleDate());
 
         cell = row.createCell(COLUMN_INDEX_RETURN_DATE);
         if(reportDTO.getReturnDate() != null) {

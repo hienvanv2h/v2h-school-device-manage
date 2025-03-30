@@ -7,7 +7,6 @@ import com.vanhuuhien99.school_device_management.formmodel.SemesterForm;
 import com.vanhuuhien99.school_device_management.repository.SemesterRepository;
 import com.vanhuuhien99.school_device_management.service.SemesterService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

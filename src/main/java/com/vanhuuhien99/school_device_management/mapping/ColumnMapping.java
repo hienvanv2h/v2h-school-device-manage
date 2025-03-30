@@ -105,8 +105,7 @@ public class ColumnMapping {
             put("teacherAssignment.subject.subjectName", "Môn học");     // Schedule.teacherAssignment.subject.subjectName
             put("dayOfWeek", "Ngày trong tuần");
             put("scheduleDate", "Ngày học");
-            put("startTime", "Bắt đầu vào");
-            put("endTime", "Kết thúc vào");
+            put("periods", "Tiết học");
             put("location", "Địa điểm");
             put("createdAt", "Ngày tạo");
             put("updatedAt", "Ngày cập nhật");
